@@ -25,7 +25,7 @@ public class PriorityQueue<TPriority, TValue>
 		Insert(priority, value);
 	}
 
-	private void Insert(TPriority priority, TValue value)
+	internal void Insert(TPriority priority, TValue value)
 	{
 		KeyValuePair<TPriority, TValue> val = 
 			new KeyValuePair<TPriority, TValue>(priority, value);
@@ -35,7 +35,7 @@ public class PriorityQueue<TPriority, TValue>
 		HeapifyFromEndToBeginning(_baseHeap.Count - 1);
 	}
 
-	private int HeapifyFromEndToBeginning(int pos)
+	internal int HeapifyFromEndToBeginning(int pos)
 	{
 		if (pos >= _baseHeap.Count) return -1;
 
@@ -54,7 +54,7 @@ public class PriorityQueue<TPriority, TValue>
 		return pos;
 	}
 
-	private void ExchangeElements(int pos1, int pos2)
+	internal void ExchangeElements(int pos1, int pos2)
 	{
 		KeyValuePair<TPriority, TValue> val = _baseHeap[pos1];
 		_baseHeap[pos1] = _baseHeap[pos2];
@@ -77,7 +77,7 @@ public class PriorityQueue<TPriority, TValue>
 			throw new InvalidOperationException("Priority queue is empty");
 	}
 
-	private void DeleteRoot()
+	internal void DeleteRoot()
 	{
 		if (_baseHeap.Count <= 1)
 		{
@@ -92,7 +92,7 @@ public class PriorityQueue<TPriority, TValue>
 		HeapifyFromBeginningToEnd(0);
 	}
 
-	private void HeapifyFromBeginningToEnd(int pos)
+	internal void HeapifyFromBeginningToEnd(int pos)
 	{
 		if (pos >= _baseHeap.Count) return;
 

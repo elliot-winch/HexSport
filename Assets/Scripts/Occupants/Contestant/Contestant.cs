@@ -3,13 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Contestant : MonoBehaviour, IOccupant {
+public class Contestant : MonoBehaviour, ICatcher {
 
 	public float movesPerTurn = 4f;
 	public float moveSpeed = 3f;
 
 	bool moving = false;
-	int teamNumber; //to move into data
 	float movesRemaining;
 	List<Hex> moveHexesInRange;
 	IOccupant destOccupant;
@@ -17,6 +16,26 @@ public class Contestant : MonoBehaviour, IOccupant {
 	ContestantData data;
 
 	Ball ball;
+
+	#region ICatcher implementation
+	public Vector3 BallOffset {
+		get {
+			return new Vector3 (0.5f, 0.5f, 0.5f);
+		}
+	}
+
+	public Action<Ball> OnCatch {
+		get {
+			return (ball) => {
+				ball.CurrentHex = null;
+
+				this.ball = ball;
+				ball.transform.parent = transform;
+				ball.transform.localPosition = BallOffset;
+			};
+		}
+	}
+	#endregion
 
 	public float MovesRemaining {
 		get {
@@ -28,7 +47,7 @@ public class Contestant : MonoBehaviour, IOccupant {
 			GameManager.Instance.CheckStartOfTurn ();
 
 			if (movesRemaining <= 0) {
-				MouseManager.Instance.SelectNext (this);
+				UserControlManager.Instance.SelectNext (this);
 			}
 		}
 	}
@@ -40,6 +59,10 @@ public class Contestant : MonoBehaviour, IOccupant {
 			return currentHex;
 		}
 		set {
+			if (value == null) {
+				Debug.LogError ("Cannot set T.CurrentHex to null");
+			}
+
 			if (currentHex != null) {
 				currentHex.Occupant = null;
 			}
@@ -47,6 +70,12 @@ public class Contestant : MonoBehaviour, IOccupant {
 			currentHex = value;
 
 			currentHex.Occupant = this;
+		}
+	}
+
+	public Team Team {
+		get {
+			return data.Team;
 		}
 	}
 
@@ -94,13 +123,7 @@ public class Contestant : MonoBehaviour, IOccupant {
 			return ball;
 		}
 		set {
-			if (value != null) {
-				ball = value;
-				ball.PickUp (this);
-			} else {
-				ball.transform.parent = null;
-				ball = null;
-			}
+			ball = value;
 		}
 	}
 		
@@ -114,6 +137,7 @@ public class Contestant : MonoBehaviour, IOccupant {
 
 		RegisterOnMoveCompleteCallback ( (c) => {
 			CheckHex(destOccupant);
+
 		} );
 	}
 
@@ -157,7 +181,7 @@ public class Contestant : MonoBehaviour, IOccupant {
 	public void ShowMovementHexes(){
 
 		GetComponent<LineRenderer> ().enabled = true;
-		moveHexesInRange = GridManager.Instance.Grid.HexesInRangeIncludesObstacles (CurrentHex, MovesRemaining);
+		moveHexesInRange = GridManager.Instance.Grid.HexesInRangeAccountingObstacles (CurrentHex, MovesRemaining);
 
 		foreach (Hex h in moveHexesInRange) {
 			h.GetComponent<MeshRenderer> ().material.color = new Color (1 / 3f, 0, 1 / 3f);
@@ -193,7 +217,7 @@ public class Contestant : MonoBehaviour, IOccupant {
 
 	void CheckHex(IOccupant o){
 		if (o != null && o is Ball) {
-			Ball = (Ball)o;
+			((Ball)o).Receive (this);
 		}
 	}
 	#endregion

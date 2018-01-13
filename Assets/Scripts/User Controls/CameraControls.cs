@@ -34,10 +34,12 @@ public class CameraControls : MonoBehaviour {
 
 		CameraHeight = cameraHeight;
 
-		MouseManager.Instance.RegisterOnSelectedCallback( (c) => {
+		/*
+		UserControlManager.Instance.RegisterOnSelectedCallback( (c) => {
 			cAuto.MoveCameraParallelToZeroPlane(c.transform.position, 0.2f);
 
 		});
+		*/
 	}
 	
 	void Update () {

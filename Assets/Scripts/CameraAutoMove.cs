@@ -17,7 +17,6 @@ public class CameraAutoMove : MonoBehaviour {
 	}
 
 	IEnumerator LerpCamera(Vector3 lookPoint, float speed){
-		
 		cc.enabled = false;
 
 		Ray r = Camera.main.ViewportPointToRay (new Vector2(0.5f, 0.5f));
@@ -32,6 +31,8 @@ public class CameraAutoMove : MonoBehaviour {
 			yield return null;
 		}
 
-		cc.enabled = true;
+		if (UserControlManager.Instance.ModeType == ControlModeEnum.Move) {
+			cc.enabled = true;
+		}
 	}
 }

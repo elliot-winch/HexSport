@@ -57,14 +57,21 @@
      <Compile Include="Assets\Scripts\Map\GridManager.cs" />
      <Compile Include="Assets\Scripts\Map\Hex.cs" />
      <Compile Include="Assets\Scripts\Map\Path.cs" />
+     <Compile Include="Assets\Scripts\Map\TargetFinder.cs" />
      <Compile Include="Assets\Scripts\Occupants\Ball.cs" />
      <Compile Include="Assets\Scripts\Occupants\Contestant\Contestant.cs" />
      <Compile Include="Assets\Scripts\Occupants\Contestant\ContestantData.cs" />
      <Compile Include="Assets\Scripts\Occupants\Contestant\Team.cs" />
+     <Compile Include="Assets\Scripts\Occupants\Goal.cs" />
+     <Compile Include="Assets\Scripts\Occupants\ICatcher.cs" />
      <Compile Include="Assets\Scripts\Occupants\IOccupant.cs" />
+     <Compile Include="Assets\Scripts\Occupants\Wall.cs" />
      <Compile Include="Assets\Scripts\PriorityQueue.cs" />
      <Compile Include="Assets\Scripts\User Controls\CameraControls.cs" />
-     <Compile Include="Assets\Scripts\User Controls\MouseManager.cs" />
+     <Compile Include="Assets\Scripts\User Controls\Modes\ControlMode.cs" />
+     <Compile Include="Assets\Scripts\User Controls\Modes\MoveMode.cs" />
+     <Compile Include="Assets\Scripts\User Controls\Modes\TargetSelectorMode.cs" />
+     <Compile Include="Assets\Scripts\User Controls\UserControlManager.cs" />
      <Compile Include="Assets\Tile.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

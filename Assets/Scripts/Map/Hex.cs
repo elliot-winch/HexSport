@@ -47,7 +47,20 @@ public class Hex : MonoBehaviour {
 				break;
 			case HexType.Wall:
 				moveCost = Mathf.Infinity;
-				Instantiate (GridManager.Instance.wallPrefab, Position, Quaternion.identity, transform);
+				GameObject wallObj = Instantiate (GridManager.Instance.wallPrefab, Position, Quaternion.identity, transform);
+				Wall wallComp = wallObj.GetComponent<Wall> ();
+
+				wallComp.CurrentHex = this;
+				occupant = wallComp;
+				break;
+			case HexType.Goal:
+				moveCost = Mathf.Infinity;
+				GameObject goalObj = Instantiate (GridManager.Instance.goalPrefab, Position, Quaternion.identity, transform);
+				Goal goalComp = goalObj.GetComponent<Goal> ();
+
+				goalComp.CurrentHex = this;
+				occupant = goalComp;
+				GridManager.Instance.Goals.Add (goalComp);
 				break;
 			}
 		}
@@ -59,12 +72,13 @@ public class Hex : MonoBehaviour {
 		}
 		set {
 			occupant = value;
+			Debug.Log (Position + " " + occupant);
 		}
 	}
 
 	public bool OccupantBlocksMovement {
 		get {
-			return Occupant != null && Occupant is Contestant;
+			return Occupant != null && (Occupant is Contestant || Occupant is Wall);
 		}
 	}
 
@@ -78,5 +92,6 @@ public class Hex : MonoBehaviour {
 public enum HexType {
 	Reg,
 	Wall,
-	Speed
+	Speed,
+	Goal
 }

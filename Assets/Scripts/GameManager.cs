@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,12 +17,12 @@ public class GameManager : MonoBehaviour {
 	public GameObject testContestant;
 	public GameObject ballPrefab;
 
-	List<Team> teamsInMatch;
+	Dictionary<Team, int> teamsInMatch;
 	int currentTeamIndex;
 
 	public Team CurrentTeam {
 		get {
-			return teamsInMatch [(currentTeamIndex % teamsInMatch.Count)];
+			return teamsInMatch.Keys.ToArray() [(currentTeamIndex % teamsInMatch.Keys.Count)];
 		} 
 	}
 
@@ -33,13 +34,13 @@ public class GameManager : MonoBehaviour {
 
 		instance = this;
 
-		teamsInMatch = new List<Team> ();
+		teamsInMatch = new Dictionary<Team, int> ();
 
-		teamsInMatch.Add (new Team ("Team 1", new List<ContestantData>() { new ContestantData(), new ContestantData() }, Color.red));
-		teamsInMatch.Add (new Team ("Team 2", new List<ContestantData>() { new ContestantData(), new ContestantData() }, Color.blue));
+		teamsInMatch[new Team ("Team 1", new List<ContestantData>() { new ContestantData(), new ContestantData(), new ContestantData()}, Color.red)] = 0;
+		teamsInMatch[new Team ("Team 2", new List<ContestantData>() { new ContestantData(), new ContestantData(), new ContestantData()}, Color.blue)] = 0;
 
 		int i = 0;
-		foreach (Team t in teamsInMatch) {
+		foreach (Team t in teamsInMatch.Keys.ToList()) {
 			foreach (ContestantData d in t.Contestants) {
 				d.Team = t;
 				SpawnContestant (d, GridManager.Instance.Grid.TileAt (2 * i, - 2 * i).GetComponent<Hex> ());
@@ -47,14 +48,13 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 
-		Hex ballStartHex = GridManager.Instance.Grid.TileAt (5, -5).GetComponent<Hex>();
-		GameObject ball = Instantiate (ballPrefab, Vector3.zero, Quaternion.identity);
-
-		ball.GetComponent<Ball> ().CurrentHex = ballStartHex;
+		SpawnBall ();
 
 		CheckStartOfTurn ();
 
-
+		//temp!
+		GridManager.Instance.Grid.TileAt (15, -16).GetComponent<Hex> ().Type = HexType.Goal;
+		((Goal)GridManager.Instance.Grid.TileAt (15, -16).GetComponent<Hex> ().Occupant).Team = CurrentTeam;
 	}
 	
 	void SpawnContestant (ContestantData d, Hex startingHex) {
@@ -72,6 +72,19 @@ public class GameManager : MonoBehaviour {
 		d.Contestant = c;
 	}
 
+	public void Score(Team t){
+		if (teamsInMatch.ContainsKey (t)) {
+			teamsInMatch [t]++;
+		}
+	}
+
+	public void SpawnBall(){
+		Hex ballStartHex = GridManager.Instance.Grid.TileAt (5, -5).GetComponent<Hex>();
+		GameObject ball = Instantiate (ballPrefab, Vector3.zero, Quaternion.identity);
+
+		ball.GetComponent<Ball> ().CurrentHex = ballStartHex;
+	}
+
 	public bool CheckStartOfTurn(){
 
 		foreach (ContestantData c in CurrentTeam.Contestants) {
@@ -83,6 +96,8 @@ public class GameManager : MonoBehaviour {
 
 		currentTeamIndex++;
 
+		UserControlManager.Instance.ModeType = ControlModeEnum.Move;
+
 		foreach (ContestantData c in CurrentTeam.Contestants) {
 			c.Contestant.OnTurnBegin (c.Contestant);
 		}
@@ -90,80 +105,6 @@ public class GameManager : MonoBehaviour {
 		return true;
 	}
 
-	public List<Contestant> GetValidTargets(Contestant con, int range, bool friendlyTeam, Func<bool> additionalChecks = null){
 
-		List<Contestant> possibleTargets = new List<Contestant> ();
-		List<Contestant> targets = new List<Contestant> ();
 
-		if (friendlyTeam) {
-			foreach(ContestantData cd in con.Data.Team.Contestants){
-				if (cd == con.Data) {
-					continue;
-				}
-
-				possibleTargets.Add (cd.Contestant);
-			}
-		} else {
-			foreach (Team t in teamsInMatch) {
-				if (t == con.Data.Team) {
-					continue;
-				}
-
-				foreach (ContestantData cd in t.Contestants) {
-					possibleTargets.Add (cd.Contestant);
-				}
-			}
-		}
-
-		foreach (Contestant posTarg in possibleTargets) {
-
-			//Range check
-			int cubeDist = Grid.Distance (con.CurrentHex.GetComponent<Tile> (), posTarg.CurrentHex.GetComponent<Tile> ());
-			Debug.Log ("Cube Dist: " + cubeDist);
-
-			if (cubeDist > range) {
-				continue;
-			}
-				
-			if(DrawLineOnGrid(con.CurrentHex, posTarg.CurrentHex)){
-				targets.Add (posTarg);
-				Debug.Log (posTarg.name);
-
-			}
-		}
-
-		return targets;
-	}
-
-	//Takes blocked line of sight into account
-	public bool DrawLineOnGrid(Hex start, Hex end,int cubeDist = -1){
-		List<Hex> unused;
-		return DrawLineOnGrid (start, end, out unused, cubeDist);
-	}
-
-	public bool DrawLineOnGrid(Hex start, Hex end, out List<Hex> hexes, int cubeDist = -1){
-		if (cubeDist < 0) {
-			cubeDist = Grid.Distance (start.GetComponent<Tile> (), end.GetComponent<Tile> ());
-		}
-
-		hexes = new List<Hex>();
-
-		RaycastHit hitInfo;
-		for (int i = 0; i <= cubeDist; i++) {
-			Vector3 pos = Vector3.Lerp(start.Position, end.Position, (1f/cubeDist) * i) + new Vector3 (0, 0.1f, 0);
-
-			if (Physics.Raycast (pos, -Vector3.up, out hitInfo, 1<<LayerMask.NameToLayer("Hex")) && hitInfo.collider.tag == "Hex") {
-				Hex h = hitInfo.collider.GetComponent<Hex> ();
-
-				if (h.OccupantBlocksLineOfSight == false) {
-					hexes.Add (h);
-				}
-			} else {
-				hexes = null;
-				return false;
-			}
-		}
-
-		return true;
-	}
 }

@@ -29,4 +29,30 @@ public class ContestantData {
 			}
 		}
 	}
+
+	//Stats
+	float dexerity;
+	float agility;
+	float strength;
+	float firearms;
+	float health;
+
+	public float Dexerity {
+		get {
+			return dexerity;
+		}
+	}
+
+	public ContestantData(){
+		this.dexerity = 6f;
+		this.agility = 3f;
+	}
+
+	public ContestantData(Contestant con, Team team, float dex, float agility){
+		this.contestant = con;
+		this.team = team;
+		this.dexerity = dex;
+		this.agility = agility;
+	}
+
 }

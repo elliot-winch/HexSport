@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MouseManager : MonoBehaviour {
+public class UserControlManager : MonoBehaviour {
 
-	static MouseManager instance;
+	static UserControlManager instance;
 
-	public static MouseManager Instance {
+	public static UserControlManager Instance {
 		get {
 			return instance;
 		}
@@ -17,114 +18,72 @@ public class MouseManager : MonoBehaviour {
 	public Button throwButton;
 	public KeyCode selectNextKey = KeyCode.Tab;
 
-	ControlMode mode = ControlMode.Observe;
-	Action<Hex> onMouseOver;
-	Action onMouseNotOnMap;
-	Action<Hex> onLeftClick;
-	Action<Hex> onRightClick;
-	Action onTabPressed;
-	Action onModeChanged;
+	//References
+	CameraControls camCont;
+	CameraAutoMove camAuto;
 
+	//Mode and input callbacks
+	Hex prevMouseHex;
+	ControlMode[] controlModes;
+	ControlMode currentControlMode;
+	ControlModeEnum modeType;
+
+	//Movement vairables
 	Action<Contestant> onSelected;
-		
 	Contestant selected;
 	GameObject hexOutliner;
-	Hex prevMouseHex;
 	Vector3 outlinerOffset = new Vector3(0f, 0.01f, 0.0f);
 
-	List<Contestant> targets;
-
-	public ControlMode Mode {
+	public ControlModeEnum ModeType {
 		get {
-			return mode;
+			return modeType;
 		}
 		set {
-			if (mode == value) {
-				return;
+
+			if (currentControlMode != null && currentControlMode.OnModeChanged != null) {
+				currentControlMode.OnModeChanged ();
 			}
 
-			if (onModeChanged != null) {
-				onModeChanged ();
-			}
+			modeType = value;
 
-			mode = value;
+			switch(modeType) {
 
-			switch (mode) {
+			case ControlModeEnum.Move:
+				if (selected != null) {
+					selected.ShowMovementHexes ();
+					camAuto.MoveCameraParallelToZeroPlane (selected.CurrentHex.Position, 0.2f);
+				}
 
-			case ControlMode.Move:
-				onMouseOver = (mouseHex) => {
-					//Mouse UI: Path Line and Cursor
-					MovementMouseUI (mouseHex);
-				};
+				currentControlMode = controlModes[(int)ControlModeEnum.Move];
 
-				onMouseNotOnMap = () => {
-					hexOutliner.SetActive (false);
-					if (selected != null) {
-						selected.GetComponent<LineRenderer> ().enabled = false;
-					}
-				};
-
-				onLeftClick = (hex) => {
-					SelectHex (hex);
-				};
-
-				onRightClick = (hex) => {
-					MoveSelectedToHex (hex);
-				};
-
-				onTabPressed = () => {
-					if (selected != null) {
-						SelectNext (selected);
-					} else {
-						StartCoroutine (SelectContestant (GameManager.Instance.CurrentTeam.Contestants [0].Contestant));
-					}
-				};
-
-				onModeChanged = () => {
-					if(selected != null){
-						selected.HideMovementHexes();
-						selected.GetComponent<LineRenderer>().enabled = false;
-					}
-				};
 				break;
-			case ControlMode.Throw:
 
-				targets = GameManager.Instance.GetValidTargets (selected, 4 /*selected.range*/, true);
-
-				onMouseOver = (mouseHex) => {
-					//Mouse UI: Path Line and Cursor
-					hexOutliner.SetActive (true);
-					ThrowMouseUI (mouseHex);
+			case ControlModeEnum.Throw:
+				
+				currentControlMode = new TargetSelectorMode<ICatcher> (
+					selected,
+					ThrowToTarget,
+					(int)(selected.Data.Dexerity * 2),
+					true
+				);
+				
+					break;
+			case ControlModeEnum.SwipeBall: 
+				
+				Func<Contestant, bool> checkForBall = (Contestant con) => {
+					return con.Ball != null;
 				};
 
-				onMouseNotOnMap = () => {
-					hexOutliner.SetActive (false);
-					ClearThrowLineUI ();
-				};
+				currentControlMode = new TargetSelectorMode<Contestant> (
+					selected, 
+					SwipeBall,
+					1,
+					false,
+					checkForBall
+				);
 
-				onLeftClick = (hex) => {
-					ThrowTo (hex);
-				};
-
-				onRightClick = (hex) => {
-					Mode = ControlMode.Move;
-				};
-
-				onTabPressed = () => {
-					//will cycle through targets
-				};
-
-				onModeChanged = () => {
-					ClearThrowLineUI();
-				}; 
-				break;
+					break;
 			}
-		}
-	}
-
-	public Action<Contestant> OnSelected {
-		get {
-			return onSelected;
 		}
 	}
 
@@ -135,7 +94,9 @@ public class MouseManager : MonoBehaviour {
 
 		instance = this;
 
-		Mode = ControlMode.Move;
+		camCont = Camera.main.GetComponent<CameraControls> ();
+		camAuto = Camera.main.GetComponent<CameraAutoMove> ();
+
 	
 		hexOutliner = new GameObject ();
 		Vector3[] verts = new Vector3[6];
@@ -178,6 +139,47 @@ public class MouseManager : MonoBehaviour {
 		hexOutliner.AddComponent<MeshRenderer> ().material.color = Color.green;
 
 		hexOutliner.transform.Rotate (new Vector3 (270, 0, 0));
+
+		//Control Modes
+		controlModes = new ControlMode[6];
+
+		controlModes [(int)ControlModeEnum.Move] = new ControlMode (
+			onMouseOver: (hex) => {
+				MovementMouseUI (hex);
+			},
+
+			onMouseNotOverMap: () => {
+				DisableMoveUI();
+			},
+
+			onLeftClick: (hex) => {
+				SelectHex (hex);
+			},
+
+			onRightClick : (hex) => {
+				MoveSelectedToHex (hex);
+			},
+
+			onTabPressed: () => {
+				if (selected != null) {
+					SelectNext (selected);
+				} else {
+					StartCoroutine (SelectContestant (GameManager.Instance.CurrentTeam.Contestants [0].Contestant));
+				}
+			},
+
+			onModeChanged: () => {
+				if(selected != null){
+					selected.HideMovementHexes();
+					selected.GetComponent<LineRenderer>().enabled = false;
+				}
+				DisableMoveUI();
+			}
+		);
+
+		ModeType = ControlModeEnum.Move;
+		Debug.Log (modeType);
+		Debug.Log (currentControlMode);
 	}
 
 	void Update () {
@@ -192,40 +194,40 @@ public class MouseManager : MonoBehaviour {
 			if (hitInfo.collider.tag == "Hex") {
 				mouseHex = hitInfo.collider.GetComponent<Hex> ();
 			} else {
-				onMouseNotOnMap ();
+				currentControlMode.OnMouseNotOverMap ();
 				return;
 			}
 
 			if (mouseHex != null && prevMouseHex != mouseHex) {
-				onMouseOver (mouseHex);
+				currentControlMode.OnMouseOver (mouseHex);
 				prevMouseHex = mouseHex;
 			}
 
 		} else {
-			onMouseNotOnMap ();
+			currentControlMode.OnMouseNotOverMap ();
 		}
 
 		//Left Click
 		if (Input.GetMouseButtonDown (0) && hitInfo.collider != null) {
 			if (hitInfo.collider.tag == "Hex") {
-				onLeftClick (hitInfo.collider.GetComponent<Hex> ());
+				currentControlMode.OnLeftClick (hitInfo.collider.GetComponent<Hex> ());
 			}
 		}
 
 		//Right Click
 		if (Input.GetMouseButtonDown (1) && hitInfo.collider != null) {
 			if (hitInfo.collider.tag == "Hex") {
-				onRightClick(hitInfo.collider.GetComponent<Hex>());
+				currentControlMode.OnRightClick(hitInfo.collider.GetComponent<Hex>());
 			}
 		}
 
 		//Select Next
 		if(Input.GetKeyDown(selectNextKey)){
-			onTabPressed ();
+			currentControlMode.OnTabPressed ();
 		}
 	}
 
-	#region private methods - move mode
+	#region internal methods - move mode
 	void SelectHex(Hex h){
 		//Temp - non team members cannot be selected
 		//Create two levels of selection - view and control
@@ -247,7 +249,7 @@ public class MouseManager : MonoBehaviour {
 
 		selected = c;
 
-		onSelected (selected);
+		camAuto.MoveCameraParallelToZeroPlane (selected.CurrentHex.Position, 0.2f);
 
 		while (selected.Moving) {
 			yield return null;
@@ -301,59 +303,59 @@ public class MouseManager : MonoBehaviour {
 			}
 		}
 	}
-	#endregion
 
-	#region private methods - throw mode
-	void ThrowTo(Hex h){
-		if(h.Occupant != null && h.Occupant is Contestant){
-			Contestant target = (Contestant)h.Occupant;
-
-			if (targets.Contains (target)) {
-				selected.Ball.Throw (selected, (Contestant)h.Occupant);
-			}
-		}
-	}
-
-	List<Hex> prevHexLine;
-	void ThrowMouseUI(Hex h){
-		if (h.Occupant != null 
-			&& h.Occupant is Contestant
-			&& targets.Contains((Contestant)h.Occupant)) {
-
-			hexOutliner.GetComponent<MeshRenderer> ().material.color = Color.green;
-
-			List<Hex> hexesInLine;
-			GameManager.Instance.DrawLineOnGrid (selected.CurrentHex, h.Occupant.CurrentHex, out hexesInLine);
-
-			ClearThrowLineUI ();
-
-			foreach (Hex j in hexesInLine) {
-				j.GetComponent<MeshRenderer> ().material.color = new Color (1 / 3f, 1 / 3f, 0);
-			}
-
-			prevHexLine = hexesInLine;
-		} else {
-			hexOutliner.GetComponent<MeshRenderer> ().material.color = Color.red;
-
-			ClearThrowLineUI ();
-		}
-		hexOutliner.transform.position = h.Position + outlinerOffset;
-	}
-
-	void ClearThrowLineUI(){
-		if (prevHexLine != null) {
-			foreach (Hex j in prevHexLine) {
-				j.GetComponent<MeshRenderer> ().material.color = new Color (1f, 1f, 1f);
-			}
-
-			prevHexLine = null;
+	void DisableMoveUI(){
+		hexOutliner.SetActive (false);
+		if (selected != null) {
+			selected.GetComponent<LineRenderer> ().enabled = false;
 		}
 	}
 	#endregion
 
+	#region internal methods - throw mode
+	void ThrowToTarget(){
+		TargetSelectorMode<ICatcher> tsm = ((TargetSelectorMode<ICatcher>)currentControlMode);
 
-	public void SwitchModes(int modeNum){
-		Mode = (ControlMode)modeNum;
+		ICatcher currentTarget = tsm.CurrentTarget;
+		List<ICatcher> targets = tsm.Targets;
+
+		if(currentTarget != null){
+			ICatcher catcher = (ICatcher)currentTarget;
+
+			if (targets.Contains (catcher)) {
+				selected.Ball.RegisterOnFinishedLaunch (() => {
+					SwitchMode(ControlModeEnum.Move);
+				});
+
+				selected.Ball.ThrowToCatcher (selected, catcher, tsm.TargetProbabilities[catcher]);
+
+			}
+		}
+	}
+	#endregion
+
+	#region Swipe - temp probs
+	public void SwipeBall(){
+		Contestant target = ((TargetSelectorMode<Contestant>)currentControlMode).CurrentTarget;
+
+		if (target.Ball == null) {
+			Debug.LogError ("Trying to swipe ball that isn't held");
+		}
+
+		selected.Ball = target.Ball;
+
+		selected.Ball.Release (target);
+		selected.Ball.Receive (selected);
+
+	}
+	#endregion
+
+	public void SwitchMode(int modeNum){
+		SwitchMode((ControlModeEnum)modeNum);
+	}
+
+	public void SwitchMode(ControlModeEnum mode){
+		ModeType = mode;
 	}
 
 	public void SelectNext(Contestant c){
@@ -368,8 +370,10 @@ public class MouseManager : MonoBehaviour {
 	}
 }
 
-public enum ControlMode {
+public enum ControlModeEnum {
 	Observe,
 	Move,
-	Throw
+	Throw,
+	SwipeBall,
+	Attack
 }

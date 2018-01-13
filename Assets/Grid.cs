@@ -22,10 +22,10 @@ public class Grid : MonoBehaviour {
 	public Material lineMaterial;
 
 	//Internal variables
-	private Dictionary<string, Tile> grid = new Dictionary<string, Tile>();
-	private Dictionary<Tile, Hex> hexes = new Dictionary<Tile, Hex> ();
-	private Mesh hexMesh = null;
-	private CubeIndex[] directions = 
+	internal Dictionary<string, Tile> grid = new Dictionary<string, Tile>();
+	internal Dictionary<Tile, Hex> hexes = new Dictionary<Tile, Hex> ();
+	internal Mesh hexMesh = null;
+	internal CubeIndex[] directions = 
 		new CubeIndex[] {
 			new CubeIndex(1, -1, 0), 
 			new CubeIndex(1, 0, -1), 
@@ -135,7 +135,7 @@ public class Grid : MonoBehaviour {
 	}
 
 	//BreathFirstSearch includes obstaclues
-	public List<Hex> HexesInRangeIncludesObstacles(Hex center, float range){
+	public List<Hex> HexesInRangeAccountingObstacles(Hex center, float range){
 		List<Hex> inRange = new List<Hex> ();
 		List<Hex> openSet = new List<Hex> ();
 		Dictionary<Hex, float> distanceFromCenter = new Dictionary<Hex, float> ();
@@ -208,7 +208,7 @@ public class Grid : MonoBehaviour {
 	#endregion
 
 	#region Private Methods
-	private void Awake() {
+	internal void Awake() {
 		if(!inst)
 			inst = this;
 
@@ -216,12 +216,12 @@ public class Grid : MonoBehaviour {
 		GenerateGrid();
 	}
 
-	private void GetMesh() {
+	internal void GetMesh() {
 		hexMesh = null;
 		Tile.GetHexMesh(hexRadius, hexOrientation, ref hexMesh);
 	}
 
-	private void GenHexShape() {
+	internal void GenHexShape() {
 		Debug.Log ("Generating hexagonal shaped grid...");
 
 		Tile tile;
@@ -252,7 +252,7 @@ public class Grid : MonoBehaviour {
 		}
 	}
 
-	private void GenRectShape() {
+	internal void GenRectShape() {
 		Debug.Log ("Generating rectangular shaped grid...");
 
 		Tile tile;
@@ -289,7 +289,7 @@ public class Grid : MonoBehaviour {
 		}
 	}
 
-	private void GenParrallShape() {
+	internal void GenParrallShape() {
 		Debug.Log ("Generating parrellelogram shaped grid...");
 
 		Tile tile;
@@ -316,7 +316,7 @@ public class Grid : MonoBehaviour {
 		}
 	}
 
-	private void GenTriShape() {
+	internal void GenTriShape() {
 		Debug.Log ("Generating triangular shaped grid...");
 		
 		Tile tile;
@@ -345,7 +345,7 @@ public class Grid : MonoBehaviour {
 		}
 	}
 
-	private Tile CreateHexGO(Vector3 postion, string name) {
+	internal Tile CreateHexGO(Vector3 postion, string name) {
 		GameObject go = new GameObject(name, typeof(MeshFilter), typeof(MeshRenderer), typeof(Tile));
 
 		if(addColliders)
@@ -379,7 +379,7 @@ public class Grid : MonoBehaviour {
 			lines.SetColors(Color.black, Color.black);
 			lines.material = lineMaterial;
 
-			lines.SetVertexCount(7);
+			lines.positionCount = 7;
 
 			for(int vert = 0; vert <= 6; vert++)
 				lines.SetPosition(vert, Tile.Corner(tile.transform.position, hexRadius, vert, hexOrientation));
@@ -393,7 +393,7 @@ public class Grid : MonoBehaviour {
 		return tile;
 	}
 
-	private void AddToGrid(string s, Tile t){
+	internal void AddToGrid(string s, Tile t){
 		grid [s] = t;
 		hexes[t] = t.GetComponent<Hex> ();
 	}
