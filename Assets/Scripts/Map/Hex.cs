@@ -6,8 +6,8 @@ public class Hex : MonoBehaviour {
 
 	float moveCost = 1f;
 	IOccupant occupant;
-	Vector3 cubeIndex;
 	HexType type;
+	GameObject spawnedObject;
 
 	public Vector3 Position {
 		get {
@@ -15,18 +15,21 @@ public class Hex : MonoBehaviour {
 		}
 	}
 
-	public Vector3 CubeIndex {
+	public CubeIndex CubeIndex {
 		get {
-			return cubeIndex;
-		}
-		set {
-			cubeIndex = value;
+			return GetComponent<Tile>().index;
 		}
 	}
 
 	public float MoveCost{
 		get {
 			return moveCost;
+		}
+	}
+
+	public GameObject SpawnedObject {
+		get {
+			return spawnedObject;
 		}
 	}
 
@@ -43,20 +46,20 @@ public class Hex : MonoBehaviour {
 				break;
 			case HexType.Speed:
 				moveCost = 0.5f;
-				GetComponent<MeshRenderer> ().material.color = Color.blue;
+				GetComponent<MeshRenderer> ().material = GridManager.Instance.speedHexMat;
 				break;
 			case HexType.Wall:
 				moveCost = Mathf.Infinity;
-				GameObject wallObj = Instantiate (GridManager.Instance.wallPrefab, Position, Quaternion.identity, transform);
-				Wall wallComp = wallObj.GetComponent<Wall> ();
+				spawnedObject = Instantiate (GridManager.Instance.wallPrefab, Position, Quaternion.identity, transform);
+				Wall wallComp = spawnedObject.GetComponent<Wall> ();
 
 				wallComp.CurrentHex = this;
 				occupant = wallComp;
 				break;
 			case HexType.Goal:
 				moveCost = Mathf.Infinity;
-				GameObject goalObj = Instantiate (GridManager.Instance.goalPrefab, Position, Quaternion.identity, transform);
-				Goal goalComp = goalObj.GetComponent<Goal> ();
+				spawnedObject = Instantiate (GridManager.Instance.goalPrefab, Position, Quaternion.identity, transform);
+				Goal goalComp = spawnedObject.GetComponent<Goal> ();
 
 				goalComp.CurrentHex = this;
 				occupant = goalComp;

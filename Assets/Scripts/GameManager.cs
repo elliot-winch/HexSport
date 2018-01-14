@@ -20,10 +20,18 @@ public class GameManager : MonoBehaviour {
 	Dictionary<Team, int> teamsInMatch;
 	int currentTeamIndex;
 
+	List<Hex> ballStartHexes;
+
 	public Team CurrentTeam {
 		get {
-			return teamsInMatch.Keys.ToArray() [(currentTeamIndex % teamsInMatch.Keys.Count)];
+			return TeamsInMatch [(currentTeamIndex % teamsInMatch.Keys.Count)];
 		} 
+	}
+
+	public Team[] TeamsInMatch {
+		get {
+			return teamsInMatch.Keys.ToArray ();
+		}
 	}
 
 	// Use this for initialization
@@ -39,28 +47,66 @@ public class GameManager : MonoBehaviour {
 		teamsInMatch[new Team ("Team 1", new List<ContestantData>() { new ContestantData(), new ContestantData(), new ContestantData()}, Color.red)] = 0;
 		teamsInMatch[new Team ("Team 2", new List<ContestantData>() { new ContestantData(), new ContestantData(), new ContestantData()}, Color.blue)] = 0;
 
-		int i = 0;
-		foreach (Team t in teamsInMatch.Keys.ToList()) {
-			foreach (ContestantData d in t.Contestants) {
-				d.Team = t;
-				SpawnContestant (d, GridManager.Instance.Grid.TileAt (2 * i, - 2 * i).GetComponent<Hex> ());
-				i++;
+		ballStartHexes = new List<Hex> ();
+		for(int k = 1; k <= 9; k++){
+			ballStartHexes.Add(GridManager.Instance.Grid.TileAt(k * 2, -15 - k).GetComponent<Hex>());
+		}
+
+		//Spawn Pitch which reads from file when i have more than one pitch
+		Grid currentGrid = GridManager.Instance.Grid;
+
+		Hex[] goalHexes = new Hex[] { 
+			currentGrid.TileAt(3, -5).GetComponent<Hex>(), 
+			currentGrid.TileAt(10, -6).GetComponent<Hex>(), 
+			currentGrid.TileAt(17, -12).GetComponent<Hex>(), 
+			currentGrid.TileAt(3, -28).GetComponent<Hex>(), 
+			currentGrid.TileAt(10, -34).GetComponent<Hex>(), 
+			currentGrid.TileAt(17, -35).GetComponent<Hex>(), 
+		};
+
+		for (int i = 0; i < goalHexes.Length; i++) {
+			goalHexes [i].Type = HexType.Goal;
+
+			if (i < goalHexes.Length / 2) {
+				((Goal)goalHexes [i].Occupant).Team = TeamsInMatch [0];
+				goalHexes [i].transform.Rotate (new Vector3 (0f, 180f, 0f));
+			} else {
+				((Goal)goalHexes [i].Occupant).Team = TeamsInMatch [1];
 			}
 		}
+
+		SpawnLineOf(HexType.Wall, currentGrid.TileAt(3, -14).GetComponent<Hex>(), currentGrid.TileAt(8, -14).GetComponent<Hex>());
+		SpawnLineOf(HexType.Wall, currentGrid.TileAt(17, -21).GetComponent<Hex>(), currentGrid.TileAt(12, -16).GetComponent<Hex>());
+		SpawnLineOf(HexType.Wall, currentGrid.TileAt(3, -19).GetComponent<Hex>(), currentGrid.TileAt(8, -24).GetComponent<Hex>());
+		SpawnLineOf(HexType.Wall, currentGrid.TileAt(17, -26).GetComponent<Hex>(), currentGrid.TileAt(12, -26).GetComponent<Hex>());
+
+		SpawnLineOf(HexType.Speed, currentGrid.TileAt(1, -20).GetComponent<Hex>(), currentGrid.TileAt(1, -11).GetComponent<Hex>());
+		SpawnLineOf(HexType.Speed, currentGrid.TileAt(19, -29).GetComponent<Hex>(), currentGrid.TileAt(19, -20).GetComponent<Hex>());
+		SpawnLineOf(HexType.Speed, currentGrid.TileAt(10, -23).GetComponent<Hex>(), currentGrid.TileAt(10, -27).GetComponent<Hex>());
+		SpawnLineOf(HexType.Speed, currentGrid.TileAt(10, -13).GetComponent<Hex>(), currentGrid.TileAt(10, -17).GetComponent<Hex>());
+
+		TeamsInMatch [0].Contestants [0].Team = TeamsInMatch [0];
+		SpawnContestant (TeamsInMatch[0].Contestants[0], GridManager.Instance.Grid.TileAt (2, -7).GetComponent<Hex> ());
+		TeamsInMatch [0].Contestants [1].Team = TeamsInMatch [0];
+		SpawnContestant (TeamsInMatch[0].Contestants[1], GridManager.Instance.Grid.TileAt (10, -11).GetComponent<Hex> ());
+		TeamsInMatch [0].Contestants [2].Team = TeamsInMatch [0];
+		SpawnContestant (TeamsInMatch[0].Contestants[2], GridManager.Instance.Grid.TileAt (18, -15).GetComponent<Hex> ());
+
+		TeamsInMatch [1].Contestants [0].Team = TeamsInMatch [1];
+		SpawnContestant (TeamsInMatch[1].Contestants[0], GridManager.Instance.Grid.TileAt (2, -25).GetComponent<Hex> ());
+		TeamsInMatch [1].Contestants [1].Team = TeamsInMatch [1];
+		SpawnContestant (TeamsInMatch[1].Contestants[1], GridManager.Instance.Grid.TileAt (10, -29).GetComponent<Hex> ());
+		TeamsInMatch [1].Contestants [2].Team = TeamsInMatch [1];
+		SpawnContestant (TeamsInMatch[1].Contestants[2], GridManager.Instance.Grid.TileAt (18, -33).GetComponent<Hex> ());
 
 		SpawnBall ();
 
 		CheckStartOfTurn ();
 
-		//temp!
-		GridManager.Instance.Grid.TileAt (15, -16).GetComponent<Hex> ().Type = HexType.Goal;
-		((Goal)GridManager.Instance.Grid.TileAt (15, -16).GetComponent<Hex> ().Occupant).Team = CurrentTeam;
 	}
 	
 	void SpawnContestant (ContestantData d, Hex startingHex) {
 		//prefab is temp, will load prefab of correct type
-		//positions will load from map data
-
 		GameObject go = Instantiate (testContestant, startingHex.Position , Quaternion.identity, transform);
 		go.GetComponent<MeshRenderer> ().material.color = d.Team.Color;	
 
@@ -79,7 +125,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void SpawnBall(){
-		Hex ballStartHex = GridManager.Instance.Grid.TileAt (5, -5).GetComponent<Hex>();
+
+		Hex ballStartHex = ballStartHexes [UnityEngine.Random.Range (0, ballStartHexes.Count)];
 		GameObject ball = Instantiate (ballPrefab, Vector3.zero, Quaternion.identity);
 
 		ball.GetComponent<Ball> ().CurrentHex = ballStartHex;
@@ -105,6 +152,14 @@ public class GameManager : MonoBehaviour {
 		return true;
 	}
 
+	void SpawnLineOf(HexType type, Hex start, Hex end){
 
+		List<Hex> hexes;
+		GridManager.Instance.DrawLineOnGrid (start, end, out hexes);
+
+		foreach (Hex h in hexes) {
+			h.Type = type;
+		}
+	}
 
 }

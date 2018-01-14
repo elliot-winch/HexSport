@@ -6,6 +6,8 @@ public class GridManager : MonoBehaviour {
 
 	public GameObject wallPrefab;
 	public GameObject goalPrefab;
+	public Material lineMaterial;
+	public Material speedHexMat;
 	public int gridLength = 30;
 	public int gridWidth = 20;
 
@@ -45,17 +47,11 @@ public class GridManager : MonoBehaviour {
 		grid.mapShape = MapShape.Rectangle;
 		grid.mapWidth = gridWidth;
 		grid.mapHeight = gridLength;
+		grid.lineMaterial = lineMaterial;
 
 		grid.GenerateGrid ();
 
 		pitchObjects = new List<IOccupant> ();
-
-		List<Hex> wall;
-		DrawLineOnGrid (Grid.TileAt(8, -10).GetComponent<Hex>(), Grid.TileAt(10, -5).GetComponent<Hex>(), out wall);
-
-		foreach (Hex h in wall) {
-			h.Type = HexType.Wall;
-		}
 	}
 		
 	//Takes blocked line of sight into account

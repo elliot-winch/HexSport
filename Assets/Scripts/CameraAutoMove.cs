@@ -8,15 +8,25 @@ public class CameraAutoMove : MonoBehaviour {
 
 	Plane zeroPlane = new Plane(Vector3.up, Vector3.zero);
 
+	Coroutine running;
+
 	void Start(){
 		cc = GetComponent<CameraControls> ();
 	}
 
 	public void MoveCameraParallelToZeroPlane(Vector3 lookPoint, float speed){
-		StartCoroutine (LerpCamera (lookPoint, speed));
+		running = StartCoroutine (LerpCamera (lookPoint, speed));
+	}
+
+	public void CancelAutoMove(){
+		StopCoroutine (running);
 	}
 
 	IEnumerator LerpCamera(Vector3 lookPoint, float speed){
+		if (running != null) {
+			CancelAutoMove ();
+		}
+
 		cc.enabled = false;
 
 		Ray r = Camera.main.ViewportPointToRay (new Vector2(0.5f, 0.5f));

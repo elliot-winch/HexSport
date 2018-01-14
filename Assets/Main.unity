@@ -283,8 +283,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallPrefab: {fileID: 1440822806569416, guid: f791a188c5b2f0245b4df35df08dcbf3, type: 2}
   goalPrefab: {fileID: 1435081016228102, guid: 5e79c3edd10eb4047be82c09e73095d1, type: 2}
-  gridLength: 30
-  gridWidth: 20
+  lineMaterial: {fileID: 2100000, guid: a2bb29413886117438d548505a01b202, type: 2}
+  speedHexMat: {fileID: 2100000, guid: 3d0b0668309cf16449a6da1840030c96, type: 2}
+  gridLength: 31
+  gridWidth: 21
 --- !u!114 &598494248
 MonoBehaviour:
   m_ObjectHideFlags: 0

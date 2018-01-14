@@ -79,7 +79,7 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 
 
 	//UI
-	List<Hex> prevHexLine;
+	Dictionary<Hex, GameObject> hexLine;
 
 	internal void LineMouseUI(Contestant selected, Hex h){
 		ClearLineUI ();
@@ -87,20 +87,21 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 		List<Hex> hexesInLine;
 		GridManager.Instance.DrawLineOnGrid (selected.CurrentHex, h.Occupant.CurrentHex, out hexesInLine);
 
-		foreach (Hex j in hexesInLine) {
-			j.GetComponent<MeshRenderer> ().material.color = Color.cyan;
-		}
+		hexLine = new Dictionary<Hex, GameObject> ();
 
-		prevHexLine = hexesInLine;
+		foreach (Hex j in hexesInLine) {
+			hexLine[j] = UserControlManager.Instance.SpawnUIGameObject (h);
+			hexLine[j].GetComponent<MeshRenderer>().material.color = new Color(2/3f, 0, 2/3f);
+		}
 	}
 
 	internal void ClearLineUI(){
-		if (prevHexLine != null) {
-			foreach (Hex j in prevHexLine) {
-				j.GetComponent<MeshRenderer> ().material.color = new Color (1f, 1f, 1f);
+		if (hexLine != null) {
+			foreach (Hex j in hexLine.Keys) {
+				MonoBehaviour.Destroy (hexLine [j]);
 			}
 
-			prevHexLine = null;
+			hexLine = null;
 		}
 	}
 }

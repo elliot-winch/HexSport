@@ -43,6 +43,12 @@ public class Goal : MonoBehaviour, ICatcher {
 		set {
 			if(team == null){
 				team = value;
+
+				MeshRenderer[] mrs = GetComponentsInChildren<MeshRenderer> ();
+
+				foreach (MeshRenderer mr in mrs) {
+					mr.material.color = team.Color;
+				}
 			}
 		}
 	}

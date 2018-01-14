@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,7 @@ public class Contestant : MonoBehaviour, ICatcher {
 
 	bool moving = false;
 	float movesRemaining;
-	List<Hex> moveHexesInRange;
+	Dictionary<Hex, GameObject> moveHexesInRange;
 	IOccupant destOccupant;
 
 	ContestantData data;
@@ -45,10 +46,6 @@ public class Contestant : MonoBehaviour, ICatcher {
 			movesRemaining = value;
 
 			GameManager.Instance.CheckStartOfTurn ();
-
-			if (movesRemaining <= 0) {
-				UserControlManager.Instance.SelectNext (this);
-			}
 		}
 	}
 
@@ -103,7 +100,7 @@ public class Contestant : MonoBehaviour, ICatcher {
 
 	public List<Hex> MoveHexesInRange {
 		get {
-			return moveHexesInRange;
+			return moveHexesInRange.Keys.ToList();
 		}
 	}
 
@@ -142,7 +139,7 @@ public class Contestant : MonoBehaviour, ICatcher {
 	}
 
 	public IEnumerator Move(Hex destHex){
-		if (moving == false && moveHexesInRange.Contains (destHex)) {
+		if (moving == false && moveHexesInRange.ContainsKey (destHex)) {
 
 			moving = true;
 			Path p = new Path (GridManager.Instance.Grid, currentHex, destHex);
@@ -180,21 +177,25 @@ public class Contestant : MonoBehaviour, ICatcher {
 
 	public void ShowMovementHexes(){
 
-		GetComponent<LineRenderer> ().enabled = true;
-		moveHexesInRange = GridManager.Instance.Grid.HexesInRangeAccountingObstacles (CurrentHex, MovesRemaining);
+		moveHexesInRange = new Dictionary<Hex, GameObject> ();
 
-		foreach (Hex h in moveHexesInRange) {
-			h.GetComponent<MeshRenderer> ().material.color = new Color (1 / 3f, 0, 1 / 3f);
+		List<Hex> hexes = GridManager.Instance.Grid.HexesInRangeAccountingObstacles (CurrentHex, MovesRemaining);
+
+		foreach (Hex h in hexes) {
+			moveHexesInRange [h] = UserControlManager.Instance.SpawnUIGameObject (h);
+			moveHexesInRange [h].GetComponent<MeshRenderer> ().material.color = new Color (1 / 3f, 0, 1 / 3f);
 		}
 	}
 
 	public void HideMovementHexes(){
 		GetComponent<LineRenderer> ().enabled = false;
 
-		foreach (Hex h in moveHexesInRange) {
-			h.GetComponent<MeshRenderer> ().material.color = Color.white;
+		foreach (Hex h in moveHexesInRange.Keys) {
+			Destroy (moveHexesInRange [h]);
 		}
 	}
+
+	public 
 
 	#region private methods
 	IEnumerator MoveToHex(Hex current, Hex neighbour){
@@ -203,7 +204,7 @@ public class Contestant : MonoBehaviour, ICatcher {
 		float movePercentage = 0f;
 
 		while (movePercentage < 1f) {
-			movePercentage += (moveSpeed * Time.deltaTime) / distance * neighbour.MoveCost;
+			movePercentage += (moveSpeed * Time.deltaTime) / (distance * neighbour.MoveCost);
 
 			//temp
 			transform.position = Vector3.Lerp(current.Position, neighbour.Position, movePercentage);

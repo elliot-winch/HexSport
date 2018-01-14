@@ -261,8 +261,11 @@ public class Grid : MonoBehaviour {
 		switch(hexOrientation){
 		case HexOrientation.Flat:
 			for(int q = 0; q < mapWidth; q++){
-				int qOff = q>>1;
-				for (int r = -qOff; r < mapHeight - qOff; r++){
+				int qOff = q >> 1;
+
+				//for symmetry
+				int tilesInRow = mapHeight - qOff - (q&1);
+				for (int r = -qOff; r < tilesInRow; r++){
 					pos.x = hexRadius * 3.0f/2.0f * q;
 					pos.z = hexRadius * Mathf.Sqrt(3.0f) * (r + q/2.0f);
 					

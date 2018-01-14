@@ -18,6 +18,8 @@ public class UserControlManager : MonoBehaviour {
 	public Button throwButton;
 	public KeyCode selectNextKey = KeyCode.Tab;
 
+	GameObject flatHexPrefab;
+
 	//References
 	CameraControls camCont;
 	CameraAutoMove camAuto;
@@ -98,7 +100,7 @@ public class UserControlManager : MonoBehaviour {
 		camAuto = Camera.main.GetComponent<CameraAutoMove> ();
 
 	
-		hexOutliner = new GameObject ();
+		flatHexPrefab = new GameObject ();
 		Vector3[] verts = new Vector3[6];
 
 		for(int k = 0; k < verts.Length; k++){
@@ -135,10 +137,15 @@ public class UserControlManager : MonoBehaviour {
 		m.triangles = tris;
 		m.normals = normals;
 
-		hexOutliner.AddComponent<MeshFilter> ().sharedMesh = m;
-		hexOutliner.AddComponent<MeshRenderer> ().material.color = Color.green;
+		flatHexPrefab.AddComponent<MeshFilter> ().sharedMesh = m;
+		flatHexPrefab.transform.Rotate (new Vector3 (270, 0, 0));
+		flatHexPrefab.AddComponent<MeshRenderer> ();
 
-		hexOutliner.transform.Rotate (new Vector3 (270, 0, 0));
+		flatHexPrefab.SetActive (false);
+
+		hexOutliner = Instantiate (flatHexPrefab);
+
+		hexOutliner.GetComponent<MeshRenderer> ().material.color = Color.green;
 
 		//Control Modes
 		controlModes = new ControlMode[6];
@@ -267,8 +274,9 @@ public class UserControlManager : MonoBehaviour {
 			}
 
 			selected.RegisterOnMoveCompleteCallback ((Contestant c) => {
+				Debug.Log("move finished " + (c == selected).ToString());
 				if (c == selected) {
-					c.ShowMovementHexes ();
+					c.ShowMovementHexes();
 				}
 			});
 		}
@@ -302,6 +310,7 @@ public class UserControlManager : MonoBehaviour {
 				selected.GetComponent<LineRenderer> ().enabled = false;
 			}
 		}
+			
 	}
 
 	void DisableMoveUI(){
@@ -367,6 +376,15 @@ public class UserControlManager : MonoBehaviour {
 
 	public void RegisterOnSelectedCallback(Action<Contestant> callback){
 		onSelected += callback;
+	}
+
+	public GameObject SpawnUIGameObject(Hex h){
+		GameObject spawned = Instantiate (flatHexPrefab, h.Position + new Vector3 (0, 0.001f, 0), Quaternion.identity, transform);
+
+		spawned.transform.Rotate (new Vector3 (270, 0, 0));
+		spawned.SetActive (true);
+
+		return spawned;
 	}
 }
 
