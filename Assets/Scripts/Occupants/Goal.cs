@@ -26,7 +26,7 @@ public class Goal : MonoBehaviour, ICatcher {
 	public System.Action<Ball> OnCatch {
 		get {
 			return (ball) => {
-				GameManager.Instance.Score(team);
+				TeamManager.Instance.Score(team);
 
 				Destroy(ball.gameObject);
 

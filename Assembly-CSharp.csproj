@@ -61,6 +61,7 @@
      <Compile Include="Assets\Scripts\Map\TargetFinder.cs" />
      <Compile Include="Assets\Scripts\Occupants\Ball.cs" />
      <Compile Include="Assets\Scripts\Occupants\Contestant\Contestant.cs" />
+     <Compile Include="Assets\Scripts\Occupants\Contestant\ContestantAction.cs" />
      <Compile Include="Assets\Scripts\Occupants\Contestant\ContestantData.cs" />
      <Compile Include="Assets\Scripts\Occupants\Contestant\Team.cs" />
      <Compile Include="Assets\Scripts\Occupants\Goal.cs" />
@@ -68,10 +69,13 @@
      <Compile Include="Assets\Scripts\Occupants\IOccupant.cs" />
      <Compile Include="Assets\Scripts\Occupants\Wall.cs" />
      <Compile Include="Assets\Scripts\PriorityQueue.cs" />
+     <Compile Include="Assets\Scripts\TeamManager.cs" />
+     <Compile Include="Assets\Scripts\TypeToTypeList.cs" />
      <Compile Include="Assets\Scripts\User Controls\CameraControls.cs" />
      <Compile Include="Assets\Scripts\User Controls\Modes\ControlMode.cs" />
      <Compile Include="Assets\Scripts\User Controls\Modes\MoveMode.cs" />
      <Compile Include="Assets\Scripts\User Controls\Modes\TargetSelectorMode.cs" />
+     <Compile Include="Assets\Scripts\User Controls\UIManager.cs" />
      <Compile Include="Assets\Scripts\User Controls\UserControlManager.cs" />
      <Compile Include="Assets\Tile.cs" />
  <Reference Include="UnityEngine.UI">

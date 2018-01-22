@@ -32,60 +32,49 @@ public class UserControlManager : MonoBehaviour {
 
 	//Movement vairables
 	Action<Contestant> onSelected;
+	Action<Contestant> onDeselected;
 	Contestant selected;
 	GameObject hexOutliner;
 	Vector3 outlinerOffset = new Vector3(0f, 0.01f, 0.0f);
 
-	public ControlModeEnum ModeType {
+	public Contestant Selected {
+		get {
+			return selected;
+		}
+	}
+
+	public ControlMode ControlMode {
+		get {
+			return currentControlMode;
+		}
+		set {
+			if (currentControlMode != null && currentControlMode.OnLeavingMode != null) {
+				currentControlMode.OnLeavingMode ();
+			}
+
+			currentControlMode = value;
+			modeType = currentControlMode.ModeType;
+
+			currentControlMode.OnEnteringMode ();
+
+		}
+	}
+
+	public ControlModeEnum ControlModeType {
 		get {
 			return modeType;
 		}
-		set {
 
-			if (currentControlMode != null && currentControlMode.OnModeChanged != null) {
-				currentControlMode.OnModeChanged ();
+		set {
+			if (currentControlMode != null && currentControlMode.OnLeavingMode != null) {
+				currentControlMode.OnLeavingMode ();
 			}
 
+			currentControlMode = controlModes [(int)value];
 			modeType = value;
 
-			switch(modeType) {
+			currentControlMode.OnEnteringMode ();
 
-			case ControlModeEnum.Move:
-				if (selected != null) {
-					selected.ShowMovementHexes ();
-					camAuto.MoveCameraParallelToZeroPlane (selected.CurrentHex.Position, 0.2f);
-				}
-
-				currentControlMode = controlModes[(int)ControlModeEnum.Move];
-
-				break;
-
-			case ControlModeEnum.Throw:
-				
-				currentControlMode = new TargetSelectorMode<ICatcher> (
-					selected,
-					ThrowToTarget,
-					(int)(selected.Data.Dexerity * 2),
-					true
-				);
-				
-					break;
-			case ControlModeEnum.SwipeBall: 
-				
-				Func<Contestant, bool> checkForBall = (Contestant con) => {
-					return con.Ball != null;
-				};
-
-				currentControlMode = new TargetSelectorMode<Contestant> (
-					selected, 
-					SwipeBall,
-					1,
-					false,
-					checkForBall
-				);
-
-					break;
-			}
 		}
 	}
 
@@ -144,13 +133,43 @@ public class UserControlManager : MonoBehaviour {
 		flatHexPrefab.SetActive (false);
 
 		hexOutliner = Instantiate (flatHexPrefab);
+		hexOutliner.name = "Cursor";
 
 		hexOutliner.GetComponent<MeshRenderer> ().material.color = Color.green;
 
 		//Control Modes
 		controlModes = new ControlMode[6];
 
+		controlModes [(int)ControlModeEnum.Observe] = new ControlMode (
+			type: ControlModeEnum.Observe,
+
+			onMouseOver: (hex) => {
+			},
+
+			onMouseNotOverMap: () => {
+			},
+
+			onLeftClick: (hex) => {
+			},
+
+			onRightClick : (hex) => {
+			},
+
+			onTabPressed: () => {
+			},
+
+			onEnteringMode: () => {
+			},
+
+			onLeavingMode: () => {
+			},
+
+			autoOnly: false
+		);
+
 		controlModes [(int)ControlModeEnum.Move] = new ControlMode (
+			type: ControlModeEnum.Move,
+
 			onMouseOver: (hex) => {
 				MovementMouseUI (hex);
 			},
@@ -170,23 +189,27 @@ public class UserControlManager : MonoBehaviour {
 			onTabPressed: () => {
 				if (selected != null) {
 					SelectNext (selected);
-				} else {
-					StartCoroutine (SelectContestant (GameManager.Instance.CurrentTeam.Contestants [0].Contestant));
 				}
 			},
 
-			onModeChanged: () => {
+			onEnteringMode: () => {
+				SelectFirst();
+			},
+
+			onLeavingMode: () => {
+				DisableMoveUI();
 				if(selected != null){
 					selected.HideMovementHexes();
-					selected.GetComponent<LineRenderer>().enabled = false;
 				}
-				DisableMoveUI();
-			}
+			},
+
+			autoOnly: false
 		);
 
-		ModeType = ControlModeEnum.Move;
+		ControlModeType = ControlModeEnum.Observe;
+
 		Debug.Log (modeType);
-		Debug.Log (currentControlMode);
+		Debug.Log (currentControlMode.ToString());
 	}
 
 	void Update () {
@@ -215,22 +238,26 @@ public class UserControlManager : MonoBehaviour {
 		}
 
 		//Left Click
-		if (Input.GetMouseButtonDown (0) && hitInfo.collider != null) {
+		if ((Input.GetMouseButtonDown (0) || Input.GetKeyDown(KeyCode.Return)) && hitInfo.collider != null) {
 			if (hitInfo.collider.tag == "Hex") {
 				currentControlMode.OnLeftClick (hitInfo.collider.GetComponent<Hex> ());
 			}
 		}
 
 		//Right Click
-		if (Input.GetMouseButtonDown (1) && hitInfo.collider != null) {
+		if ((Input.GetMouseButtonDown (1) || Input.GetKeyDown(KeyCode.Escape)) && hitInfo.collider != null) {
 			if (hitInfo.collider.tag == "Hex") {
 				currentControlMode.OnRightClick(hitInfo.collider.GetComponent<Hex>());
 			}
 		}
 
-		//Select Next
+		//Tab Handler
 		if(Input.GetKeyDown(selectNextKey)){
 			currentControlMode.OnTabPressed ();
+		}
+
+		if(Input.GetKeyDown(KeyCode.Space)){
+			GameManager.Instance.NextTurn();
 		}
 	}
 
@@ -242,7 +269,7 @@ public class UserControlManager : MonoBehaviour {
 		if (h.Occupant != null && h.Occupant is Contestant) {
 			Contestant c = (Contestant)h.Occupant;
 
-			if (c.Data.Team == GameManager.Instance.CurrentTeam) {
+			if (c.Data.Team == TeamManager.Instance.CurrentTeam) {
 				StartCoroutine (SelectContestant (c));
 			}
 		}
@@ -252,9 +279,20 @@ public class UserControlManager : MonoBehaviour {
 
 		if (selected != null) {
 			selected.HideMovementHexes ();
+			DisableMoveUI ();
+
+			if (onDeselected != null) {
+				onDeselected (selected);
+			}
 		}
 
 		selected = c;
+
+		Debug.Log (selected);
+
+		if (onSelected != null) {
+			onSelected (c);
+		}
 
 		camAuto.MoveCameraParallelToZeroPlane (selected.CurrentHex.Position, 0.2f);
 
@@ -265,20 +303,27 @@ public class UserControlManager : MonoBehaviour {
 		selected.ShowMovementHexes ();
 	}
 
+
+	public void SelectNext(Contestant c){
+		List<ContestantData> cons = TeamManager.Instance.CurrentTeam.Contestants;
+
+		if (c != null) {
+			int index = cons.IndexOf (c.Data);
+			StartCoroutine (SelectContestant (cons [(index + 1) % cons.Count].Contestant));
+		} 
+	}
+
+	public void SelectFirst(){
+		List<ContestantData> cons = TeamManager.Instance.CurrentTeam.Contestants;
+		Debug.Log (cons.Count);
+
+		StartCoroutine (SelectContestant (cons [0].Contestant));
+	}
+
 	void MoveSelectedToHex(Hex h){
 		if (selected != null) {
+			DisableMoveUI ();
 			StartCoroutine (selected.Move (h));
-
-			if (selected.Moving) {
-				selected.HideMovementHexes ();
-			}
-
-			selected.RegisterOnMoveCompleteCallback ((Contestant c) => {
-				Debug.Log("move finished " + (c == selected).ToString());
-				if (c == selected) {
-					c.ShowMovementHexes();
-				}
-			});
 		}
 	}
 
@@ -290,6 +335,7 @@ public class UserControlManager : MonoBehaviour {
 		hexOutliner.transform.position = mouseHex.Position + outlinerOffset;
 
 		if (selected != null) {
+
 			if (selected.Moving == false && selected.MoveHexesInRange.Contains (mouseHex)) {
 				Path p = new Path (GridManager.Instance.Grid, selected.CurrentHex, mouseHex);
 
@@ -298,7 +344,7 @@ public class UserControlManager : MonoBehaviour {
 				LineRenderer lr = selected.GetComponent<LineRenderer> ();
 				lr.enabled = true;
 
-				hexPositions.Add (selected.transform.position + outlinerOffset);
+				hexPositions.Add (selected.transform.position + outlinerOffset - selected.PositionOffset);
 				while (p.IsNextHex ()) {
 					hexPositions.Add (p.GetNextHex ().Position + outlinerOffset);
 				}
@@ -321,8 +367,8 @@ public class UserControlManager : MonoBehaviour {
 	}
 	#endregion
 
-	#region internal methods - throw mode
-	void ThrowToTarget(){
+	#region internal methods - throw mode - plz move this somewhere else
+	public void ThrowToTarget(){
 		TargetSelectorMode<ICatcher> tsm = ((TargetSelectorMode<ICatcher>)currentControlMode);
 
 		ICatcher currentTarget = tsm.CurrentTarget;
@@ -333,7 +379,7 @@ public class UserControlManager : MonoBehaviour {
 
 			if (targets.Contains (catcher)) {
 				selected.Ball.RegisterOnFinishedLaunch (() => {
-					SwitchMode(ControlModeEnum.Move);
+					ControlModeType = ControlModeEnum.Move;
 				});
 
 				selected.Ball.ThrowToCatcher (selected, catcher, tsm.TargetProbabilities[catcher]);
@@ -358,24 +404,13 @@ public class UserControlManager : MonoBehaviour {
 
 	}
 	#endregion
-
-	public void SwitchMode(int modeNum){
-		SwitchMode((ControlModeEnum)modeNum);
-	}
-
-	public void SwitchMode(ControlModeEnum mode){
-		ModeType = mode;
-	}
-
-	public void SelectNext(Contestant c){
-		List<ContestantData> cons = GameManager.Instance.CurrentTeam.Contestants;
-
-		int index = cons.IndexOf (c.Data);
-		StartCoroutine(SelectContestant(cons[(index + 1) % cons.Count].Contestant));
-	}
-
+		
 	public void RegisterOnSelectedCallback(Action<Contestant> callback){
 		onSelected += callback;
+	}
+		
+	public void RegisterOnDeselectedCallback(Action<Contestant> callback){
+		onDeselected += callback;
 	}
 
 	public GameObject SpawnUIGameObject(Hex h){
@@ -384,6 +419,9 @@ public class UserControlManager : MonoBehaviour {
 		spawned.transform.Rotate (new Vector3 (270, 0, 0));
 		spawned.SetActive (true);
 
+		spawned.transform.parent = selected.transform;
+		spawned.name = "Move UI Hex";
+
 		return spawned;
 	}
 }
@@ -391,7 +429,5 @@ public class UserControlManager : MonoBehaviour {
 public enum ControlModeEnum {
 	Observe,
 	Move,
-	Throw,
-	SwipeBall,
-	Attack
+	DirectTarget
 }

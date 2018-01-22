@@ -75,7 +75,6 @@ public class Hex : MonoBehaviour {
 		}
 		set {
 			occupant = value;
-			Debug.Log (Position + " " + occupant);
 		}
 	}
 

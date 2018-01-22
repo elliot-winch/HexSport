@@ -55,4 +55,11 @@ public class ContestantData {
 		this.agility = agility;
 	}
 
+
+	//test!
+	public bool CanShoot{
+		get {
+			return true;
+		}
+	}
 }

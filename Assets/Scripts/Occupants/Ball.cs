@@ -17,24 +17,35 @@ public class Ball : MonoBehaviour, IOccupant {
 			return currentHex;
 		}
 		set {
-			if (currentHex != null && currentHex.Occupant == this) {
+			//the ball is abou to move
+
+			//if the current hex contains only the ball, now nothing will occupy this space.
+			if (currentHex != null && currentHex.Occupant is Ball && ((Ball)currentHex.Occupant) == this) {
 				currentHex.Occupant = null;
 			}
 
+			//move the ball
 			currentHex = value;
 
+			//if the ball has moved to a hex
 			if (currentHex != null) {
+				//if that hex has an occupant...
 				if (currentHex.Occupant != null) {
+					//...which can receive the ball (eg a player)
 					if (currentHex.Occupant is ICatcher) {
 						this.Receive ((ICatcher)currentHex.Occupant);
 					}
+					//...which cant receive the ball (eg a wall)
 				} else {
+					//the hex doesnt have an occupant, so the ball occupies the hex
 					currentHex.Occupant = this;
 
 					transform.parent = null;
 					transform.position = currentHex.Position;
 				}
 			}
+
+			//the case where current Hex is set to null is handled by whatever picks up the ball
 		}
 	}
 

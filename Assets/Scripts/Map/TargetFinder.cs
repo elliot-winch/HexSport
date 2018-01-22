@@ -26,7 +26,7 @@ public class TargetFinder<T> where T : IOccupant {
 		foreach (Tile t in tilesInRange) {
 			Hex h = t.GetComponent<Hex> ();
 
-			if (h.Occupant != null && h.Occupant is T && (h.Occupant.Team == GameManager.Instance.CurrentTeam) == friendlyTeam) {
+			if (h.Occupant != null && h.Occupant is T && (h.Occupant.Team == TeamManager.Instance.CurrentTeam) == friendlyTeam) {
 
 				T posTarg = (T)h.Occupant;
 

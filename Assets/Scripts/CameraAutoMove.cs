@@ -41,7 +41,7 @@ public class CameraAutoMove : MonoBehaviour {
 			yield return null;
 		}
 
-		if (UserControlManager.Instance.ModeType == ControlModeEnum.Move) {
+		if (UserControlManager.Instance.ControlMode.AutoOnly == false) {
 			cc.enabled = true;
 		}
 	}

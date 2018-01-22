@@ -31,4 +31,15 @@ public class Team  {
 		this.contestants = contestants;
 		this.color = color;
 	}
+
+	public Team(string name, Color color){
+		this.name = name;
+		this.contestants = new List<ContestantData>();
+		this.color = color;
+	}
+
+	public void AddContestant(ContestantData cd){
+		contestants.Add (cd);
+		cd.Team = this;
+	}
 }

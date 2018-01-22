@@ -16,47 +16,71 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 	public Dictionary<T, float> TargetProbabilities { get { return targets; } }
 	public T CurrentTarget { get { return currentTarget; } }
 
+	Contestant contestant;
+	Action action;
+	int range;
+	bool friendlyTeam;
+	Func<T, bool> additionalChecks;
 
-	public TargetSelectorMode(Contestant selected, Action action, int range, bool friendlyTeam, Func<T, bool> additionalChecks = null) 
+
+	public TargetSelectorMode(Contestant contestant, Action action, int range, bool friendlyTeam, Func<T, bool> additionalChecks = null) 
 		: base(
+			type: ControlModeEnum.DirectTarget,
 			onMouseOver: (hex) => { },
 			onMouseNotOverMap: () => { },
-			onLeftClick: (hex) => { }, //to be filled
+			onLeftClick: (hex) => { }, 
 			onRightClick: (hex) => {
-				UserControlManager.Instance.ModeType = ControlModeEnum.Move;
+				UserControlManager.Instance.ControlModeType = ControlModeEnum.Move;
 			},
-			onTabPressed: () => { }, // to be filled
-			onModeChanged: () => { })
+			onTabPressed: () => { }, 
+			onEnteringMode: () => { },
+			onLeavingMode: () => { },
+			autoOnly: true)
 	{
 
 
-		onModeChanged = () => {
+		onLeavingMode = () => {
 			ClearLineUI ();
 			camCont.enabled = true;
 		};
 
+		onEnteringMode = () => {
+			CalculateTargets();
+		};
+
+		this.AutoOnly = true;
 		camCont.enabled = false;
 
-		targets = new TargetFinder<T> (selected, range, friendlyTeam, additionalChecks).Targets;
+		this.contestant = contestant;
+		this.action = action;
+		this.range = range;
+		this.friendlyTeam = friendlyTeam;
+		this.additionalChecks = additionalChecks;
+
+	}
+
+	void CalculateTargets(){
+		targets = new TargetFinder<T> (contestant, range, friendlyTeam, additionalChecks).Targets;
 
 		if (targets.Count <= 0) {
-			//no targets UI
+			Debug.Log ("No valid targets");
 		} else {
-
-			ChangeTarget (selected);
+			ChangeTarget ();
 
 			onLeftClick = (hex) => {
+				Debug.Log("Action!");
 				action();
 			};
 
 			onTabPressed = () => {
-				ChangeTarget (selected);
+				ChangeTarget ();
 			};
 		}
 	}
 
-	public void ChangeTarget (Contestant selected)
+	void ChangeTarget ()
 	{
+		Debug.Log ("changing target");
 		List<T> targetList = Targets;
 
 		if (targets.Count > 0) {
@@ -70,10 +94,10 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 			}
 			camAuto.MoveCameraParallelToZeroPlane (currentTarget.CurrentHex.Position, 0.2f);
 
-			LineMouseUI (selected, currentTarget.CurrentHex);
+			LineMouseUI (contestant, currentTarget.CurrentHex);
 		} else {
 			Debug.Log ("No valid targets");
-			camAuto.MoveCameraParallelToZeroPlane (selected.CurrentHex.Position, 0.2f);
+			camAuto.MoveCameraParallelToZeroPlane (contestant.CurrentHex.Position, 0.2f);
 		}
 	}
 
@@ -90,6 +114,7 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 		hexLine = new Dictionary<Hex, GameObject> ();
 
 		foreach (Hex j in hexesInLine) {
+			Debug.Log ("spawning target selection");
 			hexLine[j] = UserControlManager.Instance.SpawnUIGameObject (h);
 			hexLine[j].GetComponent<MeshRenderer>().material.color = new Color(2/3f, 0, 2/3f);
 		}
@@ -103,5 +128,10 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 
 			hexLine = null;
 		}
+	}
+
+	public override string ToString ()
+	{
+		return string.Format ("[TargetSelectorMode: Current Target In CurrentTarget={0}]", (CurrentTarget != null) ? CurrentTarget.CurrentHex.ToString() : "null");
 	}
 }

@@ -1,12 +1,18 @@
 ﻿<Properties RefactoringSettings.EnableRefactorings="True" StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Occupants\Contestant\Contestant.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Occupants\Contestant\ContestantAction.cs">
     <Files>
-      <File FileName="Assets\Scripts\User Controls\UserControlManager.cs" Line="302" Column="20" />
-      <File FileName="Assets\Scripts\User Controls\CameraControls.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\CameraAutoMove.cs" Line="21" Column="28" />
-      <File FileName="Assets\Scripts\User Controls\Modes\ControlMode.cs" Line="8" Column="20" />
-      <File FileName="Assets\Scripts\Occupants\Contestant\Contestant.cs" Line="181" Column="3" />
+      <File FileName="Assets\Scripts\Occupants\Contestant\ContestantAction.cs" Line="36" Column="50" />
+      <File FileName="Assets\Scripts\Occupants\Contestant\ContestantData.cs" Line="62" Column="16" />
+      <File FileName="Assets\Scripts\Occupants\Contestant\Contestant.cs" Line="19" Column="52" />
+      <File FileName="Assets\Scripts\GameManager.cs" Line="127" Column="5" />
+      <File FileName="Assets\Scripts\User Controls\UIManager.cs" Line="49" Column="1" />
+      <File FileName="Assets\Scripts\User Controls\UserControlManager.cs" Line="63" Column="5" />
+      <File FileName="Assets\Scripts\User Controls\Modes\TargetSelectorMode.cs" Line="42" Column="27" />
+      <File FileName="Assets\Scripts\User Controls\Modes\ControlMode.cs" Line="31" Column="27" />
+      <File FileName="Assets\Scripts\Map\Hex.cs" Line="78" Column="1" />
+      <File FileName="Assets\Scripts\CameraAutoMove.cs" Line="44" Column="64" />
+      <File FileName="Assets\Scripts\Occupants\Ball.cs" Line="20" Column="57" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
