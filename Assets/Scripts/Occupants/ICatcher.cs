@@ -5,7 +5,7 @@ using UnityEngine;
 
 public interface ICatcher : IOccupant {
 
-	Vector3 BallOffset { get; }
+	Transform BallHolderObject { get; }
 
 	Action<Ball> OnCatch { get; }
 }

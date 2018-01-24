@@ -275,7 +275,7 @@ public class UserControlManager : MonoBehaviour {
 		}
 	}
 		
-	IEnumerator SelectContestant(Contestant c){
+	public IEnumerator SelectContestant(Contestant c){
 
 		if (selected != null) {
 			selected.HideMovementHexes ();
@@ -287,9 +287,7 @@ public class UserControlManager : MonoBehaviour {
 		}
 
 		selected = c;
-
-		Debug.Log (selected);
-
+	
 		if (onSelected != null) {
 			onSelected (c);
 		}
@@ -315,8 +313,6 @@ public class UserControlManager : MonoBehaviour {
 
 	public void SelectFirst(){
 		List<ContestantData> cons = TeamManager.Instance.CurrentTeam.Contestants;
-		Debug.Log (cons.Count);
-
 		StartCoroutine (SelectContestant (cons [0].Contestant));
 	}
 

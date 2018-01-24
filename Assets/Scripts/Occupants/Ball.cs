@@ -88,7 +88,7 @@ public class Ball : MonoBehaviour, IOccupant {
 
 		if(randomVal <= chanceToThrow){
 
-			yield return StartCoroutine (Launch (a.CurrentHex.Position + a.BallOffset, b.CurrentHex.Position + b.BallOffset));
+			yield return StartCoroutine (Launch (a.BallHolderObject.position, b.BallHolderObject.position));
 			Receive (b);
 		} else {
 			List<Hex> hexesAroundMissed = GridManager.Instance.Grid.HexesInRangeAccountingObstacles (b.CurrentHex, 1 + ((randomVal - chanceToThrow) * 10f));
@@ -97,7 +97,7 @@ public class Ball : MonoBehaviour, IOccupant {
 
 			Hex hex = hexesAroundMissed [UnityEngine.Random.Range (1, hexesAroundMissed.Count)];
 
-			yield return StartCoroutine (Launch (a.transform.position + a.BallOffset, hex.Position));
+			yield return StartCoroutine (Launch (a.transform.GetChild(0).GetChild(0).position, hex.Position));
 
 			CurrentHex = hex;
 

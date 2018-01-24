@@ -30,11 +30,19 @@ public class ContestantData {
 		}
 	}
 
+	string name;
+
+	public string Name {
+		get {
+			return name;
+		}
+	}
+
 	//Stats
 	float dexerity;
 	float agility;
 	float strength;
-	float firearms;
+	float weaponsHandling;
 	float health;
 
 	public float Dexerity {
@@ -43,14 +51,14 @@ public class ContestantData {
 		}
 	}
 
-	public ContestantData(){
+	public ContestantData(string name){
+		this.name = name;
 		this.dexerity = 6f;
 		this.agility = 3f;
 	}
 
-	public ContestantData(Contestant con, Team team, float dex, float agility){
-		this.contestant = con;
-		this.team = team;
+	public ContestantData(string name, float dex, float agility){
+		this.name = name;
 		this.dexerity = dex;
 		this.agility = agility;
 	}

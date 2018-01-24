@@ -37,7 +37,8 @@ public class UIManager : MonoBehaviour {
 			DisableButtonList(con);
 		});
 	}
-	
+
+	//Player button pools
 	public void CreateButtonPool(Contestant con){
 
 		List<Button> buttons = new List<Button> ();

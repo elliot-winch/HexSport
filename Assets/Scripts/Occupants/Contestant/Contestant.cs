@@ -18,14 +18,14 @@ public class Contestant : MonoBehaviour, ICatcher {
 	ContestantData data;
 	List<IContestantAction> possibleActions;
 
-	Vector3 positionOffset = new Vector3 (0, 1f, 0);
+	Vector3 positionOffset = new Vector3 (0, 0f, 0);
 
 	Ball ball;
 
 	#region ICatcher implementation
-	public Vector3 BallOffset {
+	public Transform BallHolderObject {
 		get {
-			return new Vector3 (0.5f, 0.5f, 0.5f);
+			return transform.GetChild (0).GetChild (0);
 		}
 	}
 
@@ -35,8 +35,9 @@ public class Contestant : MonoBehaviour, ICatcher {
 				ball.CurrentHex = null;
 
 				this.ball = ball;
-				ball.transform.parent = transform;
-				ball.transform.localPosition = BallOffset;
+				//should be ballPosition object
+				ball.transform.parent = transform.GetChild(0).GetChild(0);
+				ball.transform.localPosition = Vector3.zero;
 			};
 		}
 	}
@@ -156,6 +157,8 @@ public class Contestant : MonoBehaviour, ICatcher {
 		LineRenderer lr = GetComponent<LineRenderer> ();
 		lr.enabled = false;
 
+		moveHexesInRange = new Dictionary<Hex, GameObject> ();
+
 		RegisterOnTurnStartCallback ( (c) => {
 			c.MovesRemaining = c.movesPerTurn;
 		} );
@@ -217,13 +220,14 @@ public class Contestant : MonoBehaviour, ICatcher {
 	}
 
 	public void ShowMovementHexes(){
-		moveHexesInRange = new Dictionary<Hex, GameObject> ();
-
 		List<Hex> hexes = GridManager.Instance.Grid.HexesInRangeAccountingObstacles (CurrentHex, MovesRemaining);
 
 		foreach (Hex h in hexes) {
-			moveHexesInRange [h] = UserControlManager.Instance.SpawnUIGameObject (h);
-			moveHexesInRange [h].GetComponent<MeshRenderer> ().material.color = new Color (1 / 3f, 0, 1 / 3f);
+			if (moveHexesInRange.ContainsKey (h) == false) {
+
+				moveHexesInRange [h] = UserControlManager.Instance.SpawnUIGameObject (h);
+				moveHexesInRange [h].GetComponent<MeshRenderer> ().material.color = new Color (1 / 3f, 0, 1 / 3f);
+			}
 		}
 	}
 
@@ -231,6 +235,8 @@ public class Contestant : MonoBehaviour, ICatcher {
 		foreach (Hex h in moveHexesInRange.Keys) {
 			Destroy (moveHexesInRange [h]);
 		}
+
+		moveHexesInRange = new Dictionary<Hex, GameObject> ();
 	}
 
 	public 

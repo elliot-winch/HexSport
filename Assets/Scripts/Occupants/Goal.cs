@@ -17,9 +17,9 @@ public class Goal : MonoBehaviour, ICatcher {
 	}
 
 	#region ICatcher implementation
-	public Vector3 BallOffset {
+	public Transform BallHolderObject {
 		get {
-			return new Vector3 (0f, 6f, 0f);
+			return transform;
 		}
 	}
 

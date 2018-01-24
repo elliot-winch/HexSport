@@ -86,9 +86,8 @@ public class GameManager : MonoBehaviour {
 	
 	void SpawnContestant (ContestantData d, Hex startingHex) {
 		//prefab is temp, will load prefab of correct type
-		GameObject go = Instantiate (testContestant, startingHex.Position, Quaternion.identity, transform);
-		Debug.Log (d.Team.Color);
-		go.GetComponent<MeshRenderer> ().material.color = d.Team.Color;	
+		GameObject go = Instantiate (testContestant, startingHex.Position, testContestant.transform.rotation, transform);
+		go.transform.GetChild(0).GetComponent<MeshRenderer> ().material.color = d.Team.Color;	
 
 		//temporary contestant factory
 		Contestant c = go.GetComponent<Contestant> ();

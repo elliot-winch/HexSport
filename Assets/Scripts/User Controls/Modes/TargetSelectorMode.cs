@@ -68,7 +68,6 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 			ChangeTarget ();
 
 			onLeftClick = (hex) => {
-				Debug.Log("Action!");
 				action();
 			};
 

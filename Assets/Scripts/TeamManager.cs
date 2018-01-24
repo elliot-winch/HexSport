@@ -14,8 +14,6 @@ public class TeamManager : MonoBehaviour {
 		}
 	}
 
-	public Text[] scoreTexts;
-
 	Dictionary<Team, int> teamsInMatch;
 	int currentTeamIndex;
 
@@ -41,21 +39,16 @@ public class TeamManager : MonoBehaviour {
 		teamsInMatch = new Dictionary<Team, int> ();
 
 		teamsInMatch[new Team ("Team 1", Color.red)] = 0;
-		teamsInMatch[new Team ("Team 2", Color.blue)] = 3;
+		teamsInMatch[new Team ("Team 2", Color.blue)] = 0;
 
-		if (scoreTexts.Length != teamsInMatch.Count) {
-			Debug.LogWarning ("Not enough / too many text fields to display teams' scores");
-		}
+	
 
 		for (int i = 0; i < 3; i++) {
 			foreach (Team t in teamsInMatch.Keys) {
-				t.AddContestant (new ContestantData ());
-
-				int tIndex = TeamsInMatch.IndexOf (t);
-				scoreTexts [tIndex].text = teamsInMatch[t].ToString();
-
+				t.AddContestant (new ContestantData ("Dave" + i.ToString()));
 			}
 		}
+
 	}
 
 
@@ -63,8 +56,7 @@ public class TeamManager : MonoBehaviour {
 		if (teamsInMatch.ContainsKey (t)) {
 			teamsInMatch [t]++;
 
-			int tIndex = TeamsInMatch.IndexOf (t);
-			scoreTexts [tIndex].text = teamsInMatch[t].ToString();
+			TeamUIManager.Instance.UpdateScoreUI (TeamsInMatch.IndexOf (t), teamsInMatch[t]);
 		}
 	}
 

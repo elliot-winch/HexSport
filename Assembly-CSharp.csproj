@@ -75,6 +75,7 @@
      <Compile Include="Assets\Scripts\User Controls\Modes\ControlMode.cs" />
      <Compile Include="Assets\Scripts\User Controls\Modes\MoveMode.cs" />
      <Compile Include="Assets\Scripts\User Controls\Modes\TargetSelectorMode.cs" />
+     <Compile Include="Assets\Scripts\User Controls\TeamUIManager.cs" />
      <Compile Include="Assets\Scripts\User Controls\UIManager.cs" />
      <Compile Include="Assets\Scripts\User Controls\UserControlManager.cs" />
      <Compile Include="Assets\Tile.cs" />
