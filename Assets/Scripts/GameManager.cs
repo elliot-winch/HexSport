@@ -98,17 +98,24 @@ public class GameManager : MonoBehaviour {
 
 		d.Contestant = c;
 
+
+		//Possible Actions
 		if (d.CanShoot) {
-			c.PossibleActions.Add (ContestantActionsFactory.CreateAction<IOccupant> (ContestantActionsEnum.Shoot, c, 4, true));
+			c.PossibleActions.Add (ContestantActionsFactory.CreateAction<IOccupant> ("Shoot", ContestantActionsEnum.Shoot, c, 4, true));
 		}
 
-		c.PossibleActions.Add (ContestantActionsFactory.CreateAction<ICatcher> (ContestantActionsEnum.Throw, c, (int)(d.Dexerity * 2), true));
+		Func<ICatcher, bool> throwReqs = (con) => {
+
+			return c.Ball != null && con.Ball == null;
+		};
+
+		c.PossibleActions.Add (ContestantActionsFactory.CreateAction<ICatcher> ("Throw", ContestantActionsEnum.Throw, c, (int)(d.Dexerity * 2), true, throwReqs));
 
 		Func<Contestant, bool> checkForBall = (Contestant con) => {
 			return con.Ball != null;
 		};
 
-		c.PossibleActions.Add (ContestantActionsFactory.CreateAction<Contestant> (ContestantActionsEnum.Swipe, c, 1, false, checkForBall));
+		c.PossibleActions.Add ( ContestantActionsFactory.CreateAction<Contestant> ("Swipe", ContestantActionsEnum.Swipe, c, 1, false, checkForBall));
 
 		UIManager.Instance.CreateButtonPool (c);
 	}

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ControlMode {
 
+	//probably fix this at some point. dont need both
 	protected ControlModeEnum type;
 	protected Action<Hex> onMouseOver;
 	protected Action onMouseNotOverMap;
@@ -22,11 +23,12 @@ public class ControlMode {
 	public Action OnEnteringMode { get { return onEnteringMode; } }
 	public Action OnLeavingMode { get { return onLeavingMode; } }
 
-	public bool AutoOnly { get; internal set;}
+	public bool AutoOnly { get; protected set;}
+	public Func<bool> CheckValidity { get; protected set;}
 
 	public ControlModeEnum ModeType { get; }
 
-	public ControlMode(ControlModeEnum type, Action<Hex> onMouseOver, Action onMouseNotOverMap, Action<Hex> onLeftClick, Action<Hex> onRightClick, Action onTabPressed, Action onEnteringMode, Action onLeavingMode, bool autoOnly){
+	public ControlMode(ControlModeEnum type, Action<Hex> onMouseOver, Action onMouseNotOverMap, Action<Hex> onLeftClick, Action<Hex> onRightClick, Action onTabPressed, Action onEnteringMode, Action onLeavingMode, bool autoOnly, Func<bool> checkValidity = null){
 		this.type = type;
 		this.onMouseOver = onMouseOver;
 		this.onMouseNotOverMap = onMouseNotOverMap;
@@ -36,6 +38,7 @@ public class ControlMode {
 		this.onEnteringMode = onEnteringMode;
 		this.onLeavingMode = onLeavingMode;
 		this.AutoOnly = autoOnly;
+		this.CheckValidity = checkValidity;
 	}
 
 

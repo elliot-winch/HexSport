@@ -36,7 +36,7 @@ public class Contestant : MonoBehaviour, ICatcher {
 
 				this.ball = ball;
 				//should be ballPosition object
-				ball.transform.parent = transform.GetChild(0).GetChild(0);
+				ball.transform.parent = BallHolderObject;
 				ball.transform.localPosition = Vector3.zero;
 			};
 		}
@@ -109,8 +109,14 @@ public class Contestant : MonoBehaviour, ICatcher {
 		}
 	}
 
+	Action<Contestant> onMoveBegan;
 	Action<Contestant> onMoveComplete;
-	Action<Contestant> defaultOnMoveComplete;
+
+	public Action<Contestant> OnMoveBegan {
+		get {
+			return onMoveBegan;
+		}
+	}
 
 	public Action<Contestant> OnMoveComplete {
 		get {
@@ -167,13 +173,19 @@ public class Contestant : MonoBehaviour, ICatcher {
 			CheckHex(destOccupant);
 		} );
 
-		defaultOnMoveComplete = onMoveComplete;
+
+		//UIManager uses this in Start.
+		onMoveComplete (this);
 	}
 
 	public IEnumerator Move(Hex destHex){
 		if (moving == false && moveHexesInRange.ContainsKey (destHex)) {
 
 			moving = true;
+
+			if (onMoveBegan != null) {
+				onMoveBegan (this);
+			}
 
 			HideMovementHexes ();
 
@@ -211,12 +223,12 @@ public class Contestant : MonoBehaviour, ICatcher {
 		onTurnBegin += callback;
 	}
 
-	public void RegisterOnMoveCompleteCallback(Action<Contestant> callback){
-		onMoveComplete += callback;
+	public void RegisterOnMoveBeganCallback(Action<Contestant> callback){
+		onMoveBegan += callback;
 	}
 
-	public void ResetOnMoveCompleteCallback(){
-		onMoveComplete = defaultOnMoveComplete;
+	public void RegisterOnMoveCompleteCallback(Action<Contestant> callback){
+		onMoveComplete += callback;
 	}
 
 	public void ShowMovementHexes(){
@@ -262,6 +274,16 @@ public class Contestant : MonoBehaviour, ICatcher {
 	void CheckHex(IOccupant o){
 		if (o != null && o is Ball) {
 			((Ball)o).Receive (this);
+		}
+	}
+
+	void CheckPossibleActions(){
+
+		foreach (IContestantAction act in possibleActions) {
+
+			if (act.ControlMode.CheckValidity == null || (act.ControlMode.CheckValidity != null && act.ControlMode.CheckValidity())) {
+
+			} 
 		}
 	}
 	#endregion

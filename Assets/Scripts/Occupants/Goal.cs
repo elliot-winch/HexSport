@@ -35,6 +35,12 @@ public class Goal : MonoBehaviour, ICatcher {
 		}
 	}
 
+	public Ball Ball {
+		get {
+			return null;
+		}
+	}
+
 	Team team;
 	public Team Team {
 		get {

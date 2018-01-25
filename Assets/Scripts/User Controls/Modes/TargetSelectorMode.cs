@@ -45,7 +45,21 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 		};
 
 		onEnteringMode = () => {
-			CalculateTargets();
+			//CalculateTargets();
+			//targets are calculated and stored on move ending now, rather than switching to specific slector mode
+			ChangeTarget();
+		};
+			
+		onLeftClick = (hex) => {
+			action();
+		};
+
+		onTabPressed = () => {
+			ChangeTarget ();
+		};
+
+		CheckValidity = () => {
+			return CalculateTargets () > 0;
 		};
 
 		this.AutoOnly = true;
@@ -59,27 +73,14 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 
 	}
 
-	void CalculateTargets(){
+	public int CalculateTargets(){
 		targets = new TargetFinder<T> (contestant, range, friendlyTeam, additionalChecks).Targets;
 
-		if (targets.Count <= 0) {
-			Debug.Log ("No valid targets");
-		} else {
-			ChangeTarget ();
-
-			onLeftClick = (hex) => {
-				action();
-			};
-
-			onTabPressed = () => {
-				ChangeTarget ();
-			};
-		}
+		return targets.Count;
 	}
 
 	void ChangeTarget ()
 	{
-		Debug.Log ("changing target");
 		List<T> targetList = Targets;
 
 		if (targets.Count > 0) {
@@ -113,7 +114,6 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 		hexLine = new Dictionary<Hex, GameObject> ();
 
 		foreach (Hex j in hexesInLine) {
-			Debug.Log ("spawning target selection");
 			hexLine[j] = UserControlManager.Instance.SpawnUIGameObject (h);
 			hexLine[j].GetComponent<MeshRenderer>().material.color = new Color(2/3f, 0, 2/3f);
 		}

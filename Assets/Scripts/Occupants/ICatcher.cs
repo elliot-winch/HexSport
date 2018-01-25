@@ -8,4 +8,6 @@ public interface ICatcher : IOccupant {
 	Transform BallHolderObject { get; }
 
 	Action<Ball> OnCatch { get; }
+
+	Ball Ball { get; }
 }

@@ -14,41 +14,34 @@ public class TeamUIManager : MonoBehaviour {
 			return instance;
 		}
 	}
-
-
-	public Text[] scoreTexts;
-	public Image[] teamNames;
+		
 	public GameObject playerNamePrefab;
-
 
 	void Start () {
 		if (instance != null) {
 			Debug.LogError ("There should not be more than one team UI manager");
 		}
+
+		instance = this;
+
+		Canvas mainCanvas = UIManager.Instance.mainCanvas;
+		Image[] teamBackground = mainCanvas.GetComponentsInChildren<Image> ();
 			
 		List<Team> tim = TeamManager.Instance.TeamsInMatch;
 
-		if (scoreTexts.Length != tim.Count) {
-			Debug.LogWarning ("Not enough / too many text fields to display teams' scores");
-		}
-
-		if (teamNames.Length != tim.Count) {
-			Debug.LogWarning ("Not enough / too many text fields to display teams' names");
-		}
-
 		for(int i = 0; i < tim.Count; i++) {
 
-			teamNames [i].color = new Color (tim [i].Color.r, tim [i].Color.g, tim [i].Color.b, 45f / 256); 
-			teamNames [i].transform.GetChild (0).GetComponent<Text> ().text = tim [i].Name;
+			teamBackground [i].color = new Color (tim [i].Color.r, tim [i].Color.g, tim [i].Color.b, 45f / 256); 
+			teamBackground [i].transform.Find ("Text - Name").GetComponent<Text> ().text = tim [i].Name;
 
 			//fill in score UI here, but for now it will always start at zero
 			for (int j = 0; j < tim[i].Contestants.Count; j++) {
 
-				GameObject bObj = Instantiate(playerNamePrefab, Vector3.zero, Quaternion.identity, UIManager.Instance.mainCanvas.transform);
+				GameObject bObj = Instantiate(playerNamePrefab, Vector3.zero, Quaternion.identity, teamBackground[i].transform.Find("Contestant Buttons"));
 
 				Rect textRect = playerNamePrefab.GetComponent<RectTransform> ().rect;
 
-				Vector2 pos = new Vector2 ((-(Screen.width / 2) + (textRect.width / 2)) + (i * (Screen.width - textRect.width )) , 130 - (j * textRect.height));
+				Vector2 pos = new Vector2 (0, -(j * textRect.height));
 
 				bObj.transform.localPosition = pos;
 
@@ -76,6 +69,9 @@ public class TeamUIManager : MonoBehaviour {
 	}
 	
 	public void UpdateScoreUI (int teamIndex, int value) {
-		scoreTexts [teamIndex].text = value.ToString();
+		Canvas mainCanvas = UIManager.Instance.mainCanvas;
+		Image[] teamBackground = mainCanvas.GetComponentsInChildren<Image> ();	
+
+		teamBackground [teamIndex].transform.Find ("Text - Score").GetComponent<Text> ().text = value.ToString();
 	}
 }

@@ -13,7 +13,7 @@ public class UIManager : MonoBehaviour {
 		}
 	}
 
-	public GameObject[] actionButtonPrefabs;
+	public GameObject actionButtonPrefab;
 	public Canvas mainCanvas;
 	public float buttonSpacing;
 
@@ -41,12 +41,27 @@ public class UIManager : MonoBehaviour {
 	//Player button pools
 	public void CreateButtonPool(Contestant con){
 
+		con.RegisterOnMoveCompleteCallback ( (c) => {
+			if (UserControlManager.Instance.Selected == c) {
+				EnableButtonList(c);
+			}
+		});
+
+		con.RegisterOnMoveBeganCallback ( (c) => {
+			if (UserControlManager.Instance.Selected == c) {
+				DisableButtonList(c);
+			}
+		});
+
 		List<Button> buttons = new List<Button> ();
 
 		foreach(IContestantAction a in con.PossibleActions){
 
-			GameObject button = Instantiate (actionButtonPrefabs [(int)a.ActionType], Vector3.zero, Quaternion.identity, mainCanvas.transform);
-			button.name = con.name + " Button " + a.ActionType.ToString ();
+			GameObject button = Instantiate (actionButtonPrefab, Vector3.zero, Quaternion.identity, mainCanvas.transform);
+			button.name = con.name + " Button " + a.Name;
+		
+			button.GetComponentInChildren<Text> ().text = a.Name;
+
 			button.SetActive (false);
 
 			Button.ButtonClickedEvent bcevent = new Button.ButtonClickedEvent ();
@@ -56,7 +71,12 @@ public class UIManager : MonoBehaviour {
 
 			button.GetComponent<Button> ().onClick = bcevent;
 
+			button.GetComponent<OnEnableButton> ().RegisterOnEnabledCallback (() => {
+				return a.ControlMode.CheckValidity();
+			});
+
 			buttons.Add (button.GetComponent<Button>());
+
 		}
 
 		if (buttons.Count > 0) {
@@ -72,7 +92,7 @@ public class UIManager : MonoBehaviour {
 	}
 
 	void EnableButtonList(Contestant con){
-
+		Debug.Log ("Enabling");
 		if (con != null) {
 			foreach (Button b in constantButtonPools[con]) {
 				b.gameObject.SetActive (true);
@@ -81,6 +101,7 @@ public class UIManager : MonoBehaviour {
 	}
 
 	void DisableButtonList(Contestant con){
+		Debug.Log ("Disabling");
 
 		if (con != null) {
 			foreach (Button b in constantButtonPools[con]) {

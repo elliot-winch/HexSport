@@ -2,20 +2,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public interface IContestantAction { 
 
+	string Name { get; }
 	ContestantActionsEnum ActionType {get;}
 	ControlMode ControlMode {get;}
 } 
 
 public class ContestantAction<T> : IContestantAction where T : IOccupant{
 
+
+	string name;
 	ContestantActionsEnum actionType;
 
 	Action action;
 	//will be a superclass but for now is just targeted view 
 	TargetSelectorMode<T> controlMode;
+
+	public string Name {
+		get {
+			return name;
+		}
+	}
 
 	public ContestantActionsEnum ActionType {
 		get {
@@ -29,16 +39,17 @@ public class ContestantAction<T> : IContestantAction where T : IOccupant{
 		}
 	}
 
-	//to be generic
 	public ControlMode ControlMode {
 		get {
 			return controlMode;
 		}
 	}
 
-	public ContestantAction(ContestantActionsEnum actionType, Action action, Contestant con, int range, bool friendlyTeam, Func<T, bool> additionalChecks){
+	public ContestantAction(string name, ContestantActionsEnum actionType, Action action, Contestant con, int range, bool friendlyTeam, Func<T, bool> additionalChecks){
+		this.name = name;
 		this.actionType = actionType;
 		this.action = action;
+
 		this.controlMode = new TargetSelectorMode<T> (con, this.action, range, friendlyTeam, additionalChecks);
 	}
 }
@@ -52,7 +63,7 @@ public enum ContestantActionsEnum {
 
 public static class ContestantActionsFactory {
 	
-	public static ContestantAction<T> CreateAction<T>(ContestantActionsEnum actionType, Contestant con, int range, bool friendlyTeam, Func<T, bool> additionalChecks = null) where T : IOccupant{
+	public static ContestantAction<T> CreateAction<T>(string name, ContestantActionsEnum actionType, Contestant con, int range, bool friendlyTeam, Func<T, bool> additionalChecks = null) where T : IOccupant{
 
 		Action action = () => { };
 
@@ -78,7 +89,7 @@ public static class ContestantActionsFactory {
 			break;
 		}
 			
-		return new ContestantAction<T> (actionType, action, con, range, friendlyTeam, additionalChecks);
+		return new ContestantAction<T> (name, actionType, action, con, range, friendlyTeam, additionalChecks);
 	}
 
 			

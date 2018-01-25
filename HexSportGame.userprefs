@@ -1,17 +1,18 @@
 ﻿<Properties RefactoringSettings.EnableRefactorings="True" StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Occupants\Goal.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\User Controls\UI\UIManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\User Controls\UIManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GameManager.cs" Line="90" Column="27" />
-      <File FileName="Assets\Scripts\TeamManager.cs" Line="60" Column="4" />
-      <File FileName="Assets\Scripts\User Controls\TeamUIManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Occupants\Contestant\ContestantData.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\User Controls\UserControlManager.cs" Line="381" Column="24" />
-      <File FileName="Assets\Scripts\Occupants\Contestant\Contestant.cs" Line="28" Column="46" />
-      <File FileName="Assets\Scripts\Occupants\Ball.cs" Line="91" Column="88" />
-      <File FileName="Assets\Scripts\Occupants\ICatcher.cs" Line="8" Column="11" />
-      <File FileName="Assets\Scripts\Occupants\Goal.cs" Line="22" Column="21" />
+      <File FileName="Assets\Scripts\User Controls\UserControlManager.cs" Line="377" Column="52" />
+      <File FileName="Assets\Scripts\User Controls\UI\UIManager.cs" Line="74" Column="33" />
+      <File FileName="Assets\Scripts\Occupants\Contestant\Contestant.cs" Line="170" Column="7" />
+      <File FileName="Assets\Scripts\User Controls\UI\TeamUIManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Occupants\Contestant\ContestantAction.cs" Line="49" Column="20" />
+      <File FileName="Assets\Scripts\User Controls\Modes\TargetSelectorMode.cs" Line="50" Column="19" />
+      <File FileName="Assets\Scripts\User Controls\Modes\ControlMode.cs" Line="40" Column="28" />
+      <File FileName="Assets\Scripts\GameManager.cs" Line="115" Column="28" />
+      <File FileName="Assets\Scripts\Occupants\ICatcher.cs" Line="12" Column="20" />
+      <File FileName="Assets\Scripts\Occupants\Goal.cs" Line="41" Column="4" />
+      <File FileName="Assets\Scripts\User Controls\UI\OnEnableButton.cs" Line="10" Column="24" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -287,10 +287,6 @@ public class UserControlManager : MonoBehaviour {
 		}
 
 		selected = c;
-	
-		if (onSelected != null) {
-			onSelected (c);
-		}
 
 		camAuto.MoveCameraParallelToZeroPlane (selected.CurrentHex.Position, 0.2f);
 
@@ -299,6 +295,10 @@ public class UserControlManager : MonoBehaviour {
 		}
 
 		selected.ShowMovementHexes ();
+
+		if (onSelected != null) {
+			onSelected (c);
+		}
 	}
 
 
