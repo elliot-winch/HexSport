@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ContestantData {
+public class ContestantData : IStats {
 
 	Contestant contestant;
 
@@ -34,6 +34,16 @@ public class ContestantData {
 		}
 	}
 
+	#region IStats implementation
+	Dictionary<string,string> stats; 
+
+	public Dictionary<string, string> Stats {
+		get {
+			return stats;
+		}
+	}
+	#endregion
+
 	//Stats
 	float dexerity;
 	float agility;
@@ -64,6 +74,13 @@ public class ContestantData {
 		this.agility = agility;
 		this.strength = strength;
 		this.health = new Health (startingHealth);
+
+		stats = new Dictionary<string, string> ();
+
+		stats ["Name"] = name;
+		stats ["Dexerity"] = dexerity.ToString();
+		stats ["Agility"] = agility.ToString();
+		stats ["Strength"] = strength.ToString();
 	}
 
 	/*

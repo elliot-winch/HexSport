@@ -3,30 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TeamSelectorButton<T> : Button {
+public class  TeamSelectorButton : MonoBehaviour {
 
-	T data;
-	Team team;
+	public bool active = false;
+	public int originalChildPosition;
 
-	public T Data {
-		get {
-			return data;
+	public void MoveToFront(){
+
+		if (active) {
+			Debug.Log (originalChildPosition);
+
+			this.transform.SetAsLastSibling ();
 		}
-		set {
-			if (data == null) {
-				data = value;
-			} else {
-				Debug.LogError ("Attempting to overwrite data stored in a TeamSelectorButton");
-			}
-		}
+
 	}
 
-	public Team Team {
-		get {
-			return team;
-		} 
-		set {
-			team = value;
+	public void MoveBack(){
+		if (active) {
+			this.transform.SetSiblingIndex (originalChildPosition);
 		}
 	}
+}
+
+public interface IStats {
+
+	Dictionary<string, string> Stats { get; }
 }
