@@ -17,6 +17,14 @@ In placing mode: Need to be able to place any remaining player (cycle with tab).
 
 Next:
 
+Throw and swipe take AP.
+
+Line of sight and orientation!!
+
+Interceptions.
+
+UI : Placement (who is currently selected, who is left to place [tie in with team UI], where you can place, which team is placing). Game: who is selected currently, who has moves remaining,
+
 Gunzzz! and Melee and Armour and Items. 
 
 Go learn some more Maya.
