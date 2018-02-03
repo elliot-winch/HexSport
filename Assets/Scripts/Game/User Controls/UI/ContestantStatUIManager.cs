@@ -74,7 +74,6 @@ public class ContestantStatUIManager : MonoBehaviour {
 
 				textObj.transform.SetParent (offsetter);
 				textObj.transform.localPosition = new Vector3 (0f, textObj.GetComponent<RectTransform> ().rect.height * (i + 0.5f));
-
 			} 
 		}
 
@@ -83,13 +82,16 @@ public class ContestantStatUIManager : MonoBehaviour {
 		}
 
 		//Rescale background
-		background.GetComponent<RectTransform>().sizeDelta = new Vector2(240f, 25f * kvs.Length);
+		RectTransform backgroundRect = background.GetComponent<RectTransform>();
+		backgroundRect.sizeDelta = new Vector2(240f, (25f * kvs.Length));
 
 		Text[] newTextFields = background.GetComponentsInChildren<Text> ();
 
 		for (int j = kvs.Length - 1; j >= 0; j--) {
 			newTextFields[kvs.Length - j - 1].text = string.Format ("{0}: {1}", kvs[j].Key, kvs[j].Value);
 		}
+
+		offsetter.GetComponent<RectTransform>().localPosition = new Vector2 (offsetter.GetComponent<RectTransform>().localPosition.x, 0f);
 	}
 
 	public void SelectedStatUI(ContestantData cd){

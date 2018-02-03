@@ -465,7 +465,7 @@ public class UserControlManager : MonoBehaviour {
 		onDeselected += callback;
 	}
 
-	public GameObject SpawnUIGameObject(Hex h){
+	public GameObject SpawnUIHex(Hex h){
 		
 		GameObject spawned;
 		if (h != null) {

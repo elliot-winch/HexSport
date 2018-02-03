@@ -28,7 +28,7 @@ public class PlacementMode {
 
 		foreach (Tile tile in tiles) {
 			
-			float middleZ = -middleOfBoard - (tile.index.x/2);
+			float middleZ = -middleOfBoard - (tile.index.x/2f);
 
 			if (tile.index.z > middleZ) {
 				placementHexes [teams [0]].Add (tile.GetComponent<Hex> ());
@@ -40,7 +40,7 @@ public class PlacementMode {
 		this.currentTeamIndex = 0;
 		this.currentCDIndex = 0;
 
-		this.hexOutliner = UserControlManager.Instance.SpawnUIGameObject (null);
+		this.hexOutliner = UserControlManager.Instance.SpawnUIHex (null);
 	}
 
 

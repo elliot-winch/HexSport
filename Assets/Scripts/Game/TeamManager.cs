@@ -44,12 +44,12 @@ public class TeamManager : MonoBehaviour {
 		teamsInMatch [one] = 0;
 		teamsInMatch [two] = 0;
 
-		one.AddContestant (new ContestantData ("R", 1f, 1f, 1f, 1));
-		one.AddContestant (new ContestantData ("R", 1f, 1f, 1f, 1));
-		one.AddContestant (new ContestantData ("R", 1f, 1f, 1f, 1));
-		two.AddContestant (new ContestantData ("R", 1f, 1f, 1f, 1));
-		two.AddContestant (new ContestantData ("R", 1f, 1f, 1f, 1));
-		two.AddContestant (new ContestantData ("R", 1f, 1f, 1f, 1));
+		one.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
+		one.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
+		one.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
+		two.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
+		two.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
+		two.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
 
 		/*
 		List<Team> createdTeams = GameObject.Find ("Team Selection Data").GetComponent<TeamTransfer>().Teams;

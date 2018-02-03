@@ -52,7 +52,7 @@ public class ContestantAction<T> : IContestantAction where T : IOccupant{
 		this.action = action;
 		this.time = time;
 
-		this.controlMode = new TargetSelectorMode<T> (con, this.action, range, friendlyTeam, additionalChecks);
+		this.controlMode = new TargetSelectorMode<T> (this, con, range, friendlyTeam, additionalChecks);
 	}
 }
 

@@ -247,7 +247,7 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 		foreach (Hex h in hexes) {
 			if (moveHexesInRange.ContainsKey (h) == false) {
 
-				moveHexesInRange [h] = UserControlManager.Instance.SpawnUIGameObject (h);
+				moveHexesInRange [h] = UserControlManager.Instance.SpawnUIHex (h);
 				moveHexesInRange [h].GetComponent<MeshRenderer> ().material.color = new Color (1 / 3f, 0, 1 / 3f);
 			}
 		}

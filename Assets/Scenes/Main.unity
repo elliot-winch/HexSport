@@ -608,6 +608,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionButtonPrefab: {fileID: 1120692668100180, guid: 2222fe6d63bbad149b8b93ea8bca3456,
     type: 2}
+  probabilitiesPopUp: {fileID: 1240490956899046, guid: 9ab7ecce3cb2f214984bc7238c40fa26,
+    type: 2}
+  probabilityIcon: {fileID: 1285750768377904, guid: 00f80a638489df14f9fa419d356aa950,
+    type: 2}
   buttonSpacing: 0
 --- !u!1 &1103088042
 GameObject:
@@ -841,7 +845,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -50}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1671825481
@@ -1179,7 +1183,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -50}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2001247504

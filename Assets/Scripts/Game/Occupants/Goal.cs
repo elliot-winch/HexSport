@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Goal : MonoBehaviour, ICatcher {
+public class Goal : MonoBehaviour, ICatcher, IStats {
 
 	Hex currentHex;
 
@@ -58,5 +58,18 @@ public class Goal : MonoBehaviour, ICatcher {
 			}
 		}
 	}
+	#endregion
+
+	#region IStats implementation
+
+	public Dictionary<string, string> Stats {
+		get {
+			return new Dictionary<string, string> () {
+				{ "Name",  "Goal" },
+				{ "Value", "1" }
+			};
+		}
+	}
+
 	#endregion
 }

@@ -14,6 +14,8 @@ public class ContestantButtonUIManager : MonoBehaviour {
 	}
 
 	public GameObject actionButtonPrefab;
+	public GameObject probabilitiesPopUp;
+	public GameObject probabilityIcon;
 	public float buttonSpacing;
 
 	Dictionary<Contestant, List<Button>> constantButtonPools; // buttons that always appear (but might be disabled)
@@ -37,6 +39,8 @@ public class ContestantButtonUIManager : MonoBehaviour {
 		UserControlManager.Instance.RegisterOnDeselectedCallback ((con) => {
 			DisableButtonList(con);
 		});
+
+
 	}
 
 	//Player button pools
