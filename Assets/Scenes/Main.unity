@@ -608,7 +608,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionButtonPrefab: {fileID: 1120692668100180, guid: 2222fe6d63bbad149b8b93ea8bca3456,
     type: 2}
-  probabilitiesPopUp: {fileID: 1240490956899046, guid: 9ab7ecce3cb2f214984bc7238c40fa26,
+  probabilitiesPopUp: {fileID: 1436661159093556, guid: d97229875f16e9f48b606819aa49708d,
     type: 2}
   probabilityIcon: {fileID: 1285750768377904, guid: 00f80a638489df14f9fa419d356aa950,
     type: 2}
@@ -691,7 +691,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1107247715
 RectTransform:
   m_ObjectHideFlags: 0

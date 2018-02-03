@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class UserControlManager : MonoBehaviour {
 
@@ -276,14 +277,14 @@ public class UserControlManager : MonoBehaviour {
 		}
 
 		//Left Click
-		if ((Input.GetMouseButtonDown (0) || Input.GetKeyDown(KeyCode.Return)) && hitInfo.collider != null) {
+		if (((Input.GetMouseButtonDown (0) && EventSystem.current.IsPointerOverGameObject() == false) || Input.GetKeyDown(KeyCode.Return)) && hitInfo.collider != null) {
 			if (hitInfo.collider.tag == "Hex") {
 				currentControlMode.OnLeftClick (hitInfo.collider.GetComponent<Hex> ());
 			}
 		}
 
 		//Right Click
-		if ((Input.GetMouseButtonDown (1) || Input.GetKeyDown(KeyCode.Escape)) && hitInfo.collider != null) {
+		if (((Input.GetMouseButtonDown (1) && EventSystem.current.IsPointerOverGameObject() == false) || Input.GetKeyDown(KeyCode.Escape)) && hitInfo.collider != null) {
 			if (hitInfo.collider.tag == "Hex") {
 				currentControlMode.OnRightClick(hitInfo.collider.GetComponent<Hex>());
 			}

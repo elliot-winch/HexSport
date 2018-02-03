@@ -75,7 +75,6 @@
      <Compile Include="Assets\Scripts\Game\TypeToTypeList.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\CameraControls.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\Modes\ControlMode.cs" />
-     <Compile Include="Assets\Scripts\Game\User Controls\Modes\MoveMode.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\Modes\TargetSelectorMode.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\UI\ContestantButtonUIManager.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\UI\ContestantStatUIManager.cs" />

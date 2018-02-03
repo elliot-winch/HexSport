@@ -47,9 +47,15 @@ public class ContestantStatUIManager : MonoBehaviour {
 		UserControlManager.Instance.RegisterOnSelectedCallback ((con) => {
 			SelectedStatUI(con.Data);
 		});
+
+		UserControlManager.Instance.RegisterOnDeselectedCallback ( (con) => {
+			statParent.gameObject.SetActive(false);
+		});
 	}
 
 	void ShowStats(IStats stats, Transform background){
+		statParent.gameObject.SetActive (true);
+
 		Transform offsetter = background.Find ("Offsetter");
 
 		Text[] currentTextFields = offsetter.GetComponentsInChildren<Text> ();

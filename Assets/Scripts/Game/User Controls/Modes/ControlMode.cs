@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class ControlMode {
 
-	//probably fix this at some point. dont need both
 	protected ControlModeEnum type;
 	protected Action<Hex> onMouseOver;
 	protected Action onMouseNotOverMap;
