@@ -17,10 +17,6 @@ In placing mode: Need to be able to place any remaining player (cycle with tab).
 
 Next:
 
-Completing action in TargetSelectorMode needs to switch back to move mode when it's finished.
-Why are the button pools initialising uninteractably?
-
-
 Calculate and display probabilities for each target.
 
 Gunzzz! and Melee and Armour and Items. 
