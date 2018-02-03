@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour, IOccupant {
 
-	public float throwSpeed = 1f;
 	public float throwHeight = 4f;
 	public Vector3 ballOffset = new Vector3(0.5f, 0.5f, 0.5f);
 	Hex currentHex;
@@ -73,22 +72,22 @@ public class Ball : MonoBehaviour, IOccupant {
 		transform.parent = null;
 	}
 
-	public void ThrowToCatcher(Contestant a, ICatcher b, float chanceToThrow){
+	public void ThrowToCatcher(Contestant a, ICatcher b, float chanceToThrow, float time){
 		if (a.Ball == null) {
 			Debug.LogError ("Trying to throw a ball you don't have");
 		}
 
 		Release (a);
 
-		StartCoroutine (Throwroutine (a, b, chanceToThrow));
+		StartCoroutine (Throwroutine (a, b, chanceToThrow, time));
 	}
 
-	IEnumerator Throwroutine(Contestant a, ICatcher b, float chanceToThrow){
+	IEnumerator Throwroutine(Contestant a, ICatcher b, float chanceToThrow, float time){
 		float randomVal = UnityEngine.Random.value;
 
 		if(randomVal <= chanceToThrow){
 
-			yield return StartCoroutine (Launch (a.BallHolderObject.position, b.BallHolderObject.position));
+			yield return StartCoroutine (Launch (a.BallHolderObject.position, b.BallHolderObject.position, time));
 			Receive (b);
 		} else {
 			List<Hex> hexesAroundMissed = GridManager.Instance.Grid.HexesInRangeAccountingObstacles (b.CurrentHex, 1 + ((randomVal - chanceToThrow) * 10f));
@@ -97,7 +96,7 @@ public class Ball : MonoBehaviour, IOccupant {
 
 			Hex hex = hexesAroundMissed [UnityEngine.Random.Range (1, hexesAroundMissed.Count)];
 
-			yield return StartCoroutine (Launch (a.transform.GetChild(0).GetChild(0).position, hex.Position));
+			yield return StartCoroutine (Launch (a.transform.GetChild(0).GetChild(0).position, hex.Position, time));
 
 			CurrentHex = hex;
 
@@ -106,9 +105,10 @@ public class Ball : MonoBehaviour, IOccupant {
 		onFinishedLaunch ();
 	}
 
-	IEnumerator Launch(Vector3 startPos, Vector3 endPos){
+	IEnumerator Launch(Vector3 startPos, Vector3 endPos, float time){
 
 		float distance = Vector3.Distance(startPos, endPos);
+		float throwSpeed = distance / time;
 		float movePercentage = 0f;
 		Vector3 framePosition;
 

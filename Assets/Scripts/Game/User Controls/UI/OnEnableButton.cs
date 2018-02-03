@@ -8,9 +8,9 @@ public class OnEnableButton :  Button{
 
 	void OnEnable(){
 		if (onEnable != null) {
-			gameObject.SetActive( onEnable ());
+			base.interactable = onEnable ();
 		} else {
-			gameObject.SetActive( true);
+			base.interactable = true;
 		}
 	}
 

@@ -299,6 +299,23 @@ public class UserControlManager : MonoBehaviour {
 		}
 	}
 
+	//Run an action
+	public void RunAction(Action<float> a, float time){
+		StartCoroutine (Action(a, time));
+	}
+
+	IEnumerator Action(Action<float> a, float time){
+		a (time);
+
+		//disable buttons
+
+		//here is where you might move the camera, start an animation etc.
+
+		yield return new WaitForSeconds (time);
+
+		ControlModeType = ControlModeEnum.Move;
+	}
+
 	#region internal methods - move mode
 	void SelectHex(Hex h){
 		//Temp - non team members cannot be selected
@@ -402,7 +419,7 @@ public class UserControlManager : MonoBehaviour {
 	#endregion
 
 	#region internal methods - throw mode - plz move this somewhere else
-	public void ThrowToTarget(){
+	public void ThrowToTarget(float time){
 		TargetSelectorMode<ICatcher> tsm = ((TargetSelectorMode<ICatcher>)currentControlMode);
 
 		ICatcher currentTarget = tsm.CurrentTarget;
@@ -416,7 +433,7 @@ public class UserControlManager : MonoBehaviour {
 					ControlModeType = ControlModeEnum.Move;
 				});
 
-				selected.Ball.ThrowToCatcher (selected, catcher, tsm.TargetProbabilities[catcher]);
+				selected.Ball.ThrowToCatcher (selected, catcher, tsm.TargetProbabilities[catcher], time);
 
 			}
 		}
@@ -424,7 +441,8 @@ public class UserControlManager : MonoBehaviour {
 	#endregion
 
 	#region Swipe - temp probs
-	public void SwipeBall(){
+	public void SwipeBall(float time){
+		//time is currently unused by will be used in the future 
 		Contestant target = ((TargetSelectorMode<Contestant>)currentControlMode).CurrentTarget;
 
 		if (target.Ball == null) {

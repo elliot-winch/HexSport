@@ -17,7 +17,8 @@ public class ContestantAction<T> : IContestantAction where T : IOccupant{
 	string name;
 	ContestantActionsEnum actionType;
 
-	Action action;
+	Action<float> action;
+	float time;
 	//will be a superclass but for now is just targeted view 
 	TargetSelectorMode<T> controlMode;
 
@@ -33,7 +34,7 @@ public class ContestantAction<T> : IContestantAction where T : IOccupant{
 		}
 	}
 
-	public Action CompleteAction {
+	public Action<float> CompleteAction {
 		get {
 			return this.action;
 		}
@@ -45,10 +46,11 @@ public class ContestantAction<T> : IContestantAction where T : IOccupant{
 		}
 	}
 
-	public ContestantAction(string name, ContestantActionsEnum actionType, Action action, Contestant con, int range, bool friendlyTeam, Func<T, bool> additionalChecks){
+	public ContestantAction(string name, ContestantActionsEnum actionType, Action<float> action, float time, Contestant con, int range, bool friendlyTeam, Func<T, bool> additionalChecks){
 		this.name = name;
 		this.actionType = actionType;
 		this.action = action;
+		this.time = time;
 
 		this.controlMode = new TargetSelectorMode<T> (con, this.action, range, friendlyTeam, additionalChecks);
 	}
@@ -63,9 +65,9 @@ public enum ContestantActionsEnum {
 
 public static class ContestantActionsFactory {
 	
-	public static ContestantAction<T> CreateAction<T>(string name, ContestantActionsEnum actionType, Contestant con, int range, bool friendlyTeam, Func<T, bool> additionalChecks = null) where T : IOccupant{
+	public static ContestantAction<T> CreateAction<T>(string name, ContestantActionsEnum actionType, float time, Contestant con, int range, bool friendlyTeam, Func<T, bool> additionalChecks = null) where T : IOccupant{
 
-		Action action = () => { };
+		Action<float> action = (t) => { };
 
 		switch (actionType) {
 			
@@ -83,13 +85,13 @@ public static class ContestantActionsFactory {
 			action = UserControlManager.Instance.SwipeBall;
 			break;
 		case ContestantActionsEnum.Shoot: 
-			action = () => {
+			action = (t) => {
 				Debug.Log ("Phew");
 			};
 			break;
 		}
 			
-		return new ContestantAction<T> (name, actionType, action, con, range, friendlyTeam, additionalChecks);
+		return new ContestantAction<T> (name, actionType, action, time, con, range, friendlyTeam, additionalChecks);
 	}
 
 			

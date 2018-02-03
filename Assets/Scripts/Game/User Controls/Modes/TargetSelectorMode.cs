@@ -17,13 +17,13 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 	public T CurrentTarget { get { return currentTarget; } }
 
 	Contestant contestant;
-	Action action;
+	Action<float> action;
 	int range;
 	bool friendlyTeam;
 	Func<T, bool> additionalChecks;
 
 
-	public TargetSelectorMode(Contestant contestant, Action action, int range, bool friendlyTeam, Func<T, bool> additionalChecks = null) 
+	public TargetSelectorMode(Contestant contestant, Action<float> action, int range, bool friendlyTeam, Func<T, bool> additionalChecks = null) 
 		: base(
 			type: ControlModeEnum.DirectTarget,
 			onMouseOver: (hex) => { },
@@ -50,9 +50,8 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 		};
 			
 		onLeftClick = (hex) => {
-			action();
-
-			//when the action is done it should switch back to move
+			//temp number, but might actually be were we calculate time / or get the time from a TimeManager
+			UserControlManager.Instance.RunAction(action, 1f);
 		};
 
 		onTabPressed = () => {
@@ -127,7 +126,6 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 			camAuto.MoveCameraParallelToZeroPlane (contestant.CurrentHex.Position, 0.2f);
 		}
 	}
-
 
 	//UI
 	Dictionary<Hex, GameObject> hexLine;

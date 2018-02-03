@@ -17,7 +17,9 @@ public class ContestantButtonUIManager : MonoBehaviour {
 	public float buttonSpacing;
 
 	Dictionary<Contestant, List<Button>> constantButtonPools; // buttons that always appear (but might be disabled)
-	Dictionary<Contestant, List<Button>> tempButtonPools; //buttons that only appear when an action is possible
+	Dictionary<Contestant, List<Button>> tempButtonPools;
+
+ //buttons that only appear when an action is possible
 
 	void Start () {
 		if (instance != null) {
@@ -50,6 +52,8 @@ public class ContestantButtonUIManager : MonoBehaviour {
 			if (UserControlManager.Instance.Selected == c) {
 				DisableButtonList(c);
 			}
+
+			//CheckButtons
 		});
 
 		List<Button> buttons = new List<Button> ();

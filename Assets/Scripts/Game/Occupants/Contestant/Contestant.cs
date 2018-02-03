@@ -286,16 +286,6 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 			((Ball)o).Receive (this);
 		}
 	}
-
-	void CheckPossibleActions(){
-
-		foreach (IContestantAction act in possibleActions) {
-
-			if (act.ControlMode.CheckValidity == null || (act.ControlMode.CheckValidity != null && act.ControlMode.CheckValidity())) {
-
-			} 
-		}
-	}
 	#endregion
 
 }
