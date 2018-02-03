@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Contestant : MonoBehaviour, ICatcher {
+public class Contestant : MonoBehaviour, ICatcher, IStats {
 
 	public float movesPerTurn = 4f;
 	public float moveSpeed = 3f;
@@ -42,6 +42,16 @@ public class Contestant : MonoBehaviour, ICatcher {
 		}
 	}
 	#endregion
+
+	#region IStats implementation
+
+	public Dictionary<string, string> Stats {
+		get {
+			return data.Stats;
+		}
+	}
+	#endregion
+
 	public Vector3 Position {
 		get {
 			return transform.position;

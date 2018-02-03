@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour {
+public class ContestantButtonUIManager : MonoBehaviour {
 
-	static UIManager instance;
+	static ContestantButtonUIManager instance;
 
-	public static UIManager Instance {
+	public static ContestantButtonUIManager Instance {
 		get {
 			return instance;
 		}
 	}
 
 	public GameObject actionButtonPrefab;
-	public Canvas mainCanvas;
 	public float buttonSpacing;
 
 	Dictionary<Contestant, List<Button>> constantButtonPools; // buttons that always appear (but might be disabled)
@@ -22,7 +21,7 @@ public class UIManager : MonoBehaviour {
 
 	void Start () {
 		if (instance != null) {
-			Debug.LogError ("There should only be one UI Manager");
+			Debug.LogError ("There should only be one ContestantButtonUIManager");
 		}
 
 		instance = this;
@@ -57,7 +56,7 @@ public class UIManager : MonoBehaviour {
 
 		foreach(IContestantAction a in con.PossibleActions){
 
-			GameObject button = Instantiate (actionButtonPrefab, Vector3.zero, Quaternion.identity, mainCanvas.transform);
+			GameObject button = Instantiate (actionButtonPrefab, Vector3.zero, Quaternion.identity, GameManager.Instance.mainCanvas.transform);
 			button.name = con.name + " Button " + a.Name;
 		
 			button.GetComponentInChildren<Text> ().text = a.Name;

@@ -38,7 +38,6 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 			autoOnly: true)
 	{
 
-
 		onLeavingMode = () => {
 			ClearLineUI ();
 			camCont.enabled = true;
@@ -52,6 +51,8 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 			
 		onLeftClick = (hex) => {
 			action();
+
+			//when the action is done it should switch back to move
 		};
 
 		onTabPressed = () => {
@@ -69,6 +70,32 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 		this.range = range;
 		this.friendlyTeam = friendlyTeam;
 		this.additionalChecks = additionalChecks;
+
+		bool willShowStats = false;
+
+		Type[] interfaces = typeof(T).GetInterfaces ();
+
+		foreach (Type t in interfaces) {
+			if (t == typeof(IStats)) {
+				willShowStats = true;
+			}
+		}
+
+			
+		if (willShowStats){
+			onEnteringMode += () => {
+				ContestantStatUIManager.Instance.TargetStatParent.gameObject.SetActive (true);
+				ContestantStatUIManager.Instance.ShowTargetUI((IStats)currentTarget);
+			};
+
+			onLeavingMode += () => {
+				ContestantStatUIManager.Instance.TargetStatParent.gameObject.SetActive (false);
+			};
+
+			onTabPressed += () => {
+				ContestantStatUIManager.Instance.ShowTargetUI((IStats)currentTarget);
+			};
+		}
 
 	}
 
@@ -94,6 +121,7 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 			camAuto.MoveCameraParallelToZeroPlane (currentTarget.CurrentHex.Position, 0.2f);
 
 			LineMouseUI (contestant, currentTarget.CurrentHex);
+
 		} else {
 			Debug.Log ("No valid targets");
 			camAuto.MoveCameraParallelToZeroPlane (contestant.CurrentHex.Position, 0.2f);

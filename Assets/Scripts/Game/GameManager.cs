@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public Canvas mainCanvas;
+
 	public GameObject testContestant;
 	public GameObject ballPrefab;
 
@@ -114,7 +116,7 @@ public class GameManager : MonoBehaviour {
 
 		c.PossibleActions.Add ( ContestantActionsFactory.CreateAction<Contestant> ("Swipe", ContestantActionsEnum.Swipe, c, 1, false, checkForBall));
 
-		UIManager.Instance.CreateButtonPool (c);
+		ContestantButtonUIManager.Instance.CreateButtonPool (c);
 
 	}
 

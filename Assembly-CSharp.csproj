@@ -77,9 +77,10 @@
      <Compile Include="Assets\Scripts\Game\User Controls\Modes\ControlMode.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\Modes\MoveMode.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\Modes\TargetSelectorMode.cs" />
+     <Compile Include="Assets\Scripts\Game\User Controls\UI\ContestantButtonUIManager.cs" />
+     <Compile Include="Assets\Scripts\Game\User Controls\UI\ContestantStatUIManager.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\UI\OnEnableButton.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\UI\TeamUIManager.cs" />
-     <Compile Include="Assets\Scripts\Game\User Controls\UI\UIManager.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\UserControlManager.cs" />
      <Compile Include="Assets\Scripts\Team Selection\TeamSelectionManager.cs" />
      <Compile Include="Assets\Scripts\Team Selection\TeamSelectorButton.cs" />

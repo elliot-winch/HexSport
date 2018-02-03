@@ -75,7 +75,6 @@ public class PlacementMode {
 		if (CanPlace (h)) {
 
 			GameManager.Instance.SpawnContestant (teams [currentTeamIndex].Contestants [currentCDIndex++], h);
-			Debug.Log ("Spawning");
 
 			if (currentCDIndex >= teams [currentTeamIndex].Contestants.Count) {
 				currentTeamIndex++;

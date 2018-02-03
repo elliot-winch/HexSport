@@ -1,13 +1,17 @@
 ﻿<Properties RefactoringSettings.EnableRefactorings="True" StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Game\GameManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Game\User Controls\Modes\TargetSelectorMode.cs">
     <Files>
-      <File FileName="Assets\Scripts\Game\PlacementMode.cs" Line="78" Column="27" />
-      <File FileName="Assets\Scripts\Game\GameManager.cs" Line="115" Column="144" />
-      <File FileName="Assets\Scripts\Game\Occupants\Contestant\ContestantAction.cs" Line="51" Column="24" />
-      <File FileName="Assets\Scripts\Game\User Controls\UI\UIManager.cs" Line="42" Column="2" />
-      <File FileName="Assets\Scripts\Game\User Controls\Modes\TargetSelectorMode.cs" Line="66" Column="1" />
-      <File FileName="Assets\Scripts\Game\User Controls\UserControlManager.cs" Line="80" Column="4" />
+      <File FileName="Assets\Scripts\Game\User Controls\UserControlManager.cs" Line="408" Column="46" />
+      <File FileName="Assets\Scripts\Game\CameraAutoMove.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Game\PlacementMode.cs" Line="78" Column="1" />
+      <File FileName="Assets\Scripts\Game\User Controls\UI\ContestantStatUIManager.cs" Line="15" Column="18" />
+      <File FileName="Assets\Scripts\Game\User Controls\Modes\TargetSelectorMode.cs" Line="63" Column="35" />
+      <File FileName="Assets\Scripts\Game\Occupants\Contestant\ContestantAction.cs" Line="53" Column="22" />
+      <File FileName="Assets\Scripts\Game\Occupants\Contestant\ContestantData.cs" Line="5" Column="31" />
+      <File FileName="Assets\Scripts\Game\Occupants\Wall.cs" Line="24" Column="1" />
+      <File FileName="Assets\Scripts\Game\Occupants\Contestant\Contestant.cs" Line="45" Column="2" />
+      <File FileName="Assets\Scripts\Game\Occupants\ICatcher.cs" Line="6" Column="38" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

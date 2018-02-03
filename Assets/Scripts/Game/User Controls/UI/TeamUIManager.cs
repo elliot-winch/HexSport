@@ -24,7 +24,7 @@ public class TeamUIManager : MonoBehaviour {
 
 		instance = this;
 
-		Canvas mainCanvas = UIManager.Instance.mainCanvas;
+		Canvas mainCanvas = GameManager.Instance.mainCanvas;
 		Image[] teamBackground = mainCanvas.GetComponentsInChildren<Image> ();
 			
 		List<Team> tim = TeamManager.Instance.TeamsInMatch;
@@ -69,7 +69,7 @@ public class TeamUIManager : MonoBehaviour {
 	}
 	
 	public void UpdateScoreUI (int teamIndex, int value) {
-		Canvas mainCanvas = UIManager.Instance.mainCanvas;
+		Canvas mainCanvas = GameManager.Instance.mainCanvas;
 		Image[] teamBackground = mainCanvas.GetComponentsInChildren<Image> ();	
 
 		teamBackground [teamIndex].transform.Find ("Text - Score").GetComponent<Text> ().text = value.ToString();
