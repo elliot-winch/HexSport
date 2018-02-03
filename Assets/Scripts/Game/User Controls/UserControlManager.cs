@@ -47,13 +47,16 @@ public class UserControlManager : MonoBehaviour {
 			return currentControlMode;
 		}
 		set {
-			if (currentControlMode != null && currentControlMode.OnLeavingMode != null) {
-				Debug.Log ("called");
-				currentControlMode.OnLeavingMode ();
+			if (currentControlMode != null){
+				if (currentControlMode.OnLeavingMode != null) {
+					currentControlMode.OnLeavingMode ();
+				}
 			}
 
 			currentControlMode = value;
 			modeType = currentControlMode.ModeType;
+
+			camCont.enabled = (currentControlMode.AutoOnly == false);
 
 			currentControlMode.OnEnteringMode ();
 
@@ -72,6 +75,8 @@ public class UserControlManager : MonoBehaviour {
 
 			currentControlMode = controlModes [(int)value];
 			modeType = value;
+
+			camCont.enabled = (currentControlMode.AutoOnly == false);
 
 			currentControlMode.OnEnteringMode ();
 

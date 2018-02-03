@@ -93,7 +93,6 @@ public class GameManager : MonoBehaviour {
 		c.CurrentHex =  startingHex;
 		c.Position = startingHex.Position;
 		c.Data = d;
-
 		d.Contestant = c;
 
 
@@ -101,7 +100,7 @@ public class GameManager : MonoBehaviour {
 		if (d.CanShoot) {
 			c.PossibleActions.Add (ContestantActionsFactory.CreateAction<IOccupant> ("Shoot", ContestantActionsEnum.Shoot, c, 4, true));
 		}
-
+			
 		Func<ICatcher, bool> throwReqs = (con) => {
 
 			return c.Ball != null && con.Ball == null;
@@ -116,6 +115,7 @@ public class GameManager : MonoBehaviour {
 		c.PossibleActions.Add ( ContestantActionsFactory.CreateAction<Contestant> ("Swipe", ContestantActionsEnum.Swipe, c, 1, false, checkForBall));
 
 		UIManager.Instance.CreateButtonPool (c);
+
 	}
 
 

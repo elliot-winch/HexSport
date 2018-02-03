@@ -23,6 +23,7 @@ public class CameraAutoMove : MonoBehaviour {
 	}
 
 	IEnumerator LerpCamera(Vector3 lookPoint, float speed){
+
 		if (running != null) {
 			CancelAutoMove ();
 		}

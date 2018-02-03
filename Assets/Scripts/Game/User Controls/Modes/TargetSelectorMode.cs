@@ -63,7 +63,6 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 		};
 
 		this.AutoOnly = true;
-		camCont.enabled = false;
 
 		this.contestant = contestant;
 		this.action = action;
