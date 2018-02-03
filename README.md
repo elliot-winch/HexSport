@@ -17,8 +17,6 @@ In placing mode: Need to be able to place any remaining player (cycle with tab).
 
 Next:
 
-Calculate and display probabilities for each target.
-
 Gunzzz! and Melee and Armour and Items. 
 
 Go learn some more Maya.
