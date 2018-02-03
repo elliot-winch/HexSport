@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour {
 
 		SpawnBall ();
 
-		//counter is temp. in fact, this will all be temp as playes choose where to spawn
+/*		//counter is temp. in fact, this will all be temp as playes choose where to spawn
 		int counter = 9;
 		foreach (Team t in TeamManager.Instance.TeamsInMatch) {
 			foreach (ContestantData d in t.Contestants) {
@@ -77,14 +77,12 @@ public class GameManager : MonoBehaviour {
 				counter++;
 			}
 		}
+		*/
 
-		CheckStartOfTurn ();
-
-		UserControlManager.Instance.ControlModeType = ControlModeEnum.Move;
-
+		UserControlManager.Instance.ControlModeType = ControlModeEnum.Placement;
 	}
 	
-	void SpawnContestant (ContestantData d, Hex startingHex) {
+	public void SpawnContestant (ContestantData d, Hex startingHex) {
 		//prefab is temp, will load prefab of correct type
 		GameObject go = Instantiate (testContestant, startingHex.Position, testContestant.transform.rotation, transform);
 		go.transform.GetChild(0).GetComponent<MeshRenderer> ().material.color = d.Team.Color;	

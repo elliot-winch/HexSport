@@ -80,7 +80,7 @@ public class Hex : MonoBehaviour {
 
 	public bool OccupantBlocksMovement {
 		get {
-			return Occupant != null && (Occupant is Contestant || Occupant is Wall);
+			return Occupant != null && (Occupant is Contestant || Occupant is Wall || Occupant is Goal);
 		}
 	}
 

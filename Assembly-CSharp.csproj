@@ -69,6 +69,7 @@
      <Compile Include="Assets\Scripts\Game\Occupants\ICatcher.cs" />
      <Compile Include="Assets\Scripts\Game\Occupants\IOccupant.cs" />
      <Compile Include="Assets\Scripts\Game\Occupants\Wall.cs" />
+     <Compile Include="Assets\Scripts\Game\PlacementMode.cs" />
      <Compile Include="Assets\Scripts\Game\PriorityQueue.cs" />
      <Compile Include="Assets\Scripts\Game\TeamManager.cs" />
      <Compile Include="Assets\Scripts\Game\TypeToTypeList.cs" />
@@ -82,6 +83,7 @@
      <Compile Include="Assets\Scripts\Game\User Controls\UserControlManager.cs" />
      <Compile Include="Assets\Scripts\Team Selection\TeamSelectionManager.cs" />
      <Compile Include="Assets\Scripts\Team Selection\TeamSelectorButton.cs" />
+     <Compile Include="Assets\Scripts\Team Selection\TeamTransfer.cs" />
      <Compile Include="Assets\Tile.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

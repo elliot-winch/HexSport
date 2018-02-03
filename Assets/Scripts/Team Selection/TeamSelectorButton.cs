@@ -11,8 +11,6 @@ public class  TeamSelectorButton : MonoBehaviour {
 	public void MoveToFront(){
 
 		if (active) {
-			Debug.Log (originalChildPosition);
-
 			this.transform.SetAsLastSibling ();
 		}
 

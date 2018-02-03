@@ -38,17 +38,28 @@ public class TeamManager : MonoBehaviour {
 
 		teamsInMatch = new Dictionary<Team, int> ();
 
-		teamsInMatch[new Team ("Team 1", Color.red)] = 0;
-		teamsInMatch[new Team ("Team 2", Color.blue)] = 0;
+		Team one = new Team ("Team 1", Color.red);
+		Team two = new Team ("Team 2", Color.blue);
 
-	
+		teamsInMatch [one] = 0;
+		teamsInMatch [two] = 0;
 
-		for (int i = 0; i < 3; i++) {
-			foreach (Team t in teamsInMatch.Keys) {
-				t.AddContestant (new ContestantData ("Dave" + i.ToString(), i, i, i, i));
-			}
+		one.AddContestant (new ContestantData ("R", 1f, 1f, 1f, 1));
+		one.AddContestant (new ContestantData ("R", 1f, 1f, 1f, 1));
+		one.AddContestant (new ContestantData ("R", 1f, 1f, 1f, 1));
+		two.AddContestant (new ContestantData ("R", 1f, 1f, 1f, 1));
+		two.AddContestant (new ContestantData ("R", 1f, 1f, 1f, 1));
+		two.AddContestant (new ContestantData ("R", 1f, 1f, 1f, 1));
+
+		/*
+		List<Team> createdTeams = GameObject.Find ("Team Selection Data").GetComponent<TeamTransfer>().Teams;
+
+		foreach (Team t in createdTeams) {
+			Debug.Log (t.Contestants.Count);
+			teamsInMatch [t] = 0;
+
 		}
-
+		* this is the real shit */
 	}
 
 

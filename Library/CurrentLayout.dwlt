@@ -20,7 +20,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 2}
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 392}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -109,7 +109,7 @@ MonoBehaviour:
   m_MinSize: {x: 683, y: 342}
   m_MaxSize: {x: 12008, y: 8042}
   vertical: 0
-  controlID: 109
+  controlID: 74
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -133,7 +133,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 342}
   m_MaxSize: {x: 8006, y: 8042}
   vertical: 1
-  controlID: 110
+  controlID: 88
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -157,7 +157,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 221}
   m_MaxSize: {x: 8006, y: 4021}
   vertical: 0
-  controlID: 111
+  controlID: 11
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -228,8 +228,8 @@ MonoBehaviour:
     y: 486
     width: 1486
     height: 461
-  m_MinSize: {x: 102, y: 121}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 16}
@@ -369,20 +369,20 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: ca33fcff
-    m_LastClickedID: -248886
-    m_ExpandedIDs: f231fcffd833fcff6078fcff6e79fcff4c95fcffb895fcffee95fcff5a96fcffcefefdffd64dfeffd8a6feffa8ccfefff8ecfeff1efcfeff5006ffffa42fffffa844ffff2473ffff928affff609cffffd8a7ffff62c5ffff1ad5ffff9efbffff00000000b4280000be280000
+    m_SelectedIDs: b2540000
+    m_LastClickedID: 21682
+    m_ExpandedIDs: 0293f5ffd2c0f6ffd4c0f6ffde37f7ff4473f7ffa2acf7ffae7bf8ff3a9ff9ff66aaf9ffbe1cfaffce94faff94cefaff7e08fbff7a44fbffe449fbffd24efbff0e85fbffe2befbffa6c4fbff7e01fcffaa39fcffc079fcff5c02feffeefefeffc068ffff926affff946bffff9efbfffff4ffffff00000000be280000c8280000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: TeamSelectorButton(Clone)
-      m_OriginalName: TeamSelectorButton(Clone)
+      m_Name: Game Manager
+      m_OriginalName: Game Manager
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: -211972
+      m_UserData: 19324
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 0
@@ -390,7 +390,7 @@ MonoBehaviour:
       m_ClientGUIView: {fileID: 8}
     m_SearchString: 
   m_ExpandedScenes:
-  - Team Selection
+  - Main
   m_CurrenRootInstanceID: 0
   m_Locked: 0
   m_CurrentSortingName: TransformSorting
@@ -422,14 +422,14 @@ MonoBehaviour:
     height: 465
   m_PersistentViewDataDictionary: {fileID: 0}
   m_SceneLighting: 1
-  lastFramingTime: 7790.327879788159
+  lastFramingTime: 14953.482705032735
   m_2DMode: 0
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 96, y: 318, z: 0}
+    m_Target: {x: 26.500042, y: 13.884306, z: 24.258612}
     speed: 2
-    m_Value: {x: 96, y: 318, z: 0}
+    m_Value: {x: 26.500042, y: 13.884306, z: 24.258612}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -453,13 +453,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: -0.1278127, y: -0.11249808, z: 0.014593194, w: -0.98528934}
+    m_Target: {x: -0.5139309, y: 0.48603636, z: -0.5038564, w: -0.4957544}
     speed: 2
-    m_Value: {x: -0.12781271, y: -0.11249809, z: 0.014593195, w: -0.9852894}
+    m_Value: {x: -0.5139309, y: 0.48603636, z: -0.5038564, w: -0.4957544}
   m_Size:
-    m_Target: 311.32138
+    m_Target: 5284.7495
     speed: 2
-    m_Value: 311.32138
+    m_Value: 5284.7495
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -537,19 +537,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Scripts/Team Selection
+    - Assets/Scenes
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts/Team Selection
+  - Assets/Scenes
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\Elliot Winch\Documents\Unity Projects\HexSportGame
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: bc270000
-    m_LastClickedID: 10172
-    m_ExpandedIDs: 00000000a2270000c4270000cc270000ec27000034280000702800007228000000ca9a3bffffff7f
+    m_SelectedIDs: 02280000
+    m_LastClickedID: 10242
+    m_ExpandedIDs: 00000000a2270000c4270000cc270000e4270000ec27000002280000342800006e2800007028000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -577,7 +577,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000a2270000c4270000cc270000ec270000342800007028000072280000
+    m_ExpandedIDs: 00000000a2270000c4270000cc270000ec270000342800006e28000070280000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -602,8 +602,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: ca33fcff
-    m_LastClickedInstanceID: -248886
+    m_SelectedInstanceIDs: 
+    m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c623000098270000ba3f0000a0270000845f0000da280000e2280000182e00006cc9fefff8f6f8ff7a82feff7c2a0000682700006c280000
     m_RenameOverlay:

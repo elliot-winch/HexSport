@@ -15,7 +15,6 @@ public class UserControlManager : MonoBehaviour {
 		}
 	}
 
-	public Button throwButton;
 	public KeyCode selectNextKey = KeyCode.Tab;
 
 	GameObject flatHexPrefab;
@@ -49,6 +48,7 @@ public class UserControlManager : MonoBehaviour {
 		}
 		set {
 			if (currentControlMode != null && currentControlMode.OnLeavingMode != null) {
+				Debug.Log ("called");
 				currentControlMode.OnLeavingMode ();
 			}
 
@@ -206,14 +206,47 @@ public class UserControlManager : MonoBehaviour {
 			autoOnly: false
 		);
 
-		ControlModeType = ControlModeEnum.Observe;
+		//Placement
+		PlacementMode pm = new PlacementMode(TeamManager.Instance.TeamsInMatch);
 
-		Debug.Log (modeType);
-		Debug.Log (currentControlMode.ToString());
+		controlModes [(int)ControlModeEnum.Placement] = new ControlMode (
+			type: ControlModeEnum.Placement,
+
+			onMouseOver: (hex) => {
+				//if over valid hex, green & show ghost of model, else red
+				pm.PlacementUI(hex);
+			},
+
+			onMouseNotOverMap: () => {
+				pm.DisablePlacementUI();
+			},
+
+			onLeftClick: (hex) => {
+				pm.PlaceContestant(hex); //or pick up previously placed contestant
+			},
+
+			onRightClick : (hex) => {
+				//perhaps remove contestant?
+			},
+
+			onTabPressed: () => {
+				//cycle through contestants
+			},
+
+			onEnteringMode: () => {
+				//select first contestant - which is done by constructor
+			},
+
+			onLeavingMode: () => {
+				pm.EraseUI();
+			},
+
+			autoOnly: false
+		);
 	}
 
 	void Update () {
-		
+
 		RaycastHit hitInfo;
 
 		Ray r = Camera.main.ScreenPointToRay (Input.mousePosition);
@@ -410,13 +443,19 @@ public class UserControlManager : MonoBehaviour {
 	}
 
 	public GameObject SpawnUIGameObject(Hex h){
-		GameObject spawned = Instantiate (flatHexPrefab, h.Position + new Vector3 (0, 0.001f, 0), Quaternion.identity, transform);
+		
+		GameObject spawned;
+		if (h != null) {
+			spawned = Instantiate (flatHexPrefab, h.Position + new Vector3 (0, 0.001f, 0), Quaternion.identity, transform);
+		} else {
+			spawned = Instantiate (flatHexPrefab, Vector3.zero, Quaternion.identity, transform);
+		}
 
 		spawned.transform.Rotate (new Vector3 (270, 0, 0));
 		spawned.SetActive (true);
 
-		spawned.transform.parent = selected.transform;
-		spawned.name = "Move UI Hex";
+		//spawned.transform.parent = selected.transform;
+		spawned.name = "UI Hex - UserControlManager Created";
 
 		return spawned;
 	}
@@ -425,5 +464,6 @@ public class UserControlManager : MonoBehaviour {
 public enum ControlModeEnum {
 	Observe,
 	Move,
-	DirectTarget
+	DirectTarget,
+	Placement
 }

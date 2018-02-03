@@ -8,11 +8,8 @@ public class OnEnableButton :  Button{
 
 	void OnEnable(){
 		if (onEnable != null) {
-			Debug.Log ("on enabled is not null");
-		
 			gameObject.SetActive( onEnable ());
 		} else {
-			Debug.Log ("on enabled is null");
 			gameObject.SetActive( true);
 		}
 	}
