@@ -23,4 +23,4 @@ UI : Placement (who is currently selected, who is left to place [tie in with tea
 
 Gunzzz! and Melee and Armour and Items. 
 
-Go learn some more Maya.
+Find a 3D artist
