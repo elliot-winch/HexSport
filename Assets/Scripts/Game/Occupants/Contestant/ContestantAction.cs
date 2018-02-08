@@ -46,13 +46,13 @@ public class ContestantAction<T> : IContestantAction where T : IOccupant{
 		}
 	}
 
-	public ContestantAction(string name, ContestantActionsEnum actionType, Action<float> action, float time, Contestant con, int range, bool friendlyTeam, Func<T, bool> additionalChecks){
+	public ContestantAction(string name, ContestantActionsEnum actionType, Action<float> action, float time, Contestant con, int range, float timeCost, bool friendlyTeam, Func<T, bool> additionalChecks){
 		this.name = name;
 		this.actionType = actionType;
 		this.action = action;
 		this.time = time;
 
-		this.controlMode = new TargetSelectorMode<T> (this, con, range, friendlyTeam, additionalChecks);
+		this.controlMode = new TargetSelectorMode<T> (this, con, range, timeCost, friendlyTeam, additionalChecks);
 	}
 }
 
@@ -65,7 +65,7 @@ public enum ContestantActionsEnum {
 
 public static class ContestantActionsFactory {
 	
-	public static ContestantAction<T> CreateAction<T>(string name, ContestantActionsEnum actionType, float time, Contestant con, int range, bool friendlyTeam, Func<T, bool> additionalChecks = null) where T : IOccupant{
+	public static ContestantAction<T> CreateAction<T>(string name, ContestantActionsEnum actionType, float time, Contestant con, int range, float timeCost, bool friendlyTeam, Func<T, bool> additionalChecks = null) where T : IOccupant{
 
 		Action<float> action = (t) => { };
 
@@ -91,7 +91,7 @@ public static class ContestantActionsFactory {
 			break;
 		}
 			
-		return new ContestantAction<T> (name, actionType, action, time, con, range, friendlyTeam, additionalChecks);
+		return new ContestantAction<T> (name, actionType, action, time, con, range, timeCost, friendlyTeam, additionalChecks);
 	}
 
 			

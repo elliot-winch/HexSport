@@ -71,9 +71,10 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 		get {
 			return movesRemaining;
 		}
-		private set {
+		set {
 			movesRemaining = value;
 
+			//this needs to change to remaining possible actions
 			GameManager.Instance.CheckStartOfTurn ();
 		}
 	}

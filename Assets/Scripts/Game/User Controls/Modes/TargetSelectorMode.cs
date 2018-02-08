@@ -24,7 +24,7 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 	Func<T, bool> additionalChecks;
 
 
-	public TargetSelectorMode(ContestantAction<T> conAction, Contestant contestant, int range, bool friendlyTeam, Func<T, bool> additionalChecks = null) 
+	public TargetSelectorMode(ContestantAction<T> conAction, Contestant contestant, int range, float timeCost, bool friendlyTeam, Func<T, bool> additionalChecks = null) 
 		: base(
 			type: ControlModeEnum.DirectTarget,
 			onMouseOver: (hex) => { },
@@ -56,6 +56,7 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 			
 		onLeftClick = (hex) => {
 			//temp number, but might actually be were we calculate time / or get the time from a TimeManager
+			contestant.MovesRemaining -= timeCost;
 			UserControlManager.Instance.RunAction(conAction.CompleteAction, 1f);
 		};
 
@@ -64,7 +65,7 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 		};
 
 		CheckValidity = () => {
-			return CalculateTargets() > 0;
+			return this.contestant.MovesRemaining >= timeCost && CalculateTargets() > 0;
 		};
 
 		this.AutoOnly = true;

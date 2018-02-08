@@ -72,6 +72,7 @@ public class TeamUIManager : MonoBehaviour {
 		Canvas mainCanvas = GameManager.Instance.mainCanvas;
 		Image[] teamBackground = mainCanvas.GetComponentsInChildren<Image> ();	
 
+		//FIXME: scoring gives this error. also ball offset on goal is wrong
 		teamBackground [teamIndex].transform.Find ("Text - Score").GetComponent<Text> ().text = value.ToString();
 	}
 }

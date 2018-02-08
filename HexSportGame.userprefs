@@ -1,12 +1,14 @@
 ﻿<Properties RefactoringSettings.EnableRefactorings="True" StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Game\User Controls\Modes\TargetSelectorMode.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Game\Occupants\Contestant\Contestant.cs">
     <Files>
-      <File FileName="Assets\Scripts\Game\User Controls\UserControlManager.cs" Line="287" Column="36" />
-      <File FileName="Assets\Scripts\Game\User Controls\UI\ContestantStatUIManager.cs" Line="60" Column="3" />
-      <File FileName="Assets\Scripts\Game\User Controls\UI\OnEnableButton.cs" Line="15" Column="66" />
-      <File FileName="Assets\Scripts\Game\User Controls\UI\ContestantButtonUIManager.cs" Line="81" Column="43" />
-      <File FileName="Assets\Scripts\Game\User Controls\Modes\TargetSelectorMode.cs" Line="197" Column="37" />
+      <File FileName="Assets\Scripts\Game\Occupants\Contestant\Contestant.cs" Line="101" Column="3" />
+      <File FileName="Assets\Scripts\Game\Occupants\Contestant\ContestantAction.cs" Line="94" Column="79" />
+      <File FileName="Assets\Scripts\Game\User Controls\Modes\ControlMode.cs" Line="26" Column="2" />
+      <File FileName="Assets\Scripts\Game\User Controls\UI\ContestantButtonUIManager.cs" Line="82" Column="33" />
+      <File FileName="Assets\Scripts\Game\GameManager.cs" Line="120" Column="3" />
+      <File FileName="Assets\Scripts\Game\Map\Hex.cs" Line="91" Column="3" />
+      <File FileName="Assets\Scripts\Game\User Controls\UI\TeamUIManager.cs" Line="75" Column="71" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
