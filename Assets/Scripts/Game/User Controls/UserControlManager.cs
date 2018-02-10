@@ -389,7 +389,7 @@ public class UserControlManager : MonoBehaviour {
 		if (selected != null) {
 
 			if (selected.Moving == false && selected.MoveHexesInRange.Contains (mouseHex)) {
-				Path p = new Path (GridManager.Instance.Grid, selected.CurrentHex, mouseHex);
+				AStarPath p = new AStarPath (GridManager.Instance.Grid, selected.CurrentHex, mouseHex, true);
 
 				List<Vector3> hexPositions = new List<Vector3> ();
 

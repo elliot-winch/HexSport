@@ -200,7 +200,7 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 
 			HideMovementHexes ();
 
-			Path p = new Path (GridManager.Instance.Grid, currentHex, destHex);
+			AStarPath p = new AStarPath (GridManager.Instance.Grid, currentHex, destHex, true);
 
 			Hex next;
 

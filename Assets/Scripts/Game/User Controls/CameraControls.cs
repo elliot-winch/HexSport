@@ -18,6 +18,7 @@ public class CameraControls : MonoBehaviour {
 	Plane zeroPlane = new Plane(Vector3.up, Vector3.zero);
 
 	CameraAutoMove cAuto;
+	CameraResponder cResp;
 
 	public float CameraHeight {
 		get {
@@ -25,12 +26,13 @@ public class CameraControls : MonoBehaviour {
 		}
 		set {
 			cameraHeight = value;
-			transform.position = new Vector3(transform.position.x, cameraHeight, transform.position.y);
+			transform.position = new Vector3(transform.position.x, cameraHeight, transform.position.z);
 		}
 	}
 
 	void Start () {
 		cAuto = GetComponent<CameraAutoMove> ();
+		cResp = GetComponent<CameraResponder> ();
 
 		CameraHeight = cameraHeight;
 

@@ -10,6 +10,14 @@ public class ContestantStatUIManager : MonoBehaviour {
 
 	static ContestantStatUIManager instance;
 
+	public GameObject contestantLabelPrefab;
+	[Range(0,1)]
+	public float labelAlphaLow;
+	[Range(0,1)]
+	public float labelAlphaHigh;
+	public Vector2 minLabelSize;		//this is the size of the label at the top of the screen
+	public Vector2 labelSizeIncrease;	//this + minLabelSize is the size of the label at the bottom of the screen
+
 	Font arial;
 	Transform statParent;
 	Transform targetStatParent;
@@ -46,11 +54,54 @@ public class ContestantStatUIManager : MonoBehaviour {
 
 		UserControlManager.Instance.RegisterOnSelectedCallback ((con) => {
 			SelectedStatUI(con.Data);
+
+			SetLabelAlpha (con.transform.Find("Canvas").Find("Contestant Label"), labelAlphaHigh);
+
 		});
 
 		UserControlManager.Instance.RegisterOnDeselectedCallback ( (con) => {
 			statParent.gameObject.SetActive(false);
+
+			SetLabelAlpha (con.transform.Find("Canvas").Find("Contestant Label"), labelAlphaLow);
+
 		});
+	}
+
+	void Update(){
+		foreach (Contestant con in TeamManager.Instance.AllContestants) {
+			SetLabelPosition (con, con.transform.Find("Canvas").Find("Contestant Label"));
+		}
+	}
+
+	//Methods
+	public void InitLabelUI(Contestant con){
+		GameObject label = Instantiate (contestantLabelPrefab, con.transform.Find ("Canvas"));
+		label.name = "Contestant Label";
+
+		SetLabelAlpha (con.transform, labelAlphaLow);
+	
+		SetLabelPosition (con, label.transform);
+
+		label.GetComponentInChildren<Text> ().text = con.Data.Name;
+		//label.GetComponentInChildren<Slider>().value = startingHex / maxHealth
+	}
+
+	void SetLabelPosition(Contestant con, Transform label){
+		Bounds conBounds = con.GetComponentInChildren<MeshRenderer> ().bounds;
+
+		Vector3 labelWorldPos = con.Position + new Vector3(0f, (conBounds.center.y + conBounds.extents.y) * 1.4f, 0f);
+
+		label.position = Camera.main.WorldToScreenPoint (labelWorldPos);
+
+		//Comment these lines out to see their effect. The box doesn't change size as you move
+		//the camera, which creates a funky non-persepctive effect.
+		label.localScale = labelSizeIncrease * ((Screen.height - label.position.y) / Screen.height) + minLabelSize;
+	}
+
+	void SetLabelAlpha(Transform label, float alpha){
+		foreach (CanvasRenderer l in label.GetComponentsInChildren<CanvasRenderer>()) {
+			l.SetAlpha (alpha);
+		}
 	}
 
 	void ShowStats(IStats stats, Transform background){
@@ -107,4 +158,6 @@ public class ContestantStatUIManager : MonoBehaviour {
 	public void ShowTargetUI(IStats s){
 		ShowStats(s, targetStatParent);
 	}
+
+
 }

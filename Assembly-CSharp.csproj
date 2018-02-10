@@ -53,11 +53,13 @@
   <ItemGroup>
      <Compile Include="Assets\Grid.cs" />
      <Compile Include="Assets\Scripts\Game\CameraAutoMove.cs" />
+     <Compile Include="Assets\Scripts\Game\CameraResponder.cs" />
      <Compile Include="Assets\Scripts\Game\GameManager.cs" />
+     <Compile Include="Assets\Scripts\Game\Map\AStarPath.cs" />
+     <Compile Include="Assets\Scripts\Game\Map\CoverCalculation.cs" />
      <Compile Include="Assets\Scripts\Game\Map\GridManager.cs" />
      <Compile Include="Assets\Scripts\Game\Map\Hex.cs" />
      <Compile Include="Assets\Scripts\Game\Map\Map.cs" />
-     <Compile Include="Assets\Scripts\Game\Map\Path.cs" />
      <Compile Include="Assets\Scripts\Game\Map\TargetFinder.cs" />
      <Compile Include="Assets\Scripts\Game\Occupants\Ball.cs" />
      <Compile Include="Assets\Scripts\Game\Occupants\Contestant\Contestant.cs" />

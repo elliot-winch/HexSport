@@ -29,6 +29,36 @@ public class TeamManager : MonoBehaviour {
 		}
 	}
 
+	//Good: independent of the UserControlMode
+	//Bad: calculate numCons each time (which, with ContestantStatUIManager is every frame
+	List<Contestant> all = null;
+	public List<Contestant> AllContestants{
+		get {
+			int numCons = 0;
+
+			foreach (Team t in TeamsInMatch) {
+				numCons += t.Contestants.Count;
+			}
+				
+			if (all != null && all.Count == numCons) {
+				return all;
+			} else {
+				List<Contestant> cons = new List<Contestant> ();
+
+				foreach (Team t in TeamsInMatch) {
+					foreach (ContestantData c in t.Contestants) {
+						if (c.Contestant != null) {
+							cons.Add (c.Contestant);
+						}
+					}
+				}
+
+				all = cons;
+				return cons;
+			}
+		}
+	}
+
 	void Start(){
 		if (instance != null) {
 			Debug.LogError ("There should not be more than one team manager");

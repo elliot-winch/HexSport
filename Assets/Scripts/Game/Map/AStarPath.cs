@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Path {
+public class AStarPath {
 
 	Stack<Hex> validPath;
 
-	public Path(Grid grid, Hex startHex, Hex endHex){
+	public AStarPath(Grid grid, Hex startHex, Hex endHex, bool hexValuesAffectPath){
 
 		List<Hex> closedSet = new List<Hex> ();
 
@@ -53,7 +53,8 @@ public class Path {
 					continue;
 				}
 					
-				float tentative_g_score = g_score [current] + current.MoveCost;
+
+				float tentative_g_score = g_score [current] + (hexValuesAffectPath ? current.MoveCost : 1f);
 
 				if (openSet.Contains (neighbour) && tentative_g_score >= g_score [neighbour]) {
 					continue;
@@ -101,5 +102,9 @@ public class Path {
 
 	public bool IsNextHex(){
 		return validPath != null && validPath.Count > 0;
+	}
+
+	public int Length(){
+		return validPath.Count;
 	}
 }

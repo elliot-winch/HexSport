@@ -64,7 +64,7 @@ public class ContestantButtonUIManager : MonoBehaviour {
 
 		foreach(IContestantAction a in con.PossibleActions){
 
-			GameObject button = Instantiate (actionButtonPrefab, Vector3.zero, Quaternion.identity, GameManager.Instance.mainCanvas.transform);
+			GameObject button = Instantiate (actionButtonPrefab, Vector3.zero, Quaternion.identity, con.transform.Find("Canvas"));
 			button.name = con.name + " Button " + a.Name;
 		
 			button.GetComponentInChildren<Text> ().text = a.Name;

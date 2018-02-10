@@ -140,7 +140,7 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 	#region UI
 	Dictionary<Hex, GameObject> hexLine;
 
-	internal void LineMouseUI(Contestant selected, Hex h){
+	internal void LineMouseUI(Contestant selected, Hex h){ //this should really have the relevant hexes passed to it rather than recalc them
 		ClearLineUI ();
 
 		List<Hex> hexesInLine;

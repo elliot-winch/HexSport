@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour {
 	public GameObject testContestant;
 	public GameObject ballPrefab;
 
-
 	List<Hex> ballStartHexes;
 
 
@@ -81,6 +80,7 @@ public class GameManager : MonoBehaviour {
 		}
 		*/
 
+
 		UserControlManager.Instance.ControlModeType = ControlModeEnum.Placement;
 	}
 	
@@ -89,7 +89,6 @@ public class GameManager : MonoBehaviour {
 		GameObject go = Instantiate (testContestant, startingHex.Position, testContestant.transform.rotation, transform);
 		go.transform.GetChild(0).GetComponent<MeshRenderer> ().material.color = d.Team.Color;	
 
-		//temporary contestant factory
 		Contestant c = go.GetComponent<Contestant> ();
 		//Here set contestant values in line with data
 		c.CurrentHex =  startingHex;
@@ -97,6 +96,8 @@ public class GameManager : MonoBehaviour {
 		c.Data = d;
 		d.Contestant = c;
 
+		//UI
+		ContestantStatUIManager.Instance.InitLabelUI(c);
 
 		//Possible Actions
 		if (d.CanShoot) {
@@ -117,7 +118,6 @@ public class GameManager : MonoBehaviour {
 		c.PossibleActions.Add ( ContestantActionsFactory.CreateAction<Contestant> ("Swipe", ContestantActionsEnum.Swipe, 0f, c, 1, 3f, false, checkForBall));
 
 		ContestantButtonUIManager.Instance.CreateButtonPool (c);
-
 	}
 
 
