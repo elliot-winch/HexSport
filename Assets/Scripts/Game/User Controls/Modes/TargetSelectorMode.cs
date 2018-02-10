@@ -56,7 +56,7 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 			
 		onLeftClick = (hex) => {
 			//temp number, but might actually be were we calculate time / or get the time from a TimeManager
-			contestant.MovesRemaining -= timeCost;
+			contestant.ActionsRemaining -- ;
 			UserControlManager.Instance.RunAction(conAction.CompleteAction, 1f);
 		};
 
@@ -65,7 +65,7 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 		};
 
 		CheckValidity = () => {
-			return this.contestant.MovesRemaining >= timeCost && CalculateTargets() > 0;
+			return this.contestant.ActionsRemaining > 0 && CalculateTargets() > 0;
 		};
 
 		this.AutoOnly = true;

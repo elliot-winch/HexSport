@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour {
 
 		foreach (ContestantData c in TeamManager.Instance.CurrentTeam.Contestants) {
 			//Make sure zero is high enough. Perhaps check all possible actions instead?
-			if (c.Contestant.MovesRemaining > 0f) {
+			if (c.Contestant.ActionsRemaining > 0f) {
 				return false;
 			}
 		}

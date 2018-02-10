@@ -6,19 +6,21 @@ using UnityEngine;
 
 public class Contestant : MonoBehaviour, ICatcher, IStats {
 
-	public float movesPerTurn = 4f;
+	public int actionsPerTurn = 2;
+	public float movesPerAction = 4f; //this will be dependent on the con's pace
 	public float moveSpeed = 3f;
 
 	//Movement variables
 	bool moving = false;
-	float movesRemaining;
+	int actionsRemaining;
+	float movesInActionRemaining;
 	Dictionary<Hex, GameObject> moveHexesInRange;
 	IOccupant destOccupant;
 
 	ContestantData data;
 	List<IContestantAction> possibleActions;
 
-	Vector3 positionOffset = new Vector3 (0, 0f, 0);
+	Vector3 positionOffset = new Vector3 (0, 0, 0);
 
 	Ball ball;
 
@@ -67,14 +69,13 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 		}
 	}
 
-	public float MovesRemaining {
+	public int ActionsRemaining {
 		get {
-			return movesRemaining;
+			return actionsRemaining;
 		}
 		set {
-			movesRemaining = value;
+			actionsRemaining = value;
 
-			//this needs to change to remaining possible actions
 			GameManager.Instance.CheckStartOfTurn ();
 		}
 	}
@@ -177,7 +178,7 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 		moveHexesInRange = new Dictionary<Hex, GameObject> ();
 
 		RegisterOnTurnStartCallback ( (c) => {
-			c.MovesRemaining = c.movesPerTurn;
+			c.ActionsRemaining = actionsPerTurn;
 		} );
 
 		RegisterOnMoveCompleteCallback ( (c) => {
@@ -192,6 +193,8 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 	public IEnumerator Move(Hex destHex){
 		if (moving == false && moveHexesInRange.ContainsKey (destHex)) {
 
+			ActionsRemaining--;
+			movesInActionRemaining = movesPerAction;
 			moving = true;
 
 			if (onMoveBegan != null) {
@@ -213,7 +216,7 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 
 				CheckHex (next.Occupant);
 
-				if (MovesRemaining >= next.MoveCost) {
+				if (movesInActionRemaining >= next.MoveCost) {
 					yield return StartCoroutine (MoveToHex (current, next));
 				} 
 
@@ -243,15 +246,20 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 	}
 
 	public void ShowMovementHexes(){
-		List<Hex> hexes = GridManager.Instance.Grid.HexesInRangeAccountingObstacles (CurrentHex, MovesRemaining);
 
-		foreach (Hex h in hexes) {
-			if (moveHexesInRange.ContainsKey (h) == false) {
+		//FIXME: this needs to be much more intelligent
+		for (int i = actionsPerTurn; i > 0; i--) {
+			List<Hex> hexes = GridManager.Instance.Grid.HexesInRangeAccountingObstacles (CurrentHex, movesPerAction * i);
 
-				moveHexesInRange [h] = UserControlManager.Instance.SpawnUIHex (h);
-				moveHexesInRange [h].GetComponent<MeshRenderer> ().material.color = new Color (1 / 3f, 0, 1 / 3f);
+			foreach (Hex h in hexes) {
+				if (moveHexesInRange.ContainsKey (h) == false) {
+
+					moveHexesInRange [h] = UserControlManager.Instance.SpawnUIHex (h);
+					moveHexesInRange [h].GetComponent<MeshRenderer> ().material.color = new Color (1f / i, 0, 1f/ i);
+				}
 			}
 		}
+
 	}
 
 	public void HideMovementHexes(){
@@ -278,7 +286,7 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 			yield return null;
 		}
 
-		MovesRemaining -= neighbour.MoveCost;
+		movesInActionRemaining -= neighbour.MoveCost;
 	
 	}
 
