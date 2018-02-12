@@ -61,6 +61,7 @@
      <Compile Include="Assets\Scripts\Game\Map\Hex.cs" />
      <Compile Include="Assets\Scripts\Game\Map\Map.cs" />
      <Compile Include="Assets\Scripts\Game\Map\TargetFinder.cs" />
+     <Compile Include="Assets\Scripts\Game\ObjectPool.cs" />
      <Compile Include="Assets\Scripts\Game\Occupants\Ball.cs" />
      <Compile Include="Assets\Scripts\Game\Occupants\Contestant\Contestant.cs" />
      <Compile Include="Assets\Scripts\Game\Occupants\Contestant\ContestantAction.cs" />
@@ -75,6 +76,7 @@
      <Compile Include="Assets\Scripts\Game\PriorityQueue.cs" />
      <Compile Include="Assets\Scripts\Game\TeamManager.cs" />
      <Compile Include="Assets\Scripts\Game\TypeToTypeList.cs" />
+     <Compile Include="Assets\Scripts\Game\UIHexBuilder.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\CameraControls.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\Modes\ControlMode.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\Modes\TargetSelectorMode.cs" />

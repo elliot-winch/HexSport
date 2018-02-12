@@ -169,6 +169,56 @@ public class Grid : MonoBehaviour {
 		return inRange;
 	}
 
+	//BreathFirstSearch but stratifies the results
+	//Potential fix, combine this and HexesInRangeAccountingObstacles, bc they basically do the same thing
+	public List<List<Hex>> HexesInRangeSegmentedByActions(Hex center, int numAction, float rangePerAction){
+
+		Queue<Hex> openSet = new Queue<Hex> ();
+		Dictionary<Hex, float> hexDistanceFromCenter = new Dictionary<Hex, float> ();
+		//distanceFrom.Keys acts as closed set
+
+		openSet.Enqueue (center);
+		hexDistanceFromCenter [center] = 0f;
+
+		Hex current;
+		List<Hex> neighbours;
+		while (openSet.Count > 0) {
+			current = openSet.Dequeue ();
+
+			neighbours = HexNeighbours (current.GetComponent<Tile> ());
+
+			foreach (Hex h in neighbours) {
+				if (hexDistanceFromCenter.ContainsKey (h)) {
+					if (hexDistanceFromCenter [current] + h.MoveCost <= hexDistanceFromCenter [h]) {
+						hexDistanceFromCenter [h] = hexDistanceFromCenter [current] + h.MoveCost;
+					}
+				} else if (h.OccupantBlocksMovement == false) {
+					if (hexDistanceFromCenter [current] + h.MoveCost <= rangePerAction * numAction) {
+						openSet.Enqueue (h);
+						hexDistanceFromCenter [h] = hexDistanceFromCenter [current] + h.MoveCost;
+					}
+				}
+			}
+		}
+
+		List<List<Hex>> inRange = new List<List<Hex>> ();
+
+		for (int i = 0; i < numAction; i++) {
+			inRange.Add (new List<Hex> ());
+
+			List<Hex> possibleHexes = hexDistanceFromCenter.Keys.ToList ();
+
+			for(int j = possibleHexes.Count - 1; j >= 0; j--) {
+				if (hexDistanceFromCenter [possibleHexes[j]] < rangePerAction * (i + 1)) {
+					inRange [i].Add (possibleHexes[j]);
+					hexDistanceFromCenter.Remove (possibleHexes[j]);
+				}
+			}
+		}
+
+		return inRange;
+	}
+
 
 	//Ignore obstacules
 	public List<Tile> TilesInRange(Tile center, int range){

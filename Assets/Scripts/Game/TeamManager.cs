@@ -97,7 +97,7 @@ public class TeamManager : MonoBehaviour {
 		if (teamsInMatch.ContainsKey (t)) {
 			teamsInMatch [t]++;
 
-			TeamUIManager.Instance.UpdateScoreUI (TeamsInMatch.IndexOf (t), teamsInMatch[t]);
+			TeamUIManager.Instance.UpdateScoreUI (t, teamsInMatch[t]);
 		}
 	}
 

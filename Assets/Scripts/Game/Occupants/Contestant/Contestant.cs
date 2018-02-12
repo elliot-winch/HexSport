@@ -14,8 +14,11 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 	bool moving = false;
 	int actionsRemaining;
 	float movesInActionRemaining;
-	Dictionary<Hex, GameObject> moveHexesInRange;
+	List<Dictionary<Hex, GameObject>> moveHexesInRange;
 	IOccupant destOccupant;
+
+	//For movement UI
+	ObjectPool uiHexPool;
 
 	ContestantData data;
 	List<IContestantAction> possibleActions;
@@ -75,6 +78,9 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 		}
 		set {
 			actionsRemaining = value;
+
+			//potentially have a callback here instead of explicitly stating
+			TeamUIManager.Instance.UpdateActionsRemainingUI(this);
 
 			GameManager.Instance.CheckStartOfTurn ();
 		}
@@ -136,9 +142,16 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 		}
 	}
 
+
 	public List<Hex> MoveHexesInRange {
 		get {
-			return moveHexesInRange.Keys.ToList();
+			List<Hex> hexes = new List<Hex> ();
+
+			foreach (Dictionary<Hex, GameObject> h in moveHexesInRange) {
+				hexes.AddRange (h.Keys.ToList());
+			}
+
+			return hexes;
 		}
 	}
 
@@ -175,7 +188,7 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 		LineRenderer lr = GetComponent<LineRenderer> ();
 		lr.enabled = false;
 
-		moveHexesInRange = new Dictionary<Hex, GameObject> ();
+		moveHexesInRange = new List<Dictionary<Hex, GameObject>> ();
 
 		RegisterOnTurnStartCallback ( (c) => {
 			c.ActionsRemaining = actionsPerTurn;
@@ -185,52 +198,74 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 			CheckHex(destOccupant);
 		} );
 
+		uiHexPool = new ObjectPool (() => {
+			GameObject spawned;
+
+			spawned = Instantiate (UIHexBuilder.FlatHexPrefab, Vector3.zero, Quaternion.identity, transform);
+
+			spawned.transform.Rotate (new Vector3 (270, 0, 0));
+			spawned.SetActive (true);
+
+			spawned.name = "Movement UI Hex";
+
+			return spawned;
+		}, maxObjects: 200);
+
 
 		//UIManager uses this in Start.
 		onMoveComplete (this);
 	}
 
-	public IEnumerator Move(Hex destHex){
-		if (moving == false && moveHexesInRange.ContainsKey (destHex)) {
+	public void Move(Hex destHex){
+		if (moving == false) {
+			for (int i = 0; i < moveHexesInRange.Count; i++) {
+				if (moveHexesInRange [i].Keys.Contains (destHex)) {
+					ActionsRemaining -= (i + 1);
+					movesInActionRemaining = movesPerAction * (i+1);
 
-			ActionsRemaining--;
-			movesInActionRemaining = movesPerAction;
-			moving = true;
-
-			if (onMoveBegan != null) {
-				onMoveBegan (this);
+					StartCoroutine (MoveCoroutine(destHex));
+				}
 			}
-
-			HideMovementHexes ();
-
-			AStarPath p = new AStarPath (GridManager.Instance.Grid, currentHex, destHex, true);
-
-			Hex next;
-
-			Hex current = CurrentHex;
-			destOccupant = destHex.Occupant;
-			CurrentHex = destHex;
-
-			while (p.IsNextHex ()) {
-				next = p.GetNextHex ();
-
-				CheckHex (next.Occupant);
-
-				if (movesInActionRemaining >= next.MoveCost) {
-					yield return StartCoroutine (MoveToHex (current, next));
-				} 
-
-				current = next;
-			}
-
-			onMoveComplete (this);
-
-			if (UserControlManager.Instance.Selected == this) {
-				ShowMovementHexes ();
-			}
-
-			moving = false;
 		}
+	}
+
+	IEnumerator MoveCoroutine(Hex destHex){
+
+		moving = true;
+
+		if (onMoveBegan != null) {
+			onMoveBegan (this);
+		}
+
+		HideMovementHexes ();
+
+		AStarPath p = new AStarPath (GridManager.Instance.Grid, currentHex, destHex, true);
+
+		Hex next;
+
+		Hex current = CurrentHex;
+		destOccupant = destHex.Occupant;
+		CurrentHex = destHex;
+
+		while (p.IsNextHex ()) {
+			next = p.GetNextHex ();
+
+			CheckHex (next.Occupant);
+
+			if (movesInActionRemaining >= next.MoveCost) {
+				yield return StartCoroutine (MoveToHex (current, next));
+			} 
+
+			current = next;
+		}
+
+		onMoveComplete (this);
+
+		if (UserControlManager.Instance.Selected == this) {
+			ShowMovementHexes ();
+		}
+
+		moving = false;
 	}
 
 	public void RegisterOnTurnStartCallback(Action<Contestant> callback){
@@ -246,28 +281,29 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 	}
 
 	public void ShowMovementHexes(){
+		List<List<Hex>> hexes = GridManager.Instance.Grid.HexesInRangeSegmentedByActions (CurrentHex, ActionsRemaining, movesPerAction);
 
-		//FIXME: this needs to be much more intelligent
-		for (int i = actionsPerTurn; i > 0; i--) {
-			List<Hex> hexes = GridManager.Instance.Grid.HexesInRangeAccountingObstacles (CurrentHex, movesPerAction * i);
+		for(int i = 0; i < hexes.Count; i++) {
+			moveHexesInRange.Add(new Dictionary<Hex, GameObject> ());
 
-			foreach (Hex h in hexes) {
-				if (moveHexesInRange.ContainsKey (h) == false) {
+			foreach (Hex h in hexes[i]) {
+				GameObject uiHex = uiHexPool.GetObject ();
+				uiHex.transform.position = h.Position + new Vector3 (0, 0.001f, 0);
+				uiHex.GetComponent<MeshRenderer> ().material.color = new Color (1f / (i + 1), 0, 1f/ (i + 1));
 
-					moveHexesInRange [h] = UserControlManager.Instance.SpawnUIHex (h);
-					moveHexesInRange [h].GetComponent<MeshRenderer> ().material.color = new Color (1f / i, 0, 1f/ i);
-				}
+				moveHexesInRange[i] [h] = uiHex;
 			}
 		}
-
 	}
 
 	public void HideMovementHexes(){
-		foreach (Hex h in moveHexesInRange.Keys) {
-			Destroy (moveHexesInRange [h]);
+		foreach (Dictionary<Hex, GameObject> hexes in moveHexesInRange) {
+			foreach (Hex h in hexes.Keys) {
+				uiHexPool.Dismiss (hexes [h]);
+			}
 		}
 
-		moveHexesInRange = new Dictionary<Hex, GameObject> ();
+		moveHexesInRange = new List<Dictionary<Hex, GameObject>> ();
 	}
 
 	public 

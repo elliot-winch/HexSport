@@ -40,7 +40,7 @@ public class PlacementMode {
 		this.currentTeamIndex = 0;
 		this.currentCDIndex = 0;
 
-		this.hexOutliner = UserControlManager.Instance.SpawnUIHex (null);
+		this.hexOutliner = MonoBehaviour.Instantiate (UIHexBuilder.FlatHexPrefab);
 	}
 
 

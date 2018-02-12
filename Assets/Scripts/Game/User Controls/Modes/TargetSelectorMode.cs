@@ -149,8 +149,10 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 		hexLine = new Dictionary<Hex, GameObject> ();
 
 		foreach (Hex j in hexesInLine) {
-			hexLine[j] = UserControlManager.Instance.SpawnUIHex (j);
-			hexLine[j].GetComponent<MeshRenderer>().material.color = new Color(2/3f, 0, 2/3f);
+			GameObject go = MonoBehaviour.Instantiate (UIHexBuilder.FlatHexPrefab);
+			go.transform.position = j.Position + new Vector3 (0, 0.001f, 0);
+			go.GetComponent<MeshRenderer>().material.color = new Color(2/3f, 0, 2/3f);
+			hexLine [j] = go;
 		}
 	}
 

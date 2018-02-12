@@ -144,6 +144,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void NextTurn(){
+		TeamUIManager.Instance.ClearActionsRemainingUI(TeamManager.Instance.CurrentTeam);
+
 		TeamManager.Instance.IncTeam ();
 
 		UserControlManager.Instance.ControlModeType = ControlModeEnum.Move;
@@ -152,7 +154,11 @@ public class GameManager : MonoBehaviour {
 			c.Contestant.OnTurnBegin (c.Contestant);
 		}
 	
+		//put a callback here
+
 		UserControlManager.Instance.SelectFirst ();
+
+
 	}
 
 	void SpawnLineOf(HexType type, Hex start, Hex end){

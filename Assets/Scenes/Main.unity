@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 122346149}
   - component: {fileID: 122346148}
   m_Layer: 5
-  m_Name: Background - Team 2 Name
+  m_Name: Team UI Parent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -574,7 +574,7 @@ MonoBehaviour:
   contestantLabelPrefab: {fileID: 1908073624941952, guid: c0fab475a18131b4faf4b38e8801fff1,
     type: 2}
   labelAlphaLow: 0
-  labelAlphaHigh: 0.824
+  labelAlphaHigh: 0
   minLabelSize: {x: 1, y: 1}
   labelSizeIncrease: {x: 1, y: 1}
 --- !u!114 &598494250
@@ -600,6 +600,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNamePrefab: {fileID: 1057551585413268, guid: d64c5b011b19c1340bb43da3f2c16a3a,
+    type: 2}
+  actionIconPrefab: {fileID: 1764309495617870, guid: f832d5bda616f5446bbec0664d6a091f,
     type: 2}
 --- !u!114 &598494252
 MonoBehaviour:
@@ -761,7 +763,7 @@ GameObject:
   - component: {fileID: 1146667178}
   - component: {fileID: 1146667177}
   m_Layer: 5
-  m_Name: Background - Team 1 Name
+  m_Name: Team UI Parent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

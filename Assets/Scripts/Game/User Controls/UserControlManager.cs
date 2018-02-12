@@ -18,8 +18,6 @@ public class UserControlManager : MonoBehaviour {
 
 	public KeyCode selectNextKey = KeyCode.Tab;
 
-	GameObject flatHexPrefab;
-
 	//References
 	CameraControls camCont;
 	CameraAutoMove camAuto;
@@ -94,51 +92,7 @@ public class UserControlManager : MonoBehaviour {
 		camCont = Camera.main.GetComponent<CameraControls> ();
 		camAuto = Camera.main.GetComponent<CameraAutoMove> ();
 
-	
-		flatHexPrefab = new GameObject ();
-		Vector3[] verts = new Vector3[6];
-
-		for(int k = 0; k < verts.Length; k++){
-			float angleRad = Mathf.PI / 3 * k;
-			verts [k] = new Vector3 (Mathf.Cos (angleRad), Mathf.Sin (angleRad));
-		}
-
-		int[] tris = new int[12];
-
-		tris [0] = 0;
-		tris [1] = 1;
-		tris [2] = 5;
-
-		tris [3] = 1;
-		tris [4] = 4;
-		tris [5] = 5;
-
-		tris [6] = 2;
-		tris [7] = 4;
-		tris [8] = 1;
-
-		tris [9] = 3;
-		tris [10] = 4;
-		tris [11] = 2;
-
-		Vector3[] normals = new Vector3[6];
-
-		for (int k = 0; k < normals.Length; k++) {
-			normals [k] = Vector3.up;
-		}
-
-		Mesh m = new Mesh ();
-		m.vertices = verts;
-		m.triangles = tris;
-		m.normals = normals;
-
-		flatHexPrefab.AddComponent<MeshFilter> ().sharedMesh = m;
-		flatHexPrefab.transform.Rotate (new Vector3 (270, 0, 0));
-		flatHexPrefab.AddComponent<MeshRenderer> ();
-
-		flatHexPrefab.SetActive (false);
-
-		hexOutliner = Instantiate (flatHexPrefab);
+		hexOutliner = Instantiate (UIHexBuilder.FlatHexPrefab);
 		hexOutliner.name = "Cursor";
 
 		hexOutliner.GetComponent<MeshRenderer> ().material.color = Color.green;
@@ -375,7 +329,7 @@ public class UserControlManager : MonoBehaviour {
 	void MoveSelectedToHex(Hex h){
 		if (selected != null) {
 			DisableMoveUI ();
-			StartCoroutine (selected.Move (h));
+			selected.Move (h);
 		}
 	}
 
@@ -464,24 +418,6 @@ public class UserControlManager : MonoBehaviour {
 		
 	public void RegisterOnDeselectedCallback(Action<Contestant> callback){
 		onDeselected += callback;
-	}
-
-	public GameObject SpawnUIHex(Hex h){
-		
-		GameObject spawned;
-		if (h != null) {
-			spawned = Instantiate (flatHexPrefab, h.Position + new Vector3 (0, 0.001f, 0), Quaternion.identity, transform);
-		} else {
-			spawned = Instantiate (flatHexPrefab, Vector3.zero, Quaternion.identity, transform);
-		}
-
-		spawned.transform.Rotate (new Vector3 (270, 0, 0));
-		spawned.SetActive (true);
-
-		//spawned.transform.parent = selected.transform;
-		spawned.name = "UI Hex - UserControlManager Created";
-
-		return spawned;
 	}
 }
 

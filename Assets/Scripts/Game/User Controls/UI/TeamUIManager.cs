@@ -16,6 +16,10 @@ public class TeamUIManager : MonoBehaviour {
 	}
 		
 	public GameObject playerNamePrefab;
+	public GameObject actionIconPrefab;
+
+	Dictionary<ContestantData, GameObject> contestantButtons;
+	Dictionary<Team, GameObject> teamUIs;
 
 	void Start () {
 		if (instance != null) {
@@ -24,55 +28,131 @@ public class TeamUIManager : MonoBehaviour {
 
 		instance = this;
 
+		contestantButtons = new Dictionary<ContestantData, GameObject> ();
+
 		Canvas mainCanvas = GameManager.Instance.mainCanvas;
-		Image[] teamBackground = mainCanvas.GetComponentsInChildren<Image> ();
-			
+
+		teamUIs = new Dictionary<Team, GameObject> ();
 		List<Team> tim = TeamManager.Instance.TeamsInMatch;
+		int counter = 0;
 
-		for(int i = 0; i < tim.Count; i++) {
+		foreach (Transform t in GameManager.Instance.mainCanvas.transform) {
+			if (t.name == "Team UI Parent") {
+				if (counter >= tim.Count) {
+					break;
+				}
+				teamUIs [tim [counter++]] = t.gameObject;
+			}
+		}
 
-			teamBackground [i].color = new Color (tim [i].Color.r, tim [i].Color.g, tim [i].Color.b, 45f / 256); 
-			teamBackground [i].transform.Find ("Text - Name").GetComponent<Text> ().text = tim [i].Name;
+		if (counter != tim.Count) {
+			Debug.LogWarning (string.Format("There are {0} team UI parents but {1} teams!", counter, tim.Count));
+		}
+			
+
+		foreach(KeyValuePair<Team, GameObject> teamUI in teamUIs) {
+
+			teamUI.Value.GetComponent<Image>().color = new Color (teamUI.Key.Color.r, teamUI.Key.Color.g, teamUI.Key.Color.b, 45f / 256); 
+			teamUI.Value.transform.Find ("Text - Name").GetComponent<Text> ().text = teamUI.Key.Name;
 
 			//fill in score UI here, but for now it will always start at zero
-			for (int j = 0; j < tim[i].Contestants.Count; j++) {
+			for (int j = 0; j < teamUI.Key.Contestants.Count; j++) {
 
-				GameObject bObj = Instantiate(playerNamePrefab, Vector3.zero, Quaternion.identity, teamBackground[i].transform.Find("Contestant Buttons"));
+				GameObject bObj = Instantiate (playerNamePrefab, Vector3.zero, Quaternion.identity, teamUI.Value.transform.Find ("Contestant Buttons"));
 
 				Rect textRect = playerNamePrefab.GetComponent<RectTransform> ().rect;
 
-				Vector2 pos = new Vector2 (0, -(j * textRect.height));
+				Vector2 pos = new Vector2 (0, -(j * textRect.height * 2));
 
 				bObj.transform.localPosition = pos;
 
-				bObj.transform.GetChild(0).GetComponent<Text> ().text = tim [i].Contestants [j].Name;
+				bObj.transform.GetChild(0).GetComponent<Text> ().text = teamUI.Key.Contestants [j].Name;
 
 				Button.ButtonClickedEvent bcevent = new Button.ButtonClickedEvent ();
-				bcevent.AddListener (CreateSelectionListenerForPlayerNameButton (tim, i, j));
+				bcevent.AddListener (CreateSelectionListenerForPlayerNameButton (teamUI.Key, j));
 
 				bObj.GetComponent<Button> ().onClick = bcevent;
+
+				contestantButtons [teamUI.Key.Contestants [j]] = bObj;
 			}
 		}
+
+		UserControlManager.Instance.RegisterOnSelectedCallback ((con) => {
+			ColorBlock cb = contestantButtons[con.Data].GetComponent<Button>().colors;
+			cb.normalColor = new Color(0,0,1f);
+			contestantButtons[con.Data].GetComponent<Button>().colors = cb;
+
+		});
+
+		UserControlManager.Instance.RegisterOnDeselectedCallback ((con) => {
+			ColorBlock cb = contestantButtons[con.Data].GetComponent<Button>().colors;
+			cb.normalColor = new Color(1f,1f,1f);
+			contestantButtons[con.Data].GetComponent<Button>().colors = cb;
+
+		});
 	}
 
 	//Helper for start
-	UnityAction CreateSelectionListenerForPlayerNameButton(List<Team> teams, int i, int j){
+	UnityAction CreateSelectionListenerForPlayerNameButton(Team t, int j){
 		UnityAction ua = () => {
 
-			if(teams[i] == TeamManager.Instance.CurrentTeam){		
+			if(t == TeamManager.Instance.CurrentTeam){		
 				UserControlManager.Instance.ControlModeType = ControlModeEnum.Move;
-				StartCoroutine(UserControlManager.Instance.SelectContestant(teams[i].Contestants[j].Contestant));
+				StartCoroutine(UserControlManager.Instance.SelectContestant(t.Contestants[j].Contestant));
 			}
 		};
 
 		return ua;
 	}
 	
-	public void UpdateScoreUI (int teamIndex, int value) {
+	public void UpdateScoreUI (Team t, int value) {
 		Canvas mainCanvas = GameManager.Instance.mainCanvas;
-		Image[] teamBackground = mainCanvas.GetComponentsInChildren<Image> ();	
 
-		//FIXME: scoring gives this error. also ball offset on goal is wrong
-		teamBackground [teamIndex].transform.Find ("Text - Score").GetComponent<Text> ().text = value.ToString();
+		teamUIs[t].transform.Find ("Text - Score").GetComponent<Text> ().text = value.ToString();
 	}
+
+
+	#region Actions UI
+	List<GameObject> GetActionIcons(Contestant con){
+		List<GameObject> icons = new List<GameObject> ();
+
+		foreach (Transform t in contestantButtons [con.Data].transform) {
+			if (t.name == "Image - Action Icon") {
+				icons.Add (t.gameObject);
+			}
+		}
+
+		return icons;
+	}
+
+	public void UpdateActionsRemainingUI(Contestant con){
+		List<GameObject> prevIcons = GetActionIcons (con);
+
+		if (prevIcons.Count < con.ActionsRemaining) {
+
+			float y = -actionIconPrefab.GetComponent<RectTransform> ().rect.height;
+			float iconWidth = actionIconPrefab.GetComponent<RectTransform> ().rect.width;
+
+			for (int i = prevIcons.Count; i < con.ActionsRemaining; i++) {
+				Debug.Log (contestantButtons [con.Data].transform);
+				GameObject actionIcon = Instantiate (actionIconPrefab, contestantButtons [con.Data].transform);
+				//will need to set this to left or right
+				actionIcon.transform.localPosition = new Vector3 (iconWidth * (i + 0.5f), y, 0f);
+				actionIcon.name = "Image - Action Icon";
+			}
+		} else if (con.ActionsRemaining < prevIcons.Count) {
+			for (int i = con.ActionsRemaining; i < prevIcons.Count; i++) {
+				Destroy (prevIcons [i]);
+			}
+		}
+	}
+
+	public void ClearActionsRemainingUI(Team t){
+		foreach (ContestantData c in t.Contestants) {
+			foreach (GameObject g in GetActionIcons(c.Contestant)) {
+				Destroy (g);
+			}
+		}
+	}
+	#endregion //Action Icons
 }
