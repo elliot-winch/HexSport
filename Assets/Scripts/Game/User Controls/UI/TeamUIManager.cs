@@ -134,7 +134,6 @@ public class TeamUIManager : MonoBehaviour {
 			float iconWidth = actionIconPrefab.GetComponent<RectTransform> ().rect.width;
 
 			for (int i = prevIcons.Count; i < con.ActionsRemaining; i++) {
-				Debug.Log (contestantButtons [con.Data].transform);
 				GameObject actionIcon = Instantiate (actionIconPrefab, contestantButtons [con.Data].transform);
 				//will need to set this to left or right
 				actionIcon.transform.localPosition = new Vector3 (iconWidth * (i + 0.5f), y, 0f);

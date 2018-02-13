@@ -12,7 +12,7 @@ public class Wall : MonoBehaviour, IOccupant {
 		}
 		set {
 			currentHex = value;
-			transform.position = currentHex.Position;
+			transform.position = currentHex.Position + HexOffset;
 		}
 	}
 
@@ -21,4 +21,11 @@ public class Wall : MonoBehaviour, IOccupant {
 			return null;
 		}
 	}
+
+	public Vector3 HexOffset {
+		get {
+			return new Vector3 (0f, GetComponent<MeshRenderer> ().bounds.extents.y, 0f);
+		}
+	}
+
 }

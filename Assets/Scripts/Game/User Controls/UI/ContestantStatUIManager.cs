@@ -10,6 +10,10 @@ public class ContestantStatUIManager : MonoBehaviour {
 
 	static ContestantStatUIManager instance;
 
+	public string[] statSpriteNames;
+	public Sprite[] statSprites;
+	public GameObject statFieldPrefab;
+
 	public GameObject contestantLabelPrefab;
 	[Range(0,1)]
 	public float labelAlphaLow;
@@ -119,33 +123,52 @@ public class ContestantStatUIManager : MonoBehaviour {
 
 			if (i >= currentTextFields.Length) {
 
-				GameObject textObj = new GameObject ();
-				textObj.name = "Contestant UI Stat Field";
-				t = textObj.AddComponent<Text> ();
+				GameObject statField = Instantiate (statFieldPrefab, offsetter);
+				statField.name = "Contestant UI Stat Field";
 
-				t.font = arial;
-				t.alignment = TextAnchor.MiddleCenter;
-				t.GetComponent<RectTransform> ().sizeDelta = new Vector2 (240f, 25f);
-				t.fontSize = 14;
-				t.color = Color.white;
+				statField.GetComponent<RectTransform> ().sizeDelta = new Vector2 (background.GetComponent<RectTransform>().rect.width, statFieldPrefab.GetComponent<RectTransform>().rect.height);
 
-				textObj.transform.SetParent (offsetter);
-				textObj.transform.localPosition = new Vector3 (0f, textObj.GetComponent<RectTransform> ().rect.height * (i + 0.5f));
+				statField.transform.localPosition = new Vector3 (0f, statField.GetComponent<RectTransform> ().rect.height * (i + 0.5f));
 			} 
 		}
 
 		while (i < currentTextFields.Length) {
-			currentTextFields [i++].text = "";
+			currentTextFields [i].text = "";
+			currentTextFields [i].GetComponentInChildren<Image> ().sprite = new Sprite ();
+			i++;
 		}
 
 		//Rescale background
 		RectTransform backgroundRect = background.GetComponent<RectTransform>();
-		backgroundRect.sizeDelta = new Vector2(240f, (25f * kvs.Length));
+		backgroundRect.sizeDelta = new Vector2(backgroundRect.rect.width, (statFieldPrefab.GetComponent<RectTransform>().rect.height * kvs.Length));
 
 		Text[] newTextFields = background.GetComponentsInChildren<Text> ();
 
 		for (int j = kvs.Length - 1; j >= 0; j--) {
-			newTextFields[kvs.Length - j - 1].text = string.Format ("{0}: {1}", kvs[j].Key, kvs[j].Value);
+
+			Text currentTextField = newTextFields [kvs.Length - j - 1];
+			Image imageField = currentTextField.GetComponentInChildren<Image> ();
+
+			int imageForStat = -1;
+			for (int s = 0; s < statSpriteNames.Length; s++) {
+				if (statSpriteNames[s] == kvs [j].Key) {
+					imageForStat = s;
+					break;
+				}
+			}
+
+			if (imageForStat >= 0) {
+				imageField.sprite = statSprites[imageForStat];
+				imageField.color = new Color (1f, 1f, 1f, 1f);
+				currentTextField .text = string.Format ("{0}\t", kvs [j].Value);
+			} else if (kvs[j].Key == "Title") {
+				currentTextField.text = string.Format ("{0}", kvs [j].Value);
+				currentTextField.fontStyle = FontStyle.Bold;
+				currentTextField.alignment = TextAnchor.MiddleCenter;
+			} else {
+				imageField.color = new Color (1f, 1f, 1f, 0f);
+				currentTextField.text = string.Format ("{0}: {1}\t", kvs [j].Key, kvs [j].Value);
+			}
 		}
 
 		offsetter.GetComponent<RectTransform>().localPosition = new Vector2 (offsetter.GetComponent<RectTransform>().localPosition.x, 0f);

@@ -82,7 +82,7 @@
      <Compile Include="Assets\Scripts\Game\User Controls\Modes\TargetSelectorMode.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\UI\ContestantButtonUIManager.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\UI\ContestantStatUIManager.cs" />
-     <Compile Include="Assets\Scripts\Game\User Controls\UI\OnEnableButton.cs" />
+     <Compile Include="Assets\Scripts\Game\User Controls\UI\OnEnableCallbacks.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\UI\TeamUIManager.cs" />
      <Compile Include="Assets\Scripts\Game\User Controls\UserControlManager.cs" />
      <Compile Include="Assets\Scripts\Team Selection\TeamSelectionManager.cs" />

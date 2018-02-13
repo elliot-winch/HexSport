@@ -16,6 +16,12 @@ public class Goal : MonoBehaviour, ICatcher, IStats {
 		}
 	}
 
+	public Vector3 HexOffset {
+		get {
+			return Vector3.zero;
+		}
+	}
+
 	#region ICatcher implementation
 	public Transform BallHolderObject {
 		get {

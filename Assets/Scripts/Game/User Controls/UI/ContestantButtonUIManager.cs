@@ -14,11 +14,12 @@ public class ContestantButtonUIManager : MonoBehaviour {
 	}
 
 	public GameObject actionButtonPrefab;
+	public Sprite[] actionButtonSprites;
 	public GameObject probabilitiesPopUp;
 	public GameObject probabilityIcon;
 	public float buttonSpacing;
 
-	Dictionary<Contestant, List<Button>> constantButtonPools; // buttons that always appear (but might be disabled)
+	Dictionary<Contestant, List<GameObject>> constantButtonPools; // buttons that always appear (but might be disabled)
 	Dictionary<Contestant, List<Button>> tempButtonPools;
 
  //buttons that only appear when an action is possible
@@ -30,14 +31,14 @@ public class ContestantButtonUIManager : MonoBehaviour {
 
 		instance = this;
 
-		constantButtonPools = new Dictionary<Contestant, List<Button>> ();
+		constantButtonPools = new Dictionary<Contestant, List<GameObject>> ();
 
 		UserControlManager.Instance.RegisterOnSelectedCallback ((con) => {
-			EnableButtonList(con);
+			SetButtonListActive(con, true);
 		});
 
 		UserControlManager.Instance.RegisterOnDeselectedCallback ((con) => {
-			DisableButtonList(con);
+			SetButtonListActive(con, false);
 		});
 
 
@@ -48,28 +49,30 @@ public class ContestantButtonUIManager : MonoBehaviour {
 
 		con.RegisterOnMoveCompleteCallback ( (c) => {
 			if (UserControlManager.Instance.Selected == c) {
-				EnableButtonList(c);
+				SetButtonListActive(c, true);
 			}
 		});
 
 		con.RegisterOnMoveBeganCallback ( (c) => {
 			if (UserControlManager.Instance.Selected == c) {
-				DisableButtonList(c);
+				SetButtonListActive(c, false);
 			}
 
 			//CheckButtons
 		});
 
-		List<Button> buttons = new List<Button> ();
+		List<GameObject> buttons = new List<GameObject> ();
 
 		foreach(IContestantAction a in con.PossibleActions){
 
-			GameObject button = Instantiate (actionButtonPrefab, Vector3.zero, Quaternion.identity, con.transform.Find("Canvas"));
-			button.name = con.name + " Button " + a.Name;
-		
-			button.GetComponentInChildren<Text> ().text = a.Name;
+			GameObject buttonBackground = Instantiate (actionButtonPrefab, Vector3.zero, Quaternion.identity, con.transform.Find("Canvas"));
+			GameObject button = buttonBackground.transform.GetChild (0).gameObject;
 
-			button.SetActive (false);
+			buttons.Add (buttonBackground);
+			buttonBackground.name = con.name + " Button " + a.Name;
+		
+			button.GetComponent<Image> ().sprite = ContestantActionsFactory.GetSpriteFromType (a.ActionType);
+
 
 			Button.ButtonClickedEvent bcevent = new Button.ButtonClickedEvent ();
 			bcevent.AddListener( () => {
@@ -78,12 +81,23 @@ public class ContestantButtonUIManager : MonoBehaviour {
 
 			button.GetComponent<Button> ().onClick = bcevent;
 
-			button.GetComponent<OnEnableButton> ().RegisterOnEnabledCallback (() => {
+			button.GetComponent<OnEnableCallbacks> ().RegisterOnEnabledConditionCallback (() => {
 				return a.ControlMode.CheckValidity();
 			});
+				
+			button.GetComponent<OnEnableCallbacks> ().RegisterOnEnabledFalseCallback (() => {
+				buttonBackground.GetComponent<CanvasRenderer>().SetAlpha(0.6f); 
 
-			buttons.Add (button.GetComponent<Button>());
+				button.GetComponent<Button>().interactable = false;
 
+			});
+
+			button.GetComponent<OnEnableCallbacks> ().RegisterOnEnabledTrueCallback (() => {
+				buttonBackground.GetComponent<CanvasRenderer>().SetAlpha(1.0f); 
+
+				button.GetComponent<Button>().interactable = true;
+			});
+				
 		}
 
 		if (buttons.Count > 0) {
@@ -94,22 +108,19 @@ public class ContestantButtonUIManager : MonoBehaviour {
 				buttons [i].GetComponent<RectTransform> ().anchoredPosition = new Vector2 ((i * totalDist) -(limit / 2), 20);
 			}
 		}
-
+			
 		constantButtonPools[con] = buttons;
+
 	}
 
-	void EnableButtonList(Contestant con){
+	void SetButtonListActive(Contestant con, bool enabled){
 		if (con != null) {
-			foreach (Button b in constantButtonPools[con]) {
-				b.gameObject.SetActive (true);
-			}
-		}
-	}
+			foreach (GameObject b in constantButtonPools[con]) {
+				b.SetActive (enabled);
 
-	void DisableButtonList(Contestant con){
-		if (con != null) {
-			foreach (Button b in constantButtonPools[con]) {
-				b.gameObject.SetActive (false);
+				foreach (Transform t in b.transform) {
+					t.gameObject.SetActive (enabled);
+				}
 			}
 		}
 	}

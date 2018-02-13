@@ -77,7 +77,7 @@ public class ContestantData : IStats {
 
 		stats = new Dictionary<string, string> ();
 
-		stats ["Name"] = name;
+		stats ["Title"] = name;
 		stats ["Dexerity"] = dexerity.ToString();
 		stats ["Agility"] = agility.ToString();
 		stats ["Strength"] = strength.ToString();
@@ -96,7 +96,7 @@ public class ContestantData : IStats {
 	//test!
 	public bool CanShoot{
 		get {
-			return false;
+			return true;
 		}
 	}
 }

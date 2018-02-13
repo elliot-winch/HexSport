@@ -51,10 +51,10 @@ public class GameManager : MonoBehaviour {
 			goalHexes [i].Type = HexType.Goal;
 
 			if (i < goalHexes.Length / 2) {
-				((Goal)goalHexes [i].Occupant).Team = TeamManager.Instance.TeamsInMatch [0];
+				((Goal)goalHexes [i].Occupant).Team = TeamManager.Instance.TeamsInMatch [1];
 				goalHexes [i].transform.Rotate (new Vector3 (0f, 180f, 0f));
 			} else {
-				((Goal)goalHexes [i].Occupant).Team = TeamManager.Instance.TeamsInMatch [1];
+				((Goal)goalHexes [i].Occupant).Team = TeamManager.Instance.TeamsInMatch [0];
 			}
 		}
 
@@ -96,12 +96,13 @@ public class GameManager : MonoBehaviour {
 		c.Data = d;
 		d.Contestant = c;
 
+
 		//UI
 		ContestantStatUIManager.Instance.InitLabelUI(c);
 
 		//Possible Actions
 		if (d.CanShoot) {
-			c.PossibleActions.Add (ContestantActionsFactory.CreateAction<IOccupant> ("Shoot", ContestantActionsEnum.Shoot, 1f, c, 4, 3f, true));
+			c.PossibleActions.Add (ContestantActionsFactory.CreateAction<IOccupant> ("Shoot", ContestantActionsEnum.Shoot, 1f, c, 4, 3f, false));
 		}
 			
 		Func<ICatcher, bool> throwReqs = (con) => {

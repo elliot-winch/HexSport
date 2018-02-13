@@ -22,6 +22,8 @@ public class ContestantAction<T> : IContestantAction where T : IOccupant{
 	//will be a superclass but for now is just targeted view 
 	TargetSelectorMode<T> controlMode;
 
+	ContestantActionUI caUI;
+
 	public string Name {
 		get {
 			return name;
@@ -46,11 +48,19 @@ public class ContestantAction<T> : IContestantAction where T : IOccupant{
 		}
 	}
 
+	public ContestantActionUI UI {
+		get {
+			return caUI;
+		}
+	}
+
 	public ContestantAction(string name, ContestantActionsEnum actionType, Action<float> action, float time, Contestant con, int range, float timeCost, bool friendlyTeam, Func<T, bool> additionalChecks){
 		this.name = name;
 		this.actionType = actionType;
 		this.action = action;
 		this.time = time;
+
+		this.caUI = new ContestantActionUI (ContestantActionsFactory.GetSpriteFromType(actionType));
 
 		this.controlMode = new TargetSelectorMode<T> (this, con, range, timeCost, friendlyTeam, additionalChecks);
 	}
@@ -94,5 +104,23 @@ public static class ContestantActionsFactory {
 		return new ContestantAction<T> (name, actionType, action, time, con, range, timeCost, friendlyTeam, additionalChecks);
 	}
 
-			
+	public static Sprite GetSpriteFromType(ContestantActionsEnum type){
+
+		return ContestantButtonUIManager.Instance.actionButtonSprites[(int)type];
+	}
+}
+
+public class ContestantActionUI{
+
+	Sprite buttonSprite;
+
+	public Sprite ButtonSprite {
+		get {
+			return buttonSprite;
+		}
+	}
+
+	public ContestantActionUI(Sprite s){
+		this.buttonSprite = s;
+	}
 }

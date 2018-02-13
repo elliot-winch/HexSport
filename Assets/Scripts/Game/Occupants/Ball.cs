@@ -6,7 +6,6 @@ using UnityEngine;
 public class Ball : MonoBehaviour, IOccupant {
 
 	public float throwHeight = 4f;
-	public Vector3 ballOffset = new Vector3(0.5f, 0.5f, 0.5f);
 	Hex currentHex;
 
 	Action onFinishedLaunch;
@@ -40,7 +39,7 @@ public class Ball : MonoBehaviour, IOccupant {
 					currentHex.Occupant = this;
 
 					transform.parent = null;
-					transform.position = currentHex.Position;
+					transform.position = currentHex.Position + HexOffset;
 				}
 			}
 
@@ -51,6 +50,13 @@ public class Ball : MonoBehaviour, IOccupant {
 	public Team Team {
 		get {
 			return null;
+		}
+	}
+
+	public Vector3 HexOffset {
+		get {
+			//here we have random numbers for x and z so that the ball isnt always central in the hex
+			return new Vector3 (UnityEngine.Random.value * 0.5f, GetComponent<MeshRenderer> ().bounds.extents.y, UnityEngine.Random.value * 0.5f);
 		}
 	}
 

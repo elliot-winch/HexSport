@@ -23,8 +23,6 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 	ContestantData data;
 	List<IContestantAction> possibleActions;
 
-	Vector3 positionOffset = new Vector3 (0, 0, 0);
-
 	Ball ball;
 
 	#region ICatcher implementation
@@ -62,13 +60,13 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 			return transform.position;
 		}
 		set {
-			transform.position = value + positionOffset;
+			transform.position = value + HexOffset;
 		}
 	}
 
-	public Vector3 PositionOffset {
+	public Vector3 HexOffset {
 		get {
-			return positionOffset;
+			return Vector3.zero;
 		}
 	}
 

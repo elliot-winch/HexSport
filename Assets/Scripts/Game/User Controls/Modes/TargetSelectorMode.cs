@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//TODO separate functionality and UI
+
 public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 
 	protected CameraAutoMove camAuto = Camera.main.GetComponent<CameraAutoMove> ();
@@ -149,9 +151,11 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 		hexLine = new Dictionary<Hex, GameObject> ();
 
 		foreach (Hex j in hexesInLine) {
-			GameObject go = MonoBehaviour.Instantiate (UIHexBuilder.FlatHexPrefab);
+			GameObject go = MonoBehaviour.Instantiate (UIHexBuilder.FlatHexPrefab, selected.transform);
 			go.transform.position = j.Position + new Vector3 (0, 0.001f, 0);
 			go.GetComponent<MeshRenderer>().material.color = new Color(2/3f, 0, 2/3f);
+
+			go.name = "TargetSelectorMode UI Hex";
 			hexLine [j] = go;
 		}
 	}
@@ -166,6 +170,7 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 		}
 	}
 
+	//Probabilities UI
 	GameObject probabilitiesBackground;
 	GameObject[] targetIcons;
 	int currentHighlightIcon;
@@ -181,9 +186,11 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 		for(int i = 0; i < Targets.Count; i++) {
 			GameObject targetIcon = MonoBehaviour.Instantiate(ContestantButtonUIManager.Instance.probabilityIcon, probabilitiesBackground.transform);
 
+			targetIcon.GetComponent<Image> ().sprite = this.conAction.UI.ButtonSprite;
+
 			targetIcon.GetComponentInChildren<Text> ().text = String.Format ("{0}%", (Math.Ceiling(targets [Targets[i]] * 100f)).ToString());
 
-			targetIcon.transform.localPosition = new Vector2 ((targetIcon.transform.Find("Text").GetComponent<RectTransform> ().rect.width * 1.2f) * (i - ((Targets.Count - 1) / 2f)), probabilitiesBackground.GetComponent<RectTransform> ().rect.height + (targetIcon.GetComponent<RectTransform> ().rect.height + targetIcon.transform.Find("Text").GetComponent<RectTransform>().rect.height) * 0.6f);
+			targetIcon.transform.localPosition = new Vector2 ((targetIcon.transform.Find("Text").GetComponent<RectTransform> ().rect.width * 1.2f) * (i - ((Targets.Count - 1) / 2f)), probabilitiesBackground.GetComponent<RectTransform> ().rect.height + (targetIcon.GetComponent<RectTransform> ().rect.height + targetIcon.transform.Find("Text").GetComponent<RectTransform>().rect.height) * 0.8f);
 		
 			targetIcons [i] = targetIcon;
 		}
@@ -197,7 +204,6 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 
 	internal void SwitchHighlightedProbability(int index){
 		if (currentHighlightIcon >= 0) {
-			Debug.Log (currentHighlightIcon);
 			targetIcons [currentHighlightIcon].GetComponent<RectTransform> ().sizeDelta = ContestantButtonUIManager.Instance.probabilityIcon.GetComponent<RectTransform> ().sizeDelta;
 
 		}
@@ -208,7 +214,7 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 	}
 
 
-	#endregion
+	#endregion //UI
 	public override string ToString ()
 	{
 		return string.Format ("[TargetSelectorMode: Current Target In CurrentTarget={0}]", (CurrentTarget != null) ? CurrentTarget.CurrentHex.ToString() : "null");

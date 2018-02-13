@@ -211,7 +211,7 @@ public class UserControlManager : MonoBehaviour {
 
 		Ray r = Camera.main.ScreenPointToRay (Input.mousePosition);
 
-		if (Physics.Raycast (r, out hitInfo, 1<<LayerMask.NameToLayer("Hex"))) {
+		if (Physics.Raycast (r, out hitInfo, 1<<LayerMask.NameToLayer("Hex")) && EventSystem.current.IsPointerOverGameObject() == false) {
 			Hex mouseHex = null;
 
 			if (hitInfo.collider.tag == "Hex") {
@@ -269,6 +269,7 @@ public class UserControlManager : MonoBehaviour {
 		yield return new WaitForSeconds (time);
 
 		ControlModeType = ControlModeEnum.Move;
+		SelectNext (this.Selected);
 	}
 
 	#region internal methods - move mode
@@ -316,8 +317,28 @@ public class UserControlManager : MonoBehaviour {
 		List<ContestantData> cons = TeamManager.Instance.CurrentTeam.Contestants;
 
 		if (c != null) {
-			int index = cons.IndexOf (c.Data);
-			StartCoroutine (SelectContestant (cons [(index + 1) % cons.Count].Contestant));
+			int index = cons.IndexOf (c.Data) + 1;
+
+			ContestantData posNext = cons [index % cons.Count];
+
+			while (c != posNext.Contestant) {
+				posNext = cons [index % cons.Count];
+
+				if (posNext.Contestant.ActionsRemaining > 0) {
+					Debug.Log ("different contestnat");
+					StartCoroutine (SelectContestant (posNext.Contestant));
+					return;
+				} else {
+					index++;
+				}
+			} 
+
+			//if we've reached here, all teammates have run out of actions
+
+			/*
+			if (c.ActionsRemaining <= 0) {
+				GameManager.Instance.NextTurn ();
+			}*/ // we dont do this bc it is instant, and dont wait for any movement to happen
 		} 
 	}
 
@@ -350,7 +371,7 @@ public class UserControlManager : MonoBehaviour {
 				LineRenderer lr = selected.GetComponent<LineRenderer> ();
 				lr.enabled = true;
 
-				hexPositions.Add (selected.transform.position + outlinerOffset - selected.PositionOffset);
+				hexPositions.Add (selected.transform.position + outlinerOffset - selected.HexOffset);
 				while (p.IsNextHex ()) {
 					hexPositions.Add (p.GetNextHex ().Position + outlinerOffset);
 				}
