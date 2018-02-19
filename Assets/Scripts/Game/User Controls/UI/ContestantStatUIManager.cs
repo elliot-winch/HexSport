@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class ContestantStatUIManager : MonoBehaviour {
 
-	//one canvas and replace data or n canvases and hide all but selected? think ill go with one canvas
-
 	static ContestantStatUIManager instance;
 
 	public string[] statSpriteNames;
@@ -53,6 +51,11 @@ public class ContestantStatUIManager : MonoBehaviour {
 
 		statParent = GameManager.Instance.mainCanvas.transform.Find ("Background - Selected Stats");
 		targetStatParent = GameManager.Instance.mainCanvas.transform.Find ("Background - Targeted Stats");
+
+		//NB scaling Y here has no effect as it is controlled by the number of active text fields in it
+		ScreenSpaceManager.ScaleUIElement (statParent, 10f, 0f);
+		ScreenSpaceManager.ScaleUIElement (targetStatParent, 10f, 0f);
+		ScreenSpaceManager.ScaleUIElement (contestantLabelPrefab, 15f, 15f);
 
 		arial = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
 
@@ -114,19 +117,20 @@ public class ContestantStatUIManager : MonoBehaviour {
 		Transform offsetter = background.Find ("Offsetter");
 
 		Text[] currentTextFields = offsetter.GetComponentsInChildren<Text> ();
+		Debug.Log ("Currently has text fields: " + currentTextFields.Length);
 
 		KeyValuePair<string, string>[] kvs = stats.Stats.ToArray ();
 
 		int i;
 		for(i = 0; i < kvs.Length; i++) {
-			Text t;
-
+			Debug.Log (i);
 			if (i >= currentTextFields.Length) {
 
 				GameObject statField = Instantiate (statFieldPrefab, offsetter);
 				statField.name = "Contestant UI Stat Field";
 
-				statField.GetComponent<RectTransform> ().sizeDelta = new Vector2 (background.GetComponent<RectTransform>().rect.width, statFieldPrefab.GetComponent<RectTransform>().rect.height);
+				//statField.GetComponent<RectTransform> ().sizeDelta = new Vector2 (background.GetComponent<RectTransform>().rect.width, statFieldPrefab.GetComponent<RectTransform>().rect.height);
+				ScreenSpaceManager.ScaleUIElement(statField, 10f, 7.5f);
 
 				statField.transform.localPosition = new Vector3 (0f, statField.GetComponent<RectTransform> ().rect.height * (i + 0.5f));
 			} 
@@ -139,11 +143,12 @@ public class ContestantStatUIManager : MonoBehaviour {
 		}
 
 		//Rescale background
-		RectTransform backgroundRect = background.GetComponent<RectTransform>();
-		backgroundRect.sizeDelta = new Vector2(backgroundRect.rect.width, (statFieldPrefab.GetComponent<RectTransform>().rect.height * kvs.Length));
+		//backgroundRect.sizeDelta = new Vector2(backgroundRect.rect.width, (statFieldPrefab.GetComponent<RectTransform>().rect.height * kvs.Length));
+		ScreenSpaceManager.ScaleUIElement(background, 10f, 7.5f * kvs.Length);
 
-		Text[] newTextFields = background.GetComponentsInChildren<Text> ();
+		Text[] newTextFields = offsetter.GetComponentsInChildren<Text> ();
 
+		Debug.Log (newTextFields.Length + " " + kvs.Length);
 		for (int j = kvs.Length - 1; j >= 0; j--) {
 
 			Text currentTextField = newTextFields [kvs.Length - j - 1];

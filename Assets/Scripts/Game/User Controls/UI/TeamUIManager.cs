@@ -16,7 +16,30 @@ public class TeamUIManager : MonoBehaviour {
 	}
 		
 	public GameObject playerNamePrefab;
+	[Range(0,100)]
+	public float playerNameWidth;
+	[Range(0,100)]
+	public float playerNameHeight;
 	public GameObject actionIconPrefab;
+	[Range(0,100)]
+	public float actionIconWidth;
+	[Range(0,100)]
+	public float actionIconHeight;
+	//Team Banner
+	[Range(0,100)]
+	public float teamBannerWidth;
+	[Range(0,100)]
+	public float teamBannerHeight;
+	//team name
+	[Range(0,100)]
+	public float teamNameWidth;
+	[Range(0,100)]
+	public float teamNameHeight;
+	//team logo
+	[Range(0,100)]
+	public float teamLogoWidth;
+	[Range(0,100)]
+	public float teamLogoHeight;
 
 	Dictionary<ContestantData, GameObject> contestantButtons;
 	Dictionary<Team, GameObject> teamUIs;
@@ -30,6 +53,10 @@ public class TeamUIManager : MonoBehaviour {
 
 		contestantButtons = new Dictionary<ContestantData, GameObject> ();
 
+		ScreenSpaceManager.ScaleUIElement (playerNamePrefab, playerNameWidth, playerNameHeight);
+		ScreenSpaceManager.ScaleUIElement (actionIconPrefab, actionIconWidth, actionIconHeight);
+	
+
 		Canvas mainCanvas = GameManager.Instance.mainCanvas;
 
 		teamUIs = new Dictionary<Team, GameObject> ();
@@ -42,6 +69,7 @@ public class TeamUIManager : MonoBehaviour {
 					break;
 				}
 				teamUIs [tim [counter++]] = t.gameObject;
+				ScreenSpaceManager.ScaleUIElement (t, teamBannerWidth, teamBannerHeight);
 			}
 		}
 
@@ -54,12 +82,16 @@ public class TeamUIManager : MonoBehaviour {
 
 			teamUI.Value.GetComponent<Image>().color = new Color (teamUI.Key.Color.r, teamUI.Key.Color.g, teamUI.Key.Color.b, 45f / 256); 
 			teamUI.Value.transform.Find ("Text - Name").GetComponent<Text> ().text = teamUI.Key.Name;
+			ScreenSpaceManager.ScaleUIElement (teamUI.Value.transform.Find ("Text - Name"), teamNameWidth, teamNameHeight);
+			teamUI.Value.transform.Find ("Image - Logo").GetComponent<Image> ().sprite = teamUI.Key.Image;
+			ScreenSpaceManager.ScaleUIElement (teamUI.Value.transform.Find ("Image - Logo"), teamLogoWidth, teamLogoHeight);
+		
 
 			//fill in score UI here, but for now it will always start at zero
 			for (int j = 0; j < teamUI.Key.Contestants.Count; j++) {
 
 				GameObject bObj = Instantiate (playerNamePrefab, Vector3.zero, Quaternion.identity, teamUI.Value.transform.Find ("Contestant Buttons"));
-
+				//bObj is scaled bc playerNamePrefab is scaled
 				Rect textRect = playerNamePrefab.GetComponent<RectTransform> ().rect;
 
 				Vector2 pos = new Vector2 (0, -(j * textRect.height * 2));

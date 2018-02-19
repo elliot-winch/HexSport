@@ -7,6 +7,7 @@ public class Team  {
 	string name;
 	List<ContestantData> contestants;
 	Color color;
+	Sprite image;
 
 	public string Name {
 		get {
@@ -26,16 +27,21 @@ public class Team  {
 		}
 	}
 
-	public Team(string name, List<ContestantData> contestants, Color color){
+	public Sprite Image {
+		get {
+			return image;
+		}
+	}
+
+	public Team(string name, List<ContestantData> contestants, Color color, Sprite s){
 		this.name = name;
 		this.contestants = contestants;
 		this.color = color;
+		this.image = s;
 	}
 
-	public Team(string name, Color color){
-		this.name = name;
-		this.contestants = new List<ContestantData>();
-		this.color = color;
+	public Team(string name, Color color, Sprite s) : this (name, new List<ContestantData> (), color, s)
+	{
 	}
 
 	public void AddContestant(ContestantData cd){

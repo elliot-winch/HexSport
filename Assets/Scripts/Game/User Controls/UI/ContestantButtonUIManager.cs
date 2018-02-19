@@ -14,10 +14,21 @@ public class ContestantButtonUIManager : MonoBehaviour {
 	}
 
 	public GameObject actionButtonPrefab;
+	[Range(0,100)]
+	public float actionButtonWidth;
+	[Range(0,100)]
+	public float actionButtonHeight;
 	public Sprite[] actionButtonSprites;
 	public GameObject probabilitiesPopUp;
+	[Range(0,100)]
+	public float probabilitiesPopUpWidth;
+	[Range(0,100)]
+	public float probabilitiesPopUpHeight;
 	public GameObject probabilityIcon;
-	public float buttonSpacing;
+	[Range(0,100)]
+	public float probabilityIconWidth;
+	[Range(0,100)]
+	public float probabilityIconHeight;
 
 	Dictionary<Contestant, List<GameObject>> constantButtonPools; // buttons that always appear (but might be disabled)
 	Dictionary<Contestant, List<Button>> tempButtonPools;
@@ -41,7 +52,9 @@ public class ContestantButtonUIManager : MonoBehaviour {
 			SetButtonListActive(con, false);
 		});
 
-
+		ScreenSpaceManager.ScaleUIElement (actionButtonPrefab, actionButtonWidth, actionButtonHeight);
+		ScreenSpaceManager.ScaleUIElement (probabilitiesPopUp, probabilitiesPopUpWidth, probabilitiesPopUpHeight);
+		ScreenSpaceManager.ScaleUIElement (probabilityIcon, probabilityIconWidth, probabilityIconHeight);
 	}
 
 	//Player button pools
@@ -101,7 +114,7 @@ public class ContestantButtonUIManager : MonoBehaviour {
 		}
 
 		if (buttons.Count > 0) {
-			float totalDist = (buttonSpacing + ((RectTransform)buttons[0].transform).rect.width);
+			float totalDist = ( 1.5f * ((RectTransform)buttons[0].transform).rect.width);
 			float limit = totalDist * (buttons.Count - 1); 
 
 			for (int i = 0; i < buttons.Count; i++) {

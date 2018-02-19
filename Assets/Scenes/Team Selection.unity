@@ -416,6 +416,9 @@ MonoBehaviour:
     type: 2}
   mainCanvas: {fileID: 525456428}
   teamSize: 5
+  teamLogos:
+  - {fileID: 21300000, guid: 3b5d46a6f6bc39745af04773952d80ca, type: 3}
+  - {fileID: 21300000, guid: 15e0772eda539cb47b99578e9a7cffd2, type: 3}
 --- !u!4 &1052413020
 Transform:
   m_ObjectHideFlags: 0

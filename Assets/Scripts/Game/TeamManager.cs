@@ -69,27 +69,31 @@ public class TeamManager : MonoBehaviour {
 		teamsInMatch = new Dictionary<Team, int> ();
 
 
-		List<Team> createdTeams = GameObject.Find ("Team Selection Data").GetComponent<TeamTransfer>().Teams;
+		GameObject teamSelectionData = GameObject.Find ("Team Selection Data");
 
+		if(teamSelectionData != null){
+			List<Team> createdTeams = teamSelectionData.GetComponent<TeamTransfer>().Teams;
 
-		if(createdTeams != null){
 			foreach (Team t in createdTeams) {
 				teamsInMatch [t] = 0;
 			}
 		} else {
 			//this is the testing case for when there was no selection
-			Team one = new Team ("Team 1", Color.red);
-			Team two = new Team ("Team 2", Color.blue);
+			Debug.Log("testing case");
+
+			Team one = new Team ("Team 1", Color.red, new Sprite());
+			Team two = new Team ("Team 2", Color.blue, new Sprite());
+
+			one.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
+			one.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
+			one.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
+			two.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
+			two.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
+			two.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
 
 			teamsInMatch [one] = 0;
 			teamsInMatch [two] = 0;
 
-			one.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
-			one.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
-			one.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
-			two.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
-			two.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
-			two.AddContestant (new ContestantData ("R", 8f, 1f, 1f, 1));
 		}
 	}
 
