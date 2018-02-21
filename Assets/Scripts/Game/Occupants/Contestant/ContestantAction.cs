@@ -106,7 +106,7 @@ public static class ContestantActionsFactory {
 
 	public static Sprite GetSpriteFromType(ContestantActionsEnum type){
 
-		return ContestantButtonUIManager.Instance.actionButtonSprites[(int)type];
+		return ActionUIManager.Instance.actionButtonSprites[(int)type];
 	}
 }
 

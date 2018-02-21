@@ -74,14 +74,14 @@ public class PlacementMode {
 
 		if (CanPlace (h)) {
 
-			GameManager.Instance.SpawnContestant (teams [currentTeamIndex].Contestants [currentCDIndex++], h);
+			SpawnManager.Instance.SpawnContestant (teams [currentTeamIndex].Contestants [currentCDIndex++], h);
 
 			if (currentCDIndex >= teams [currentTeamIndex].Contestants.Count) {
 				currentTeamIndex++;
 
 				if (currentTeamIndex >= teams.Count) {
 					UserControlManager.Instance.ControlModeType = ControlModeEnum.Move;
-					GameManager.Instance.CheckStartOfTurn ();
+					GameManager.Instance.StartGame ();
 				} else {
 					currentCDIndex = 0;
 				}

@@ -16,30 +16,7 @@ public class TeamUIManager : MonoBehaviour {
 	}
 		
 	public GameObject playerNamePrefab;
-	[Range(0,100)]
-	public float playerNameWidth;
-	[Range(0,100)]
-	public float playerNameHeight;
 	public GameObject actionIconPrefab;
-	[Range(0,100)]
-	public float actionIconWidth;
-	[Range(0,100)]
-	public float actionIconHeight;
-	//Team Banner
-	[Range(0,100)]
-	public float teamBannerWidth;
-	[Range(0,100)]
-	public float teamBannerHeight;
-	//team name
-	[Range(0,100)]
-	public float teamNameWidth;
-	[Range(0,100)]
-	public float teamNameHeight;
-	//team logo
-	[Range(0,100)]
-	public float teamLogoWidth;
-	[Range(0,100)]
-	public float teamLogoHeight;
 
 	Dictionary<ContestantData, GameObject> contestantButtons;
 	Dictionary<Team, GameObject> teamUIs;
@@ -53,23 +30,18 @@ public class TeamUIManager : MonoBehaviour {
 
 		contestantButtons = new Dictionary<ContestantData, GameObject> ();
 
-		ScreenSpaceManager.ScaleUIElement (playerNamePrefab, playerNameWidth, playerNameHeight);
-		ScreenSpaceManager.ScaleUIElement (actionIconPrefab, actionIconWidth, actionIconHeight);
-	
-
-		Canvas mainCanvas = GameManager.Instance.mainCanvas;
+		Canvas mainCanvas = ScreenManager.Instance.mainCanvas;
 
 		teamUIs = new Dictionary<Team, GameObject> ();
 		List<Team> tim = TeamManager.Instance.TeamsInMatch;
 		int counter = 0;
 
-		foreach (Transform t in GameManager.Instance.mainCanvas.transform) {
+		foreach (Transform t in mainCanvas.transform) {
 			if (t.name == "Team UI Parent") {
 				if (counter >= tim.Count) {
 					break;
 				}
 				teamUIs [tim [counter++]] = t.gameObject;
-				ScreenSpaceManager.ScaleUIElement (t, teamBannerWidth, teamBannerHeight);
 			}
 		}
 
@@ -80,34 +52,42 @@ public class TeamUIManager : MonoBehaviour {
 
 		foreach(KeyValuePair<Team, GameObject> teamUI in teamUIs) {
 
-			teamUI.Value.GetComponent<Image>().color = new Color (teamUI.Key.Color.r, teamUI.Key.Color.g, teamUI.Key.Color.b, 45f / 256); 
+			teamUI.Value.GetComponent<Image>().color = new Color (teamUI.Key.Color.r, teamUI.Key.Color.g, teamUI.Key.Color.b, 100f / 256); 
 			teamUI.Value.transform.Find ("Text - Name").GetComponent<Text> ().text = teamUI.Key.Name;
-			ScreenSpaceManager.ScaleUIElement (teamUI.Value.transform.Find ("Text - Name"), teamNameWidth, teamNameHeight);
 			teamUI.Value.transform.Find ("Image - Logo").GetComponent<Image> ().sprite = teamUI.Key.Image;
-			ScreenSpaceManager.ScaleUIElement (teamUI.Value.transform.Find ("Image - Logo"), teamLogoWidth, teamLogoHeight);
-		
-
-			//fill in score UI here, but for now it will always start at zero
-			for (int j = 0; j < teamUI.Key.Contestants.Count; j++) {
-
-				GameObject bObj = Instantiate (playerNamePrefab, Vector3.zero, Quaternion.identity, teamUI.Value.transform.Find ("Contestant Buttons"));
-				//bObj is scaled bc playerNamePrefab is scaled
-				Rect textRect = playerNamePrefab.GetComponent<RectTransform> ().rect;
-
-				Vector2 pos = new Vector2 (0, -(j * textRect.height * 2));
-
-				bObj.transform.localPosition = pos;
-
-				bObj.transform.GetChild(0).GetComponent<Text> ().text = teamUI.Key.Contestants [j].Name;
-
-				Button.ButtonClickedEvent bcevent = new Button.ButtonClickedEvent ();
-				bcevent.AddListener (CreateSelectionListenerForPlayerNameButton (teamUI.Key, j));
-
-				bObj.GetComponent<Button> ().onClick = bcevent;
-
-				contestantButtons [teamUI.Key.Contestants [j]] = bObj;
-			}
 		}
+
+		GameManager.Instance.RegisterOnGameStart (() => {
+			//Spawn in player buttons
+			foreach(KeyValuePair<Team, GameObject> teamUI in teamUIs) {
+
+				RectTransform parent = teamUI.Value.transform.Find ("Contestant Buttons").GetComponent<RectTransform>();
+				ScreenManager.ScaleUIElement(playerNamePrefab, 9f, 6f);
+
+				float buttonWidthShiftSign = (parent.position.x < Screen.width / 2) ? 1f : -1f;
+				parent.Translate(new Vector2(buttonWidthShiftSign * playerNamePrefab.GetComponent<RectTransform>().sizeDelta.x * 0.7f, -playerNamePrefab.GetComponent<RectTransform>().sizeDelta.y * 0.6f));
+				
+				for (int j = 0; j < teamUI.Key.Contestants.Count; j++) {
+
+					GameObject bObj = Instantiate (playerNamePrefab, Vector3.zero, Quaternion.identity, parent);
+					Rect textRect = bObj.GetComponent<RectTransform> ().rect;
+
+					Debug.Log(bObj.GetComponent<RectTransform>().sizeDelta.y);
+					Vector2 pos = new Vector2 (0, -(j * bObj.GetComponent<RectTransform>().sizeDelta.y * 2));
+
+					bObj.transform.localPosition = pos;
+
+					bObj.transform.GetChild(0).GetComponent<Text> ().text = teamUI.Key.Contestants [j].Name;
+
+					Button.ButtonClickedEvent bcevent = new Button.ButtonClickedEvent ();
+					bcevent.AddListener (CreateSelectionListenerForPlayerNameButton (teamUI.Key, j));
+
+					bObj.GetComponent<Button> ().onClick = bcevent;
+
+					contestantButtons [teamUI.Key.Contestants [j]] = bObj;
+				}
+			}
+		});
 
 		UserControlManager.Instance.RegisterOnSelectedCallback ((con) => {
 			ColorBlock cb = contestantButtons[con.Data].GetComponent<Button>().colors;
@@ -138,7 +118,7 @@ public class TeamUIManager : MonoBehaviour {
 	}
 	
 	public void UpdateScoreUI (Team t, int value) {
-		Canvas mainCanvas = GameManager.Instance.mainCanvas;
+		Canvas mainCanvas = ScreenManager.Instance.mainCanvas;
 
 		teamUIs[t].transform.Find ("Text - Score").GetComponent<Text> ().text = value.ToString();
 	}

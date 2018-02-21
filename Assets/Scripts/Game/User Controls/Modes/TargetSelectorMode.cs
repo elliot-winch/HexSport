@@ -91,16 +91,16 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 			
 		if (willShowStats){
 			onEnteringMode += () => {
-				ContestantStatUIManager.Instance.TargetStatParent.gameObject.SetActive (true);
-				ContestantStatUIManager.Instance.ShowTargetUI((IStats)currentTarget);
+				StatUIManager.Instance.TargetStatParent.gameObject.SetActive (true);
+				StatUIManager.Instance.ShowTargetUI((IStats)currentTarget);
 			};
 
 			onLeavingMode += () => {
-				ContestantStatUIManager.Instance.TargetStatParent.gameObject.SetActive (false);
+				StatUIManager.Instance.TargetStatParent.gameObject.SetActive (false);
 			};
 
 			onTabPressed += () => {
-				ContestantStatUIManager.Instance.ShowTargetUI((IStats)currentTarget);
+				StatUIManager.Instance.ShowTargetUI((IStats)currentTarget);
 			};
 		}
 
@@ -176,7 +176,7 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 	int currentHighlightIcon;
 	internal void DisplayProbabilityPopUp(){
 
-		probabilitiesBackground = MonoBehaviour.Instantiate (ContestantButtonUIManager.Instance.probabilitiesPopUp, GameManager.Instance.mainCanvas.transform);
+		probabilitiesBackground = MonoBehaviour.Instantiate (ActionUIManager.Instance.probabilitiesPopUp, ScreenManager.Instance.mainCanvas.transform);
 		probabilitiesBackground.transform.SetAsFirstSibling ();
 
 		probabilitiesBackground.GetComponentInChildren<Text> ().text = conAction.Name;
@@ -184,7 +184,7 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 		targetIcons = new GameObject[Targets.Count];
 
 		for(int i = 0; i < Targets.Count; i++) {
-			GameObject targetIcon = MonoBehaviour.Instantiate(ContestantButtonUIManager.Instance.probabilityIcon, probabilitiesBackground.transform);
+			GameObject targetIcon = MonoBehaviour.Instantiate(ActionUIManager.Instance.probabilityIcon, probabilitiesBackground.transform);
 
 			targetIcon.GetComponent<Image> ().sprite = this.conAction.UI.ButtonSprite;
 
@@ -204,7 +204,7 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 
 	internal void SwitchHighlightedProbability(int index){
 		if (currentHighlightIcon >= 0) {
-			targetIcons [currentHighlightIcon].GetComponent<RectTransform> ().sizeDelta = ContestantButtonUIManager.Instance.probabilityIcon.GetComponent<RectTransform> ().sizeDelta;
+			targetIcons [currentHighlightIcon].GetComponent<RectTransform> ().sizeDelta = ActionUIManager.Instance.probabilityIcon.GetComponent<RectTransform> ().sizeDelta;
 
 		}
 

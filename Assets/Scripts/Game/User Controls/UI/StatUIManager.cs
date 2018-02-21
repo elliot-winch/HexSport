@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ContestantStatUIManager : MonoBehaviour {
+public class StatUIManager : MonoBehaviour {
 
-	static ContestantStatUIManager instance;
+	static StatUIManager instance;
 
 	public string[] statSpriteNames;
 	public Sprite[] statSprites;
 	public GameObject statFieldPrefab;
 
+	//World Space
 	public GameObject contestantLabelPrefab;
 	[Range(0,1)]
 	public float labelAlphaLow;
@@ -24,7 +25,7 @@ public class ContestantStatUIManager : MonoBehaviour {
 	Transform statParent;
 	Transform targetStatParent;
 
-	public static ContestantStatUIManager Instance {
+	public static StatUIManager Instance {
 		get {
 			return instance;
 		}
@@ -49,13 +50,10 @@ public class ContestantStatUIManager : MonoBehaviour {
 
 		instance = this;
 
-		statParent = GameManager.Instance.mainCanvas.transform.Find ("Background - Selected Stats");
-		targetStatParent = GameManager.Instance.mainCanvas.transform.Find ("Background - Targeted Stats");
+		statParent = ScreenManager.Instance.mainCanvas.transform.Find ("Background - Selected Stats");
+		targetStatParent = ScreenManager.Instance.mainCanvas.transform.Find ("Background - Targeted Stats");
 
 		//NB scaling Y here has no effect as it is controlled by the number of active text fields in it
-		ScreenSpaceManager.ScaleUIElement (statParent, 10f, 0f);
-		ScreenSpaceManager.ScaleUIElement (targetStatParent, 10f, 0f);
-		ScreenSpaceManager.ScaleUIElement (contestantLabelPrefab, 15f, 15f);
 
 		arial = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
 
@@ -130,7 +128,7 @@ public class ContestantStatUIManager : MonoBehaviour {
 				statField.name = "Contestant UI Stat Field";
 
 				//statField.GetComponent<RectTransform> ().sizeDelta = new Vector2 (background.GetComponent<RectTransform>().rect.width, statFieldPrefab.GetComponent<RectTransform>().rect.height);
-				ScreenSpaceManager.ScaleUIElement(statField, 10f, 7.5f);
+				ScreenManager.ScaleUIElement(statField, 10f, 7.5f);
 
 				statField.transform.localPosition = new Vector3 (0f, statField.GetComponent<RectTransform> ().rect.height * (i + 0.5f));
 			} 
@@ -144,7 +142,7 @@ public class ContestantStatUIManager : MonoBehaviour {
 
 		//Rescale background
 		//backgroundRect.sizeDelta = new Vector2(backgroundRect.rect.width, (statFieldPrefab.GetComponent<RectTransform>().rect.height * kvs.Length));
-		ScreenSpaceManager.ScaleUIElement(background, 10f, 7.5f * kvs.Length);
+		ScreenManager.ScaleUIElement(background, 10f, 7.5f * kvs.Length);
 
 		Text[] newTextFields = offsetter.GetComponentsInChildren<Text> ();
 

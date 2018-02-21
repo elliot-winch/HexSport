@@ -198,6 +198,7 @@ public class UserControlManager : MonoBehaviour {
 			},
 
 			onLeavingMode: () => {
+				
 				pm.EraseUI();
 			},
 
@@ -238,7 +239,7 @@ public class UserControlManager : MonoBehaviour {
 		}
 
 		//Right Click
-		if (((Input.GetMouseButtonDown (1) && EventSystem.current.IsPointerOverGameObject() == false) || Input.GetKeyDown(KeyCode.Escape)) && hitInfo.collider != null) {
+		if (((Input.GetMouseButtonDown (1) && EventSystem.current.IsPointerOverGameObject() == false) /*|| Input.GetKeyDown(KeyCode.Escape)*/) && hitInfo.collider != null) {
 			if (hitInfo.collider.tag == "Hex") {
 				currentControlMode.OnRightClick(hitInfo.collider.GetComponent<Hex>());
 			}

@@ -3,32 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ContestantButtonUIManager : MonoBehaviour {
+public class ActionUIManager : MonoBehaviour {
 
-	static ContestantButtonUIManager instance;
+	static ActionUIManager instance;
 
-	public static ContestantButtonUIManager Instance {
+	public static ActionUIManager Instance {
 		get {
 			return instance;
 		}
 	}
 
 	public GameObject actionButtonPrefab;
-	[Range(0,100)]
-	public float actionButtonWidth;
-	[Range(0,100)]
-	public float actionButtonHeight;
 	public Sprite[] actionButtonSprites;
 	public GameObject probabilitiesPopUp;
-	[Range(0,100)]
-	public float probabilitiesPopUpWidth;
-	[Range(0,100)]
-	public float probabilitiesPopUpHeight;
 	public GameObject probabilityIcon;
-	[Range(0,100)]
-	public float probabilityIconWidth;
-	[Range(0,100)]
-	public float probabilityIconHeight;
 
 	Dictionary<Contestant, List<GameObject>> constantButtonPools; // buttons that always appear (but might be disabled)
 	Dictionary<Contestant, List<Button>> tempButtonPools;
@@ -51,10 +39,6 @@ public class ContestantButtonUIManager : MonoBehaviour {
 		UserControlManager.Instance.RegisterOnDeselectedCallback ((con) => {
 			SetButtonListActive(con, false);
 		});
-
-		ScreenSpaceManager.ScaleUIElement (actionButtonPrefab, actionButtonWidth, actionButtonHeight);
-		ScreenSpaceManager.ScaleUIElement (probabilitiesPopUp, probabilitiesPopUpWidth, probabilitiesPopUpHeight);
-		ScreenSpaceManager.ScaleUIElement (probabilityIcon, probabilityIconWidth, probabilityIconHeight);
 	}
 
 	//Player button pools

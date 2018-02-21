@@ -36,7 +36,7 @@ public class Goal : MonoBehaviour, ICatcher, IStats {
 
 				Destroy(ball.gameObject);
 
-				GameManager.Instance.SpawnBall();
+				SpawnManager.Instance.SpawnBall();
 			};
 		}
 	}
