@@ -182,15 +182,18 @@ public class TargetSelectorMode<T> : ControlMode where T : IOccupant {
 		probabilitiesBackground.GetComponentInChildren<Text> ().text = conAction.Name;
 
 		targetIcons = new GameObject[Targets.Count];
+		Rect probabilityRect = probabilitiesBackground.GetComponent<RectTransform> ().rect;
 
 		for(int i = 0; i < Targets.Count; i++) {
 			GameObject targetIcon = MonoBehaviour.Instantiate(ActionUIManager.Instance.probabilityIcon, probabilitiesBackground.transform);
+			Rect textRect = targetIcon.transform.Find ("Text").GetComponent<RectTransform> ().rect;
+			float iconHeight = probabilityRect.height + textRect.height + targetIcon.GetComponent<RectTransform>().rect.height;
 
 			targetIcon.GetComponent<Image> ().sprite = this.conAction.UI.ButtonSprite;
 
 			targetIcon.GetComponentInChildren<Text> ().text = String.Format ("{0}%", (Math.Ceiling(targets [Targets[i]] * 100f)).ToString());
 
-			targetIcon.transform.localPosition = new Vector2 ((targetIcon.transform.Find("Text").GetComponent<RectTransform> ().rect.width * 1.2f) * (i - ((Targets.Count - 1) / 2f)), probabilitiesBackground.GetComponent<RectTransform> ().rect.height + (targetIcon.GetComponent<RectTransform> ().rect.height + targetIcon.transform.Find("Text").GetComponent<RectTransform>().rect.height) * 0.8f);
+			targetIcon.transform.localPosition = new Vector2 ((textRect.width * 2f) * (i - ((Targets.Count - 1) / 2f)), iconHeight);
 		
 			targetIcons [i] = targetIcon;
 		}

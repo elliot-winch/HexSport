@@ -71,7 +71,7 @@ public class Goal : MonoBehaviour, ICatcher, IStats {
 	public Dictionary<string, string> Stats {
 		get {
 			return new Dictionary<string, string> () {
-				{ "Name",  "Goal" },
+				{ "Title",  "Goal" },
 				{ "Value", "1" }
 			};
 		}

@@ -57,15 +57,18 @@ public class TeamUIManager : MonoBehaviour {
 			teamUI.Value.transform.Find ("Image - Logo").GetComponent<Image> ().sprite = teamUI.Key.Image;
 		}
 
+		//ScreenManager.ScaleUIElement (actionIconPrefab, 4.5f, 6f);
+
 		GameManager.Instance.RegisterOnGameStart (() => {
 			//Spawn in player buttons
+			//ScreenManager.ScaleUIElement(playerNamePrefab, 9f, 6f);
+
 			foreach(KeyValuePair<Team, GameObject> teamUI in teamUIs) {
 
 				RectTransform parent = teamUI.Value.transform.Find ("Contestant Buttons").GetComponent<RectTransform>();
-				ScreenManager.ScaleUIElement(playerNamePrefab, 9f, 6f);
 
 				float buttonWidthShiftSign = (parent.position.x < Screen.width / 2) ? 1f : -1f;
-				parent.Translate(new Vector2(buttonWidthShiftSign * playerNamePrefab.GetComponent<RectTransform>().sizeDelta.x * 0.7f, -playerNamePrefab.GetComponent<RectTransform>().sizeDelta.y * 0.6f));
+				parent.Translate(new Vector2(buttonWidthShiftSign * playerNamePrefab.GetComponent<RectTransform>().sizeDelta.x * 0.55f, -playerNamePrefab.GetComponent<RectTransform>().sizeDelta.y * 0.6f));
 				
 				for (int j = 0; j < teamUI.Key.Contestants.Count; j++) {
 
@@ -139,16 +142,19 @@ public class TeamUIManager : MonoBehaviour {
 
 	public void UpdateActionsRemainingUI(Contestant con){
 		List<GameObject> prevIcons = GetActionIcons (con);
+		Transform buttonParent = contestantButtons [con.Data].transform;
 
 		if (prevIcons.Count < con.ActionsRemaining) {
-
-			float y = -actionIconPrefab.GetComponent<RectTransform> ().rect.height;
+			//should save these at the start of the game
 			float iconWidth = actionIconPrefab.GetComponent<RectTransform> ().rect.width;
+			float direction = (buttonParent.position.x < Screen.width / 2) ? 1f : -1f;
+
+			Vector2 startPos = new Vector2 (buttonParent.position.x - direction * iconWidth / 2f, buttonParent.position.y -actionIconPrefab.GetComponent<RectTransform> ().rect.height);
 
 			for (int i = prevIcons.Count; i < con.ActionsRemaining; i++) {
-				GameObject actionIcon = Instantiate (actionIconPrefab, contestantButtons [con.Data].transform);
+				GameObject actionIcon = Instantiate (actionIconPrefab, buttonParent);
 				//will need to set this to left or right
-				actionIcon.transform.localPosition = new Vector3 (iconWidth * (i + 0.5f), y, 0f);
+				actionIcon.transform.position = startPos + new Vector2 (iconWidth * i * direction, 0f);
 				actionIcon.name = "Image - Action Icon";
 			}
 		} else if (con.ActionsRemaining < prevIcons.Count) {

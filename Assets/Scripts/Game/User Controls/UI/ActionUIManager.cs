@@ -32,6 +32,11 @@ public class ActionUIManager : MonoBehaviour {
 
 		constantButtonPools = new Dictionary<Contestant, List<GameObject>> ();
 
+		/*
+		ScreenManager.ScaleUIElement (actionButtonPrefab, 3f);
+		ScreenManager.ScaleUIElement (probabilitiesPopUp, 20f, 10f);
+		ScreenManager.ScaleUIElement (probabilityIcon, 2f);
+*/
 		UserControlManager.Instance.RegisterOnSelectedCallback ((con) => {
 			SetButtonListActive(con, true);
 		});
@@ -98,11 +103,11 @@ public class ActionUIManager : MonoBehaviour {
 		}
 
 		if (buttons.Count > 0) {
-			float totalDist = ( 1.5f * ((RectTransform)buttons[0].transform).rect.width);
+			float totalDist = ( 1.1f * ((RectTransform)buttons[0].transform).rect.width);
 			float limit = totalDist * (buttons.Count - 1); 
 
 			for (int i = 0; i < buttons.Count; i++) {
-				buttons [i].GetComponent<RectTransform> ().anchoredPosition = new Vector2 ((i * totalDist) -(limit / 2), 20);
+				buttons [i].GetComponent<RectTransform> ().anchoredPosition = new Vector2 ((i * totalDist) -(limit / 2), 10);
 			}
 		}
 			

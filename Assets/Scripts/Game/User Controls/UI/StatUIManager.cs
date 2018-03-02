@@ -115,7 +115,6 @@ public class StatUIManager : MonoBehaviour {
 		Transform offsetter = background.Find ("Offsetter");
 
 		Text[] currentTextFields = offsetter.GetComponentsInChildren<Text> ();
-		Debug.Log ("Currently has text fields: " + currentTextFields.Length);
 
 		KeyValuePair<string, string>[] kvs = stats.Stats.ToArray ();
 
@@ -127,8 +126,8 @@ public class StatUIManager : MonoBehaviour {
 				GameObject statField = Instantiate (statFieldPrefab, offsetter);
 				statField.name = "Contestant UI Stat Field";
 
-				//statField.GetComponent<RectTransform> ().sizeDelta = new Vector2 (background.GetComponent<RectTransform>().rect.width, statFieldPrefab.GetComponent<RectTransform>().rect.height);
-				ScreenManager.ScaleUIElement(statField, 10f, 7.5f);
+				statField.GetComponent<RectTransform> ().sizeDelta = new Vector2 (background.GetComponent<RectTransform>().rect.width, statFieldPrefab.GetComponent<RectTransform>().rect.height);
+				//ScreenManager.ScaleUIElement(statField, 10f, 7.5f);
 
 				statField.transform.localPosition = new Vector3 (0f, statField.GetComponent<RectTransform> ().rect.height * (i + 0.5f));
 			} 
@@ -137,16 +136,15 @@ public class StatUIManager : MonoBehaviour {
 		while (i < currentTextFields.Length) {
 			currentTextFields [i].text = "";
 			currentTextFields [i].GetComponentInChildren<Image> ().sprite = new Sprite ();
+			currentTextFields [i].GetComponentInChildren<Image> ().color = Color.clear;
 			i++;
 		}
 
 		//Rescale background
-		//backgroundRect.sizeDelta = new Vector2(backgroundRect.rect.width, (statFieldPrefab.GetComponent<RectTransform>().rect.height * kvs.Length));
-		ScreenManager.ScaleUIElement(background, 10f, 7.5f * kvs.Length);
+		//ScreenManager.ScaleUIElement(background, 10f, 7.5f * kvs.Length);
 
 		Text[] newTextFields = offsetter.GetComponentsInChildren<Text> ();
-
-		Debug.Log (newTextFields.Length + " " + kvs.Length);
+		int maxStringLength = 0;
 		for (int j = kvs.Length - 1; j >= 0; j--) {
 
 			Text currentTextField = newTextFields [kvs.Length - j - 1];
@@ -160,19 +158,30 @@ public class StatUIManager : MonoBehaviour {
 				}
 			}
 
-			if (imageForStat >= 0) {
+			if (imageForStat >= 0 && imageForStat < statSprites.Length) {
 				imageField.sprite = statSprites[imageForStat];
+				Debug.Log (statSprites[imageForStat]);
+
 				imageField.color = new Color (1f, 1f, 1f, 1f);
-				currentTextField .text = string.Format ("{0}\t", kvs [j].Value);
+				currentTextField.alignment = TextAnchor.MiddleRight;
+				currentTextField.text = string.Format ("{0}\t", kvs [j].Value);
 			} else if (kvs[j].Key == "Title") {
+				imageField.color = new Color (1f, 1f, 1f, 0f);
 				currentTextField.text = string.Format ("{0}", kvs [j].Value);
 				currentTextField.fontStyle = FontStyle.Bold;
 				currentTextField.alignment = TextAnchor.MiddleCenter;
 			} else {
 				imageField.color = new Color (1f, 1f, 1f, 0f);
-				currentTextField.text = string.Format ("{0}: {1}\t", kvs [j].Key, kvs [j].Value);
+				currentTextField.alignment = TextAnchor.MiddleCenter;
+				currentTextField.text = string.Format ("{0}: {1}", kvs [j].Key, kvs [j].Value);
+			}
+
+			if (currentTextField.text.ToString ().Length > maxStringLength) {
+				maxStringLength = currentTextField.text.ToString ().Length;
 			}
 		}
+			
+		background.GetComponent<RectTransform>().sizeDelta = new Vector2(background.GetComponent<RectTransform>().rect.width, (statFieldPrefab.GetComponent<RectTransform>().rect.height * kvs.Length));
 
 		offsetter.GetComponent<RectTransform>().localPosition = new Vector2 (offsetter.GetComponent<RectTransform>().localPosition.x, 0f);
 	}
