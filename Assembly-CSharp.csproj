@@ -67,8 +67,8 @@
      <Compile Include="Assets\Scripts\Game\Occupants\Contestant\ContestantAction.cs" />
      <Compile Include="Assets\Scripts\Game\Occupants\Contestant\ContestantData.cs" />
      <Compile Include="Assets\Scripts\Game\Occupants\Contestant\Team.cs" />
+     <Compile Include="Assets\Scripts\Game\Occupants\DamagableObject.cs" />
      <Compile Include="Assets\Scripts\Game\Occupants\Goal.cs" />
-     <Compile Include="Assets\Scripts\Game\Occupants\Health.cs" />
      <Compile Include="Assets\Scripts\Game\Occupants\ICatcher.cs" />
      <Compile Include="Assets\Scripts\Game\Occupants\IOccupant.cs" />
      <Compile Include="Assets\Scripts\Game\Occupants\Wall.cs" />

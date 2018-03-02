@@ -3,14 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ball : MonoBehaviour, IOccupant {
+public class Ball : DamagableObject {
 
 	public float throwHeight = 4f;
-	Hex currentHex;
 
 	Action onFinishedLaunch;
 
-	public Hex CurrentHex {
+	public override Hex CurrentHex {
 		get {
 			return currentHex;
 		}
@@ -47,13 +46,7 @@ public class Ball : MonoBehaviour, IOccupant {
 		}
 	}
 
-	public Team Team {
-		get {
-			return null;
-		}
-	}
-
-	public Vector3 HexOffset {
+	public override Vector3 HexOffset {
 		get {
 			//here we have random numbers for x and z so that the ball isnt always central in the hex
 			return new Vector3 (UnityEngine.Random.value * 0.5f, GetComponent<MeshRenderer> ().bounds.extents.y, UnityEngine.Random.value * 0.5f);

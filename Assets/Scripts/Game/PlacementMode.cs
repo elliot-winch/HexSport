@@ -80,8 +80,8 @@ public class PlacementMode {
 				currentTeamIndex++;
 
 				if (currentTeamIndex >= teams.Count) {
-					UserControlManager.Instance.ControlModeType = ControlModeEnum.Move;
 					GameManager.Instance.StartGame ();
+
 				} else {
 					currentCDIndex = 0;
 				}

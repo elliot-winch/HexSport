@@ -33,11 +33,12 @@ public class GameManager : MonoBehaviour {
 
 		if (gameStart != null) {
 			gameStart ();
+			Debug.Log ("Starting game");
 		}
 
-		NextTurn ();
+		Debug.Log ("Next turn");
+		NextTurn ();	
 	}
-
 
 	public bool CheckStartOfTurn(){
 		foreach (ContestantData c in TeamManager.Instance.CurrentTeam.Contestants) {

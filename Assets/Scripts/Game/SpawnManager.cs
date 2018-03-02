@@ -99,7 +99,7 @@ public class SpawnManager : MonoBehaviour {
 
 		//Possible Actions
 		if (d.CanShoot) {
-			c.PossibleActions.Add (ContestantActionsFactory.CreateAction<IOccupant> ("Shoot", ContestantActionsEnum.Shoot, 1f, c, 4, 3f, false));
+			c.PossibleActions.Add (ContestantActionsFactory.CreateAction<DamagableObject> ("Shoot", ContestantActionsEnum.Shoot, 1f, c, 4, 3f, false));
 		}
 
 		Func<ICatcher, bool> throwReqs = (con) => {

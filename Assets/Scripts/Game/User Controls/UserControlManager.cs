@@ -212,6 +212,10 @@ public class UserControlManager : MonoBehaviour {
 
 		Ray r = Camera.main.ScreenPointToRay (Input.mousePosition);
 
+		if (EventSystem.current.IsPointerOverGameObject ()) {
+			Debug.Log ("over UI");
+		}
+
 		if (Physics.Raycast (r, out hitInfo, 1<<LayerMask.NameToLayer("Hex")) && EventSystem.current.IsPointerOverGameObject() == false) {
 			Hex mouseHex = null;
 
@@ -219,16 +223,20 @@ public class UserControlManager : MonoBehaviour {
 				mouseHex = hitInfo.collider.GetComponent<Hex> ();
 			} else {
 				currentControlMode.OnMouseNotOverMap ();
+				Debug.Log ("on mouse NOT over");
+
 				return;
 			}
 
 			if (mouseHex != null && prevMouseHex != mouseHex) {
 				currentControlMode.OnMouseOver (mouseHex);
+				Debug.Log ("on mouse over");
 				prevMouseHex = mouseHex;
 			}
 
 		} else {
 			currentControlMode.OnMouseNotOverMap ();
+			Debug.Log ("on mouse NOT over");
 		}
 
 		//Left Click

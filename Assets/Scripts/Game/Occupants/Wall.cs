@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Wall : MonoBehaviour, IOccupant {
+public class Wall : DamagableObject {
 
-	Hex currentHex;
-
-	public Hex CurrentHex {
+	public override Hex CurrentHex {
 		get {
 			return currentHex;
 		}
@@ -16,13 +14,7 @@ public class Wall : MonoBehaviour, IOccupant {
 		}
 	}
 
-	public Team Team {
-		get {
-			return null;
-		}
-	}
-
-	public Vector3 HexOffset {
+	public override Vector3 HexOffset {
 		get {
 			return new Vector3 (0f, GetComponent<MeshRenderer> ().bounds.extents.y, 0f);
 		}

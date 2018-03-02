@@ -268,7 +268,7 @@ GameObject:
   - component: {fileID: 525456428}
   - component: {fileID: 525456427}
   - component: {fileID: 525456426}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -360,7 +360,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 615477108}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Left Team Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -440,7 +440,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1576024643}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Right Team Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

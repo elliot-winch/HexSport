@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Contestant : MonoBehaviour, ICatcher, IStats {
+public class Contestant : DamagableObject, ICatcher, IStats {
 
 	public int actionsPerTurn = 2;
 	public float movesPerAction = 4f; //this will be dependent on the con's pace
@@ -84,28 +84,7 @@ public class Contestant : MonoBehaviour, ICatcher, IStats {
 		}
 	}
 
-	Hex currentHex;
-
-	public Hex CurrentHex {
-		get {
-			return currentHex;
-		}
-		set {
-			if (value == null) {
-				Debug.LogError ("Cannot set T.CurrentHex to null");
-			}
-
-			if (currentHex != null) {
-				currentHex.Occupant = null;
-			}
-
-			currentHex = value;
-
-			currentHex.Occupant = this;
-		}
-	}
-
-	public Team Team {
+	public override Team Team {
 		get {
 			return data.Team;
 		}

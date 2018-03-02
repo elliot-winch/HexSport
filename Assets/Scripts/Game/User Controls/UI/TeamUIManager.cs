@@ -75,7 +75,6 @@ public class TeamUIManager : MonoBehaviour {
 					GameObject bObj = Instantiate (playerNamePrefab, Vector3.zero, Quaternion.identity, parent);
 					Rect textRect = bObj.GetComponent<RectTransform> ().rect;
 
-					Debug.Log(bObj.GetComponent<RectTransform>().sizeDelta.y);
 					Vector2 pos = new Vector2 (0, -(j * bObj.GetComponent<RectTransform>().sizeDelta.y * 2));
 
 					bObj.transform.localPosition = pos;

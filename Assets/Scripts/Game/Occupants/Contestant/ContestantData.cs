@@ -48,7 +48,6 @@ public class ContestantData : IStats {
 	float dexerity;
 	float agility;
 	float strength;
-	Health health;
 
 	public float Dexerity {
 		get {
@@ -73,7 +72,6 @@ public class ContestantData : IStats {
 		this.dexerity = dex;
 		this.agility = agility;
 		this.strength = strength;
-		this.health = new Health (startingHealth);
 
 		stats = new Dictionary<string, string> ();
 

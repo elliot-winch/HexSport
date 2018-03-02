@@ -120,7 +120,6 @@ public class StatUIManager : MonoBehaviour {
 
 		int i;
 		for(i = 0; i < kvs.Length; i++) {
-			Debug.Log (i);
 			if (i >= currentTextFields.Length) {
 
 				GameObject statField = Instantiate (statFieldPrefab, offsetter);
@@ -160,8 +159,6 @@ public class StatUIManager : MonoBehaviour {
 
 			if (imageForStat >= 0 && imageForStat < statSprites.Length) {
 				imageField.sprite = statSprites[imageForStat];
-				Debug.Log (statSprites[imageForStat]);
-
 				imageField.color = new Color (1f, 1f, 1f, 1f);
 				currentTextField.alignment = TextAnchor.MiddleRight;
 				currentTextField.text = string.Format ("{0}\t", kvs [j].Value);
