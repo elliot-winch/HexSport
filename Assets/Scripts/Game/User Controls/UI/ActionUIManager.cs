@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,9 +20,7 @@ public class ActionUIManager : MonoBehaviour {
 	public GameObject probabilityIcon;
 
 	Dictionary<Contestant, List<GameObject>> constantButtonPools; // buttons that always appear (but might be disabled)
-	Dictionary<Contestant, List<Button>> tempButtonPools;
-
- //buttons that only appear when an action is possible
+	Dictionary<Contestant, List<Button>> tempButtonPools; //buttons that only appear when an action is possible
 
 	void Start () {
 		if (instance != null) {
@@ -32,18 +31,18 @@ public class ActionUIManager : MonoBehaviour {
 
 		constantButtonPools = new Dictionary<Contestant, List<GameObject>> ();
 
-		/*
-		ScreenManager.ScaleUIElement (actionButtonPrefab, 3f);
-		ScreenManager.ScaleUIElement (probabilitiesPopUp, 20f, 10f);
-		ScreenManager.ScaleUIElement (probabilityIcon, 2f);
-*/
+
 		UserControlManager.Instance.RegisterOnSelectedCallback ((con) => {
+
 			SetButtonListActive(con, true);
+
 		});
 
 		UserControlManager.Instance.RegisterOnDeselectedCallback ((con) => {
 			SetButtonListActive(con, false);
+
 		});
+
 	}
 
 	//Player button pools

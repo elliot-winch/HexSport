@@ -40,7 +40,8 @@ public class PlacementMode {
 		this.currentTeamIndex = 0;
 		this.currentCDIndex = 0;
 
-		this.hexOutliner = MonoBehaviour.Instantiate (UIHexBuilder.FlatHexPrefab);
+		this.hexOutliner = MonoBehaviour.Instantiate (UIHexBuilder.Instance.flatHexPrefab);
+		this.hexOutliner.name = "Placement Cursor";
 	}
 
 

@@ -178,9 +178,8 @@ public class Contestant : DamagableObject, ICatcher, IStats {
 		uiHexPool = new ObjectPool (() => {
 			GameObject spawned;
 
-			spawned = Instantiate (UIHexBuilder.FlatHexPrefab, Vector3.zero, Quaternion.identity, transform);
+			spawned = Instantiate (UIHexBuilder.Instance.flatHexPrefab, transform);
 
-			spawned.transform.Rotate (new Vector3 (270, 0, 0));
 			spawned.SetActive (true);
 
 			spawned.name = "Movement UI Hex";
@@ -191,6 +190,7 @@ public class Contestant : DamagableObject, ICatcher, IStats {
 
 		//UIManager uses this in Start.
 		onMoveComplete (this);
+
 	}
 
 	public void Move(Hex destHex){
@@ -265,8 +265,8 @@ public class Contestant : DamagableObject, ICatcher, IStats {
 
 			foreach (Hex h in hexes[i]) {
 				GameObject uiHex = uiHexPool.GetObject ();
-				uiHex.transform.position = h.Position + new Vector3 (0, 0.001f, 0);
-				uiHex.GetComponent<MeshRenderer> ().material.color = new Color (1f / (i + 1), 0, 1f/ (i + 1));
+				uiHex.transform.position = h.Position;
+				uiHex.GetComponent<MeshRenderer> ().material.color = this.Team.Colors [Mathf.Min(i + 1, 2)];
 
 				moveHexesInRange[i] [h] = uiHex;
 			}

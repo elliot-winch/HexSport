@@ -5,15 +5,32 @@ using UnityEngine;
 /*
  * 
  * This class is temporary. It makes a hexagon, which will eventually be a 3D model rather than
- * programmatically generated.
+ * programmatically generated. - that time is now!
  * 
  */ 
 
-public static class UIHexBuilder {
+public class UIHexBuilder : MonoBehaviour {
 
-	static GameObject flatHexPrefab = null;
+	static UIHexBuilder instance;
+
+	public GameObject flatHexPrefab;
+
+	public static UIHexBuilder Instance {
+		get {
+			return instance;
+		}
+	}
+
+
+	void Start(){
+		instance = this;
+
+		flatHexPrefab.transform.localScale = new Vector3 (1f, 1f, 1f);
+	}
+
 
 	//Allows for lazy instantiation
+	/*
 	public static GameObject FlatHexPrefab {
 		get {
 			if (flatHexPrefab == null){
@@ -61,5 +78,5 @@ public static class UIHexBuilder {
 			}
 			return flatHexPrefab;
 		}
-	}
+	}*/
 }

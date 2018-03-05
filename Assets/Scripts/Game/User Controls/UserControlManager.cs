@@ -92,8 +92,9 @@ public class UserControlManager : MonoBehaviour {
 		camCont = Camera.main.GetComponent<CameraControls> ();
 		camAuto = Camera.main.GetComponent<CameraAutoMove> ();
 
-		hexOutliner = Instantiate (UIHexBuilder.FlatHexPrefab);
+		hexOutliner = Instantiate (UIHexBuilder.Instance.flatHexPrefab);
 		hexOutliner.name = "Cursor";
+		hexOutliner.SetActive (false);
 
 		hexOutliner.GetComponent<MeshRenderer> ().material.color = Color.green;
 
